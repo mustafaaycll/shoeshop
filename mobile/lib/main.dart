@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:mobile/Screens/test.dart';
 import 'package:mobile/navbar.dart';
 import 'package:flutter/services.dart';
+import 'package:mobile/utils/colors.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      systemNavigationBarColor: Color(0xfff5f3f5), // status bar color
+      systemNavigationBarColor: AppColors.background, // status bar color
       statusBarBrightness: Brightness.light, //status bar brigtness
       statusBarIconBrightness: Brightness
           .dark, //status barIcon Brightness //Navigation bar divider color
