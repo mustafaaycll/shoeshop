@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'colors.dart';
-
 class ShapeRules {
   final Color bg_color;
   final Color side_color;
