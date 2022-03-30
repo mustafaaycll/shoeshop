@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:mobile/Screens/account.dart';
 import 'package:mobile/Screens/cart.dart';
 import 'package:mobile/Screens/home.dart';
@@ -6,15 +7,20 @@ import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:flutter/cupertino.dart';
 
 class NavBar extends StatefulWidget {
-  const NavBar({Key? key}) : super(key: key);
-
+  const NavBar({Key? key, required this.analytics, required this.observer}) : super(key: key);
+  final FirebaseAnalytics analytics;
+  final FirebaseAnalyticsObserver observer;
   @override
   State<NavBar> createState() => _NavBarState();
 }
 
 class _NavBarState extends State<NavBar> {
+  static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+  static FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(analytics: analytics);
+
+
   List<Widget> _buildScreens() {
-    return [Home(), Cart(), Wishlist(), Account()];
+    return [Home(analytics:analytics,observer:observer), Cart(), Wishlist(), Account()];
   }
 
   List<PersistentBottomNavBarItem> _navBarsItems() {
