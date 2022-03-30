@@ -23,5 +23,4 @@ class AppColors {
   static final Color empty_button_text = Color(0xff1b264f);
 
   static final Color background = Color(0xfff5f3f5);
-  static final Color circleAvatarBackground = Color(0xff576ca8);
 }

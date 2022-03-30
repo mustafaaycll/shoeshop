@@ -1,14 +1,10 @@
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/Screens/test.dart';
-import 'package:mobile/Screens/welcome.dart';
 import 'package:mobile/navbar.dart';
 import 'package:flutter/services.dart';
 import 'package:mobile/utils/colors.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-
-
 
 void turnBlue() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -77,32 +73,19 @@ class _FirebaseInitState extends State<FirebaseInit> {
   }
 }
 
-class MyApp extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    return MyAppState();
-  }
-}
-
-class MyAppState extends State<MyApp> {
-
-  static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-  static FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(analytics: analytics);
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home:
-          NavBar(analytics:analytics,
-            observer:observer,), // CHILD SHOULD BE CHANGED TO LOGIN, THEN NAVBAR IF USER IS LOGGED IN
+          NavBar(), // CHILD SHOULD BE CHANGED TO LOGIN, THEN NAVBAR IF USER IS LOGGED IN
       routes: {
-        '/NavBar': (context) => NavBar(analytics:analytics,
-          observer:observer,),
+        '/NavBar': (context) => NavBar(),
         '/TestPage': (context) => Test(),
-        '/Welcome':(context) => Welcome(analytics:analytics,
-          observer:observer,),
       },
-      initialRoute: '/Welcome',
+      initialRoute: '/NavBar',
     );
   }
 }
