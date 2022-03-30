@@ -1,12 +1,14 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/Screens/test.dart';
-import 'package:mobile/Screens/welcome.dart';
+import 'package:mobile/Services/authentication.dart';
 import 'package:mobile/navbar.dart';
 import 'package:flutter/services.dart';
 import 'package:mobile/utils/colors.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
 
 void turnBlue() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -52,13 +54,7 @@ class _FirebaseInitState extends State<FirebaseInit> {
         }
 
         if (snapshot.connectionState == ConnectionState.done) {
-          return AnnotatedRegion<SystemUiOverlayStyle>(
-              value: SystemUiOverlayStyle(
-                  systemNavigationBarColor: AppColors.background,
-                  systemNavigationBarIconBrightness: Brightness.dark,
-                  statusBarIconBrightness: Brightness.dark,
-                  statusBarColor: Colors.transparent),
-              child: MyApp());
+          return const MyApp();
         }
 
         return MaterialApp(
@@ -78,19 +74,22 @@ class _FirebaseInitState extends State<FirebaseInit> {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-  static FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(analytics: analytics);
+  static FirebaseAnalyticsObserver observer =
+      FirebaseAnalyticsObserver(analytics: analytics);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home:
-          NavBar(analytics:analytics, observer:observer), // CHILD SHOULD BE CHANGED TO LOGIN, THEN NAVBAR IF USER IS LOGGED IN
-      routes: {
-        '/NavBar': (context) => NavBar(analytics:analytics, observer:observer),
-        '/TestPage': (context) => Test(),
-        '/Welcome':(context) => Welcome(analytics:analytics, observer:observer),
-      },
-      initialRoute: '/Welcome',
+    return StreamProvider<User?>.value(
+      value: AuthService().user,
+      initialData: null,
+      child: MaterialApp(
+        routes: {
+          '/NavBar': (context) =>
+              NavBar(analytics: analytics, observer: observer),
+          '/TestPage': (context) => const Test(),
+        },
+        initialRoute: '/NavBar',
+      ),
     );
   }
 }

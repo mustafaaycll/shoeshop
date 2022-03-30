@@ -45,7 +45,7 @@ class _ResetPassState extends State<ResetPass> {
     print("Reset Password!");
   }
 
-  Future<void> showAlertDialog(String title, String message, rName) async {
+  Future<void> showAlertDialog(String title, String message) async {
     bool isiOS = Platform.isIOS;
 
     return showDialog(
@@ -62,7 +62,6 @@ class _ResetPassState extends State<ResetPass> {
                 TextButton(
                     onPressed: () {
                       Navigator.of(context).pop();
-                      Navigator.pushNamed(context, rName);
                     },
                     child: Text('OK')),
               ],
@@ -77,7 +76,6 @@ class _ResetPassState extends State<ResetPass> {
                 TextButton(
                     onPressed: () {
                       Navigator.of(context).pop();
-                      Navigator.pushNamed(context, rName);
                     },
                     child: Text('OK')),
               ],
@@ -90,8 +88,8 @@ class _ResetPassState extends State<ResetPass> {
     try {
       auth.sendPasswordResetEmail(email: m);
       _setLogEvent("Resetting Password", m);
-      showAlertDialog("Email Sent!", "Please check your inbox to $m",
-          Login(analytics: analytics, observer: observer));
+      await showAlertDialog("Email Sent!", "Please check your inbox to $m");
+      Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
       print(e.code.toString());
       if (e.code == "auth/user-not-found") {
@@ -108,103 +106,149 @@ class _ResetPassState extends State<ResetPass> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_outlined),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        title: Text("Reset Password",
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: Dimen.regularPadding,
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+      backgroundColor: AppColors.opposite_case_background,
+      body: SafeArea(
+        child: Padding(
+          padding: Dimen.regularPadding,
+          child: Center(
+            child: SingleChildScrollView(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Expanded(
-                      flex: 1,
-                      child: TextFormField(
-                          keyboardType: TextInputType.emailAddress,
-                          enableSuggestions: false,
-                          autocorrect: false,
-                          decoration: const InputDecoration(
-                            hintText: 'E-mail',
-                            //fillColor: AppColors.textFormColor,
-                            //filled: true,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          "No worries!",
+                          style: TextStyle(
+                              color: AppColors.opposite_case_title_text,
+                              fontSize: 30),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: Text(
+                              "We will send you an email to reset your password, just type it.",
+                              style: TextStyle(
+                                  color: AppColors.opposite_case_title_text)),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: TextFormField(
+                              keyboardType: TextInputType.emailAddress,
+                              enableSuggestions: false,
+                              autocorrect: false,
+                              decoration: const InputDecoration(
+                                hintText: 'E-mail',
+                                //fillColor: AppColors.textFormColor,
+                                //filled: true,
+                              ),
+                              validator: (value) {
+                                if (value == null) {
+                                  return 'E-mail field cannot be empty!';
+                                } else {
+                                  String trimmedValue = value.trim();
+                                  if (trimmedValue.isEmpty) {
+                                    return 'E-mail field cannot be empty!';
+                                  }
+                                  if (!EmailValidator.validate(trimmedValue)) {
+                                    return 'Please enter a valid email!';
+                                  }
+                                }
+                                return null;
+                              },
+                              onSaved: (value) {
+                                if (value != null) {
+                                  mail = value;
+                                }
+                              }),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: OutlinedButton(
+                            style: ShapeRules(
+                                    bg_color:
+                                        AppColors.opposite_case_filled_button,
+                                    side_color: AppColors
+                                        .opposite_case_filled_button_border)
+                                .outlined_button_style(),
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                _formKey.currentState!.save();
+                                sendEmail(mail);
+                              }
+                            },
+                            child: Padding(
+                                padding: Dimen.regularPadding,
+                                child: Text(
+                                  'Send',
+                                  style: TextStyle(
+                                      color: AppColors.filled_button_text),
+                                )),
                           ),
-                          validator: (value) {
-                            if (value == null) {
-                              return 'E-mail field cannot be empty!';
-                            } else {
-                              String trimmedValue = value.trim();
-                              if (trimmedValue.isEmpty) {
-                                return 'E-mail field cannot be empty!';
-                              }
-                              if (!EmailValidator.validate(trimmedValue)) {
-                                return 'Please enter a valid email!';
-                              }
-                            }
-                            return null;
-                          },
-                          onSaved: (value) {
-                            if (value != null) {
-                              mail = value;
-                            }
-                          }),
+                        )
+                      ],
                     ),
-                  ],
-                ),
-                SizedBox(
-                  height: 16,
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: OutlinedButton(
-                        style: ShapeRules(
-                                bg_color: AppColors.empty_button,
-                                side_color: AppColors.empty_button_border)
-                            .outlined_button_style(),
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            _formKey.currentState!.save();
-                            sendEmail(mail);
-                          }
-                        },
-                        child: Padding(
-                            padding: Dimen.regularPadding,
-                            child: Text(
-                              'Send Reset Email',
-                              style: text,
-                            )),
+                    Padding(
+                      padding: Dimen.largePadding,
+                      child: Text(
+                        _message,
+                        style: TextStyle(
+                          color: AppColors.negative_button_border,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                    )
+                    ),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.arrow_back_ios,
+                              size: 15,
+                              color: AppColors.opposite_case_body_text,
+                            ),
+                            Text(
+                              "Turn back to login screen",
+                              style: TextStyle(
+                                  color: AppColors.opposite_case_body_text),
+                            ),
+                          ],
+                        )),
+                    SizedBox(
+                      height: 30,
+                    ),
                   ],
                 ),
-                Padding(
-                  padding: Dimen.largePadding,
-                  child: Text(
-                    _message,
-                    style: TextStyle(
-                      color: AppColors.negative_button_border,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
         ),
