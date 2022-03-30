@@ -1,19 +1,26 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/Screens/test.dart';
+import 'package:mobile/Services/authentication.dart';
 import 'package:mobile/utils/colors.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 import '../utils/shapes_dimensions.dart';
 
 class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
-
+  const Home({Key? key, required this.analytics, required this.observer})
+      : super(key: key);
+  final FirebaseAnalytics analytics;
+  final FirebaseAnalyticsObserver observer;
   @override
   State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
+  static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+  static FirebaseAnalyticsObserver observer =
+      FirebaseAnalyticsObserver(analytics: analytics);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,7 +74,9 @@ class _HomeState extends State<Home> {
                   bg_color: AppColors.negative_button,
                   side_color: AppColors.negative_button_border,
                 ).outlined_button_style(),
-                onPressed: () async {},
+                onPressed: () async {
+                  AuthService().signOut();
+                },
                 child: Text(
                   "Log Out",
                   style: TextStyle(color: AppColors.filled_button_text),
