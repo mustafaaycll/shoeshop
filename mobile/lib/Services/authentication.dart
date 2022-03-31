@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import "package:firebase_auth/firebase_auth.dart";
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:mobile/Services/database.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -20,6 +21,15 @@ class AuthService {
     try {
       UserCredential result = await _auth.signInAnonymously();
       User user = result.user!;
+      final snapshot = await FirebaseFirestore.instance
+          .collection('customers')
+          .doc(user.uid)
+          .get();
+
+      if (snapshot == null || !snapshot.exists) {
+        await DatabaseService(id: user.uid, ids: [])
+            .addCustomer('Anonymous', 'No Email', 'anonymous');
+      }
       return _userFromFirebase(user);
     } catch (e) {
       return null;
@@ -58,6 +68,15 @@ class AuthService {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       User user = result.user!;
+      final snapshot = await FirebaseFirestore.instance
+          .collection('customers')
+          .doc(user.uid)
+          .get();
+
+      if (snapshot == null || !snapshot.exists) {
+        await DatabaseService(id: user.uid, ids: [])
+            .addCustomer(user.displayName, user.email, 'manual');
+      }
       return 'Signed Up';
     } catch (e) {
       print(e.toString());
@@ -79,6 +98,16 @@ class AuthService {
     UserCredential result =
         await FirebaseAuth.instance.signInWithCredential(credential);
     User? user = result.user;
+
+    final snapshot = await FirebaseFirestore.instance
+        .collection('customers')
+        .doc(user!.uid)
+        .get();
+
+    if (snapshot == null || !snapshot.exists) {
+      await DatabaseService(id: user.uid, ids: [])
+          .addCustomer(user.displayName, user.email, 'google');
+    }
 
     return _userFromFirebase(user);
   }
