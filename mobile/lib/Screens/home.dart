@@ -42,7 +42,7 @@ class _HomeState extends State<Home> {
             color: AppColors.background,
           ));
     } else {
-      return Animations().scaffoldLoadingScreen('ACCOUNT');
+      return Animations().scaffoldLoadingScreen('HOME');
     }
   }
 }
