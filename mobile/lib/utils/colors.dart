@@ -33,4 +33,7 @@ class AppColors {
   static final Color background = Color(0xfff5f3f5);
   static final Color opposite_case_background = Color(0xff1b264f);
   static final Color circleAvatarBackground = Color(0xff576ca8);
+
+  static final Color spinner = Color(0xff1b264f);
+  static final Color opposite_case_spinner = Color(0xfff5f3f5);
 }

@@ -95,10 +95,14 @@ class _SignupState extends State<Signup> {
                               keyboardType: TextInputType.emailAddress,
                               enableSuggestions: false,
                               autocorrect: false,
-                              decoration: const InputDecoration(
+                              decoration: InputDecoration(
+                                icon: Icon(
+                                  CupertinoIcons.mail,
+                                  color: AppColors.background,
+                                ),
                                 hintText: 'E-mail',
-                                //fillColor: AppColors.textFormColor,
-                                //filled: true,
+                                fillColor: AppColors.background,
+                                filled: true,
                               ),
                               validator: (value) {
                                 if (value == null) {
@@ -134,10 +138,14 @@ class _SignupState extends State<Signup> {
                               keyboardType: TextInputType.text,
                               enableSuggestions: false,
                               autocorrect: false,
-                              decoration: const InputDecoration(
+                              decoration: InputDecoration(
+                                icon: Icon(
+                                  CupertinoIcons.person,
+                                  color: AppColors.background,
+                                ),
                                 hintText: 'Full Name',
-                                //fillColor: AppColors.textFormColor,
-                                //filled: true,
+                                fillColor: AppColors.background,
+                                filled: true,
                               ),
                               validator: (value) {
                                 if (value == null) {
@@ -174,10 +182,14 @@ class _SignupState extends State<Signup> {
                                 obscureText: true,
                                 enableSuggestions: false,
                                 autocorrect: false,
-                                decoration: const InputDecoration(
+                                decoration: InputDecoration(
+                                  icon: Icon(
+                                    Icons.key,
+                                    color: AppColors.background,
+                                  ),
                                   hintText: 'Password',
-                                  //fillColor: AppColors.textFormColor,
-                                  //filled: true,
+                                  fillColor: AppColors.background,
+                                  filled: true,
                                 ),
                                 validator: (value) {
                                   if (value == null) {
@@ -214,10 +226,14 @@ class _SignupState extends State<Signup> {
                               obscureText: true,
                               enableSuggestions: false,
                               autocorrect: false,
-                              decoration: const InputDecoration(
+                              decoration: InputDecoration(
+                                icon: Icon(
+                                  Icons.key,
+                                  color: AppColors.background,
+                                ),
                                 hintText: 'Confirm Password',
-                                //fillColor: AppColors.textFormColor,
-                                //filled: true,
+                                fillColor: AppColors.background,
+                                filled: true,
                               ),
                               validator: (value) {
                                 if (value == null) {

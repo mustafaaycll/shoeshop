@@ -164,10 +164,14 @@ class _LoginState extends State<Login> {
                                   keyboardType: TextInputType.emailAddress,
                                   enableSuggestions: false,
                                   autocorrect: false,
-                                  decoration: const InputDecoration(
+                                  decoration: InputDecoration(
+                                    icon: Icon(
+                                      CupertinoIcons.mail,
+                                      color: AppColors.background,
+                                    ),
                                     hintText: 'E-mail',
-                                    //fillColor: AppColors.background,
-                                    //filled: true,
+                                    fillColor: AppColors.background,
+                                    filled: true,
                                   ),
                                   validator: (value) {
                                     if (value == null) {
@@ -205,10 +209,14 @@ class _LoginState extends State<Login> {
                                     obscureText: true,
                                     enableSuggestions: false,
                                     autocorrect: false,
-                                    decoration: const InputDecoration(
+                                    decoration: InputDecoration(
+                                      icon: Icon(
+                                        Icons.key,
+                                        color: AppColors.background,
+                                      ),
                                       hintText: 'Password',
-                                      //fillColor: AppColors.textFormColor,
-                                      //filled: true,
+                                      fillColor: AppColors.background,
+                                      filled: true,
                                     ),
                                     validator: (value) {
                                       if (value == null) {
