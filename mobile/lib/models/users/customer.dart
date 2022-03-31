@@ -1,4 +1,4 @@
-class customer {
+class Customer {
   final String id;
   final String fullname;
   final String email;
@@ -8,10 +8,10 @@ class customer {
   final List<dynamic> amounts;
   final List<dynamic> basket;
   final List<dynamic> prev_orders;
-  final List<dynamic> tax_id;
+  final String tax_id;
   final List<dynamic> credit_cards;
 
-  customer(
+  Customer(
       {required this.id,
       required this.fullname,
       required this.email,

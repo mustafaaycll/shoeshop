@@ -11,8 +11,8 @@ class DatabaseService {
   final CollectionReference customerCollection =
       FirebaseFirestore.instance.collection('customers');
 
-  customer _customerDataFromSnapshot(DocumentSnapshot snapshot) {
-    return customer(
+  Customer _customerDataFromSnapshot(DocumentSnapshot snapshot) {
+    return Customer(
       id: id,
       fullname: snapshot.get('fullname'),
       email: snapshot.get('email'),
@@ -27,7 +27,7 @@ class DatabaseService {
     );
   }
 
-  Stream<customer> get customerData {
+  Stream<Customer> get customerData {
     return customerCollection
         .doc(id)
         .snapshots()

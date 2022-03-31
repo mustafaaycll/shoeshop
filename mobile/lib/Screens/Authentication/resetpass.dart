@@ -155,10 +155,14 @@ class _ResetPassState extends State<ResetPass> {
                               keyboardType: TextInputType.emailAddress,
                               enableSuggestions: false,
                               autocorrect: false,
-                              decoration: const InputDecoration(
+                              decoration: InputDecoration(
+                                icon: Icon(
+                                  CupertinoIcons.mail,
+                                  color: AppColors.background,
+                                ),
                                 hintText: 'E-mail',
-                                //fillColor: AppColors.textFormColor,
-                                //filled: true,
+                                fillColor: AppColors.background,
+                                filled: true,
                               ),
                               validator: (value) {
                                 if (value == null) {
