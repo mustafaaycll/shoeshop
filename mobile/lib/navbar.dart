@@ -2,6 +2,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:icon_badge/icon_badge.dart';
 import 'package:mobile/Screens/Authentication/login.dart';
 import 'package:mobile/Screens/account.dart';
 import 'package:mobile/Screens/cart.dart';
@@ -37,7 +38,7 @@ class _NavBarState extends State<NavBar> {
     ];
   }
 
-  List<PersistentBottomNavBarItem> _navBarsItems() {
+  List<PersistentBottomNavBarItem> _navBarsItems(List<dynamic>? basket) {
     return [
       PersistentBottomNavBarItem(
         icon: Icon(CupertinoIcons.home),
@@ -46,7 +47,13 @@ class _NavBarState extends State<NavBar> {
         inactiveColorPrimary: Color(0xff576ca8),
       ),
       PersistentBottomNavBarItem(
-        icon: Icon(CupertinoIcons.cart),
+        icon: IconBadge(
+          icon: Icon(CupertinoIcons.cart),
+          itemCount: basket == null ? 0 : basket.length,
+          badgeColor: AppColors.negative_button,
+          itemColor: AppColors.opposite_case_title_text,
+          hideZero: true,
+        ),
         title: ("Cart"),
         activeColorPrimary: Color(0xff1b264f),
         inactiveColorPrimary: Color(0xff576ca8),
@@ -85,7 +92,7 @@ class _NavBarState extends State<NavBar> {
               context,
               controller: _controller,
               screens: _buildScreens(),
-              items: _navBarsItems(),
+              items: _navBarsItems(Provider.of<Customer?>(context)?.basket),
               confineInSafeArea: true,
               backgroundColor: Color(0xfff5f3f5),
               handleAndroidBackButtonPress: true,
