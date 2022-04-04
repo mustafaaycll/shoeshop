@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -76,7 +78,7 @@ class _HomeState extends State<Home> {
                               child: allSellers != null
                                   ? ListView.builder(
                                       scrollDirection: Axis.horizontal,
-                                      itemCount: allSellers!.length,
+                                      itemCount: allSellers.length,
                                       itemBuilder: (context, i) {
                                         return Row(
                                           children: [
