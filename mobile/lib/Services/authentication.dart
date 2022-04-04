@@ -75,7 +75,7 @@ class AuthService {
 
       if (snapshot == null || !snapshot.exists) {
         await DatabaseService(id: user.uid, ids: [])
-            .addCustomer(user.displayName, user.email, 'manual');
+            .addCustomer(fullname, email, 'manual');
       }
       return 'Signed Up';
     } catch (e) {

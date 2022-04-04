@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mobile/Screens/Authentication/login.dart';
+import 'package:mobile/Services/database.dart';
 import 'package:mobile/utils/styles.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -79,12 +80,6 @@ class _ChangeNameState extends State<ChangeName> {
             );
           }
         });
-  }
-
-  Future<void> changeName(String name, String id) async {
-    print(name);
-    print(id);
-    FirebaseFirestore.instance.collection('customers').doc(id).update({'fullname': name});
   }
 
   @override
@@ -184,10 +179,11 @@ class _ChangeNameState extends State<ChangeName> {
                                     side_color: AppColors
                                         .opposite_case_filled_button_border)
                                 .outlined_button_style(),
-                            onPressed: () {
+                            onPressed: () async {
                               if (_formKey.currentState!.validate()) {
                                 _formKey.currentState!.save();
-                                changeName(mail, customer!.id);
+                                DatabaseService(id: customer!.id, ids: [])
+                                    .changeName(mail);
                                 //FocusManager.instance.primaryFocus?.unfocus();
                                 Navigator.pop(context);
                               }
