@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/animation.dart';
 import 'package:mobile/models/users/customer.dart';
+import 'package:mobile/models/users/seller.dart';
+
+import '../models/products/product.dart';
 
 class DatabaseService {
   final String id;
@@ -10,6 +13,10 @@ class DatabaseService {
 
   final CollectionReference customerCollection =
       FirebaseFirestore.instance.collection('customers');
+  final CollectionReference productCollection =
+      FirebaseFirestore.instance.collection('products');
+  final CollectionReference sellerCollection =
+      FirebaseFirestore.instance.collection('sellers');
 
   Customer _customerDataFromSnapshot(DocumentSnapshot snapshot) {
     return Customer(
@@ -55,5 +62,92 @@ class DatabaseService {
         .then((value) => print('Customer Added'))
         .catchError(
             (error) => print('Adding customer failed ${error.toString()}'));
+  }
+
+  Product _productDataFromSnapshot(DocumentSnapshot snapshot) {
+    return Product(
+        id: id,
+        name: snapshot.get("name"),
+        model: snapshot.get("model"),
+        category: snapshot.get("category"),
+        color: snapshot.get("color"),
+        description: snapshot.get("description"),
+        sex: snapshot.get("sex"),
+        price: snapshot.get("price"),
+        quantity: snapshot.get("quantity"),
+        discount_rate: snapshot.get("discount_rate"),
+        warranty: snapshot.get("warranty"),
+        comments: snapshot.get("comments"),
+        sizes: snapshot.get("sizes"));
+  }
+
+  List<Product> _productListFromSnapshot_specified(QuerySnapshot snapshot) {
+    return List<Product>.from(snapshot.docs
+        .map((doc) {
+          if (ids.contains(doc.id)) {
+            return Product(
+                id: doc.id,
+                name: doc.get("name"),
+                model: doc.get("model"),
+                category: doc.get("category"),
+                color: doc.get("color"),
+                description: doc.get("description"),
+                sex: doc.get("sex"),
+                price: doc.get("price"),
+                quantity: doc.get("quantity"),
+                discount_rate: doc.get("discount_rate"),
+                warranty: doc.get("warranty"),
+                comments: doc.get("comments"),
+                sizes: doc.get("sizes"));
+          }
+        })
+        .toList()
+        .where((element) => element != null));
+  }
+
+  List<Product> _productListFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.docs.map((doc) {
+      return Product(
+          id: doc.get("id"),
+          name: doc.get("name"),
+          model: doc.get("model"),
+          category: doc.get("category"),
+          color: doc.get("color"),
+          description: doc.get("description"),
+          sex: doc.get("sex"),
+          price: doc.get("price"),
+          quantity: doc.get("quantity"),
+          discount_rate: doc.get("discount_rate"),
+          warranty: doc.get("warranty"),
+          comments: doc.get("comments"),
+          sizes: doc.get("sizes"));
+    }).toList();
+  }
+
+  Stream<Product> get productData {
+    return productCollection.doc(id).snapshots().map(_productDataFromSnapshot);
+  }
+
+  Stream<List<Product>> get specifiedProducts {
+    return productCollection
+        .snapshots()
+        .map(_productListFromSnapshot_specified);
+  }
+
+  Stream<List<Product>> get allProducts {
+    return productCollection.snapshots().map(_productListFromSnapshot);
+  }
+
+  Seller _sellerDataFromSnapshot(DocumentSnapshot snapshot) {
+    return Seller(
+        id: id,
+        logo: snapshot.get("logo"),
+        name: snapshot.get("name"),
+        products: snapshot.get("products"),
+        ratings: snapshot.get("ratings"));
+  }
+
+  Stream<Seller> get sellerData {
+    return sellerCollection.doc(id).snapshots().map(_sellerDataFromSnapshot);
   }
 }
