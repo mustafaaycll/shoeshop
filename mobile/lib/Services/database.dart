@@ -80,12 +80,13 @@ class DatabaseService {
         color: snapshot.get("color"),
         description: snapshot.get("description"),
         sex: snapshot.get("sex"),
-        price: snapshot.get("price"),
+        price: double.parse(snapshot.get("price")),
         quantity: snapshot.get("quantity"),
         discount_rate: snapshot.get("discount_rate"),
         warranty: snapshot.get("warranty"),
         comments: snapshot.get("comments"),
-        sizes: snapshot.get("sizes"));
+        sizes: snapshot.get("sizes"),
+        photos: snapshot.get("photos"));
   }
 
   List<Product> _productListFromSnapshot_specified(QuerySnapshot snapshot) {
@@ -100,12 +101,13 @@ class DatabaseService {
                 color: doc.get("color"),
                 description: doc.get("description"),
                 sex: doc.get("sex"),
-                price: doc.get("price"),
+                price: double.parse(doc.get("price")),
                 quantity: doc.get("quantity"),
                 discount_rate: doc.get("discount_rate"),
                 warranty: doc.get("warranty"),
                 comments: doc.get("comments"),
-                sizes: doc.get("sizes"));
+                sizes: doc.get("sizes"),
+                photos: doc.get("photos"));
           }
         })
         .toList()
@@ -122,13 +124,37 @@ class DatabaseService {
           color: doc.get("color"),
           description: doc.get("description"),
           sex: doc.get("sex"),
-          price: doc.get("price"),
+          price: double.parse(doc.get("price")),
           quantity: doc.get("quantity"),
           discount_rate: doc.get("discount_rate"),
           warranty: doc.get("warranty"),
           comments: doc.get("comments"),
-          sizes: doc.get("sizes"));
+          sizes: doc.get("sizes"),
+          photos: doc.get("photos"));
     }).toList();
+  }
+
+  List<Product> _discountedProductListFromSnapshot(QuerySnapshot snapshot) {
+    return List<Product>.from(snapshot.docs
+        .map((doc) {
+          return Product(
+              id: doc.id,
+              name: doc.get("name"),
+              model: doc.get("model"),
+              category: doc.get("category"),
+              color: doc.get("color"),
+              description: doc.get("description"),
+              sex: doc.get("sex"),
+              price: double.parse(doc.get("price")),
+              quantity: doc.get("quantity"),
+              discount_rate: doc.get("discount_rate"),
+              warranty: doc.get("warranty"),
+              comments: doc.get("comments"),
+              sizes: doc.get("sizes"),
+              photos: doc.get("photos"));
+        })
+        .toList()
+        .where((element) => element.discount_rate != 0));
   }
 
   Stream<Product> get productData {
@@ -143,6 +169,12 @@ class DatabaseService {
 
   Stream<List<Product>> get allProducts {
     return productCollection.snapshots().map(_productListFromSnapshot);
+  }
+
+  Stream<List<Product>> get discountedProducts {
+    return productCollection
+        .snapshots()
+        .map(_discountedProductListFromSnapshot);
   }
   /*--PRODUCT--PRODUCT--PRODUCT--PRODUCT--PRODUCT--PRODUCT--PRODUCT--PRODUCT--*/
 

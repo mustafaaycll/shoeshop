@@ -22,6 +22,10 @@ class Animations {
     );
   }
 
+  Widget loading() {
+    return SpinKitFadingCircle(color: AppColors.spinner, size: 50.0);
+  }
+
   Widget scaffoldLoadingScreen_opposite_case(String appbarname) {
     return Scaffold(
       backgroundColor: AppColors.opposite_case_background,

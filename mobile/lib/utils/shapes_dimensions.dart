@@ -15,6 +15,16 @@ class ShapeRules {
       side: BorderSide(color: side_color),
     );
   }
+
+  ButtonStyle outlined_button_style_no_padding() {
+    return OutlinedButton.styleFrom(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
+        backgroundColor: bg_color,
+        side: BorderSide(color: side_color),
+        padding: EdgeInsets.all(0));
+  }
 }
 
 class Dimen {
