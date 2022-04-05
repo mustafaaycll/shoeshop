@@ -173,9 +173,50 @@ class _HomeState extends State<Home> {
                             SizedBox(
                               height: 10,
                             ),
-                            SizedBox(
-                              height: 105,
-                              child: ListView(
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: OutlinedButton(
+                                      style: ShapeRules(
+                                              bg_color: AppColors.empty_button,
+                                              side_color: Colors.transparent)
+                                          .outlined_button_style(),
+                                      onPressed: () {},
+                                      child: Text("Men's",
+                                          style: TextStyle(
+                                              color: AppColors.body_text))),
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Expanded(
+                                  child: OutlinedButton(
+                                      style: ShapeRules(
+                                              bg_color: AppColors.empty_button,
+                                              side_color: Colors.transparent)
+                                          .outlined_button_style(),
+                                      onPressed: () {},
+                                      child: Text("Women's",
+                                          style: TextStyle(
+                                              color: AppColors.body_text))),
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Expanded(
+                                  child: OutlinedButton(
+                                      style: ShapeRules(
+                                              bg_color: AppColors.empty_button,
+                                              side_color: Colors.transparent)
+                                          .outlined_button_style(),
+                                      onPressed: () {},
+                                      child: Text("Unisex",
+                                          style: TextStyle(
+                                              color: AppColors.body_text))),
+                                ),
+                              ],
+                            ),
+                            /*ListView(
                                 scrollDirection: Axis.horizontal,
                                 children: [
                                   OutlinedButton(
@@ -213,8 +254,7 @@ class _HomeState extends State<Home> {
                                       child: QuickObjects().namedImageBox(
                                           "Unisex", "unisex", 105, 100, false)),
                                 ],
-                              ),
-                            ),
+                              ),*/
                             SizedBox(
                               height: 10,
                             ),
@@ -252,18 +292,20 @@ class _HomeState extends State<Home> {
                                                                   .empty_button_border)
                                                           .outlined_button_style_no_padding(),
                                                       onPressed: () {},
-                                                      child: QuickObjects().productTile(
-                                                          discounteds[l],
-                                                          customer,
-                                                          allSellers!
-                                                              .where((element) =>
-                                                                  element
-                                                                      .name ==
-                                                                  discounteds[l]
-                                                                      .name)
-                                                              .toList()[0],
-                                                          250,
-                                                          190)),
+                                                      child: QuickObjects()
+                                                          .discountedProductTile_listView(
+                                                              discounteds[l],
+                                                              customer,
+                                                              allSellers!
+                                                                  .where((element) =>
+                                                                      element
+                                                                          .name ==
+                                                                      discounteds[
+                                                                              l]
+                                                                          .name)
+                                                                  .toList()[0],
+                                                              250,
+                                                              190)),
                                                   SizedBox(
                                                     width: 10,
                                                   )

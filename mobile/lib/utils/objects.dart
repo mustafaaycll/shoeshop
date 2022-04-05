@@ -5,6 +5,7 @@ import 'package:mobile/models/users/customer.dart';
 import 'package:mobile/models/users/seller.dart';
 import 'package:mobile/utils/colors.dart';
 import 'package:mobile/utils/shapes_dimensions.dart';
+import 'package:mobile/utils/styles.dart';
 
 class QuickObjects {
   String getInitials(String text) {
@@ -71,7 +72,7 @@ class QuickObjects {
     );
   }
 
-  Widget productTile(
+  Widget discountedProductTile_listView(
       Product product, Customer customer, Seller seller, double h, double w) {
     return Container(
       height: h,
@@ -87,35 +88,71 @@ class QuickObjects {
                       fit: BoxFit.cover,
                       image: NetworkImage(product.photos[0]))),
             ),
-            customer.fav_products.contains(product.id)
-                ? Positioned(
-                    left: w - 30 - 20,
-                    child: IconButton(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                SizedBox(
+                  width: 8,
+                ),
+                Container(
+                  height: 40,
+                  width: 40,
+                  child: Image.network(seller.logo),
+                ),
+                Expanded(
+                  child: Container(),
+                ),
+                customer.fav_products.contains(product.id)
+                    ? IconButton(
                         onPressed: () {},
                         icon: Icon(
                           CupertinoIcons.heart_fill,
                           color: AppColors.negative_button,
                           size: 30,
-                        )),
-                  )
-                : Positioned(
-                    left: w - 30 - 20,
-                    child: IconButton(
+                        ))
+                    : IconButton(
                         onPressed: () {},
                         icon: Icon(
                           CupertinoIcons.heart,
                           color: AppColors.negative_button,
                           size: 30,
                         )),
-                  ),
+                SizedBox(
+                  width: 5,
+                ),
+              ],
+            ),
             Positioned(
-                left: 15,
-                top: 5,
+                left: 8,
+                top: (3 * h / 5) - 20,
                 child: Container(
-                  height: 40,
+                  height: 20,
                   width: 40,
-                  child: Image.network(seller.logo),
-                ))
+                  child: Center(
+                    child: Text(
+                      "${product.discount_rate}%",
+                      style: TextStyle(color: AppColors.background),
+                    ),
+                  ),
+                  color: AppColors.negative_button,
+                )),
+            product.quantity <= 5
+                ? Positioned(
+                    left: 50,
+                    top: (3 * h / 5) - 20,
+                    child: Container(
+                      height: 20,
+                      width: 80,
+                      child: Center(
+                        child: Text(
+                          "Last ${product.quantity} in stock",
+                          style: TextStyle(
+                              color: AppColors.background, fontSize: 11),
+                        ),
+                      ),
+                      color: AppColors.negative_button,
+                    ))
+                : Container(),
           ]),
           Container(
             width: w,
@@ -155,6 +192,43 @@ class QuickObjects {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("${product.price.toStringAsFixed(2)} ₺",
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  decoration: TextDecoration.lineThrough,
+                                  color: AppColors.secondary_text)),
+                          Text(
+                              "${(product.price - (product.price * product.discount_rate / 100)).toStringAsFixed(2)} ₺",
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  color: AppColors.negative_button)),
+                        ],
+                      ),
+                      Expanded(child: Container()),
+                      customer.basket.contains(product.id)
+                          ? IconButton(
+                              onPressed: () {},
+                              icon: Icon(
+                                CupertinoIcons.cart_fill_badge_minus,
+                                color: AppColors.active_icon,
+                                size: 30,
+                              ))
+                          : IconButton(
+                              onPressed: () {},
+                              icon: Icon(
+                                CupertinoIcons.cart_badge_plus,
+                                color: AppColors.active_icon,
+                                size: 30,
+                              ))
+                    ],
+                  )
                 ],
               ),
             ),
