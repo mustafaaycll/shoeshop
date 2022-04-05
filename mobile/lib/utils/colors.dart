@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AppColors {
@@ -24,6 +25,7 @@ class AppColors {
   static final Color body_text = Color(0xff302b27);
   static final Color filled_button_text = Color(0xfff5f3f5);
   static final Color empty_button_text = Color(0xff1b264f);
+  static final Color secondary_text = Color(0xff576ca8);
 
   static final Color opposite_case_title_text = Color(0xfff5f3f5);
   static final Color opposite_case_body_text = Color(0xfff5f3f5);
@@ -36,4 +38,6 @@ class AppColors {
 
   static final Color spinner = Color(0xff1b264f);
   static final Color opposite_case_spinner = Color(0xfff5f3f5);
+
+  static final Color system_gray = CupertinoColors.systemGrey;
 }

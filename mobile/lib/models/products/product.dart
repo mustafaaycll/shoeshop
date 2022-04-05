@@ -12,6 +12,7 @@ class Product {
   final bool warranty;
   final List<dynamic> comments;
   final List<dynamic> sizes;
+  final List<dynamic> photos;
 
   Product({
     required this.id,
@@ -27,5 +28,6 @@ class Product {
     required this.warranty,
     required this.comments,
     required this.sizes,
+    required this.photos,
   });
 }
