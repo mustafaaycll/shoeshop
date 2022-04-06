@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/Screens/home.dart';
+import 'package:mobile/Screens/home/home.dart';
 import 'package:mobile/Services/authentication.dart';
 import 'package:mobile/utils/colors.dart';
 import 'package:mobile/utils/shapes_dimensions.dart';

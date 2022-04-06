@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:mobile/Screens/Authentication/signup.dart';
-import 'package:mobile/Screens/home.dart';
+import 'package:mobile/Screens/home/home.dart';
 import 'package:mobile/navbar.dart';
 import 'package:mobile/utils/colors.dart';
 import 'package:mobile/utils/shapes_dimensions.dart';

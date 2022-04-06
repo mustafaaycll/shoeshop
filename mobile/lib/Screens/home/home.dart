@@ -3,7 +3,6 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile/Screens/test.dart';
 import 'package:mobile/Services/authentication.dart';
 import 'package:mobile/Services/database.dart';
 import 'package:mobile/models/products/product.dart';
@@ -14,8 +13,9 @@ import 'package:mobile/utils/objects.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 
-import '../models/users/customer.dart';
-import '../utils/shapes_dimensions.dart';
+import '../../models/users/customer.dart';
+import '../../models/users/customer.dart';
+import '../../utils/shapes_dimensions.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key, required this.analytics, required this.observer})
