@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:mobile/models/products/product.dart';
 import 'package:mobile/models/users/customer.dart';
 import 'package:mobile/models/users/seller.dart';
+import 'package:mobile/utils/animations.dart';
 import 'package:mobile/utils/colors.dart';
 import 'package:mobile/utils/shapes_dimensions.dart';
 import 'package:mobile/utils/styles.dart';
@@ -56,7 +58,16 @@ class QuickObjects {
                   width: w,
                   height: (h - 5) / 2,
                   child: network
-                      ? Image.network(src)
+                      ? Image.network(
+                          src,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) {
+                              return child;
+                            } else {
+                              return Animations().loading();
+                            }
+                          },
+                        )
                       : Image.asset('assets/category_pictures/${src}.png')),
               SizedBox(
                 height: (h - 5) / 11,
@@ -97,7 +108,9 @@ class QuickObjects {
                 Container(
                   height: 40,
                   width: 40,
-                  child: Image.network(seller.logo),
+                  child: Image.network(
+                    seller.logo,
+                  ),
                 ),
                 Expanded(
                   child: Container(),
@@ -238,12 +251,10 @@ class QuickObjects {
     );
   }
 
-  Widget productTile_gridView(
-      Product product, Customer customer, Seller seller, Object? obj) {
-    Size size = obj as Size;
-    print(size.height);
-    double h = size.height / 2;
-    double w = size.width / 2;
+  Widget productTile_gridView(Product product, Customer customer, Seller seller,
+      double height, double width) {
+    double h = height / 2;
+    double w = width / 2;
     return Container(
       height: h,
       width: w,
@@ -253,7 +264,7 @@ class QuickObjects {
             children: [
               Container(
                 width: w,
-                height: 2 * h / 5,
+                height: 6 * h / 12,
                 decoration: BoxDecoration(
                     image: DecorationImage(
                         fit: BoxFit.cover,
@@ -262,14 +273,6 @@ class QuickObjects {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  SizedBox(
-                    width: 8,
-                  ),
-                  Container(
-                    height: 40,
-                    width: 40,
-                    child: Image.network(seller.logo),
-                  ),
                   Expanded(
                     child: Container(),
                   ),
@@ -294,36 +297,76 @@ class QuickObjects {
                 ],
               ),
               Positioned(
-                  left: 8,
-                  top: (3 * h / 5) - 20,
-                  child: Container(
-                    height: 20,
-                    width: 40,
-                    child: Center(
-                      child: Text(
-                        "${product.discount_rate}%",
-                        style: TextStyle(color: AppColors.background),
-                      ),
-                    ),
-                    color: AppColors.negative_button,
-                  )),
-              product.quantity <= 5
-                  ? Positioned(
-                      left: 50,
-                      top: (3 * h / 5) - 20,
-                      child: Container(
-                        height: 20,
-                        width: 80,
-                        child: Center(
-                          child: Text(
-                            "Last ${product.quantity} in stock",
-                            style: TextStyle(
-                                color: AppColors.background, fontSize: 11),
+                left: 8,
+                top: (6 * h / 12) - 20,
+                child: product.discount_rate != 0 && product.quantity < 5
+                    ? Row(
+                        children: [
+                          Container(
+                            height: 20,
+                            width: 40,
+                            child: Center(
+                              child: Text(
+                                "${product.discount_rate}%",
+                                style: TextStyle(color: AppColors.background),
+                              ),
+                            ),
+                            color: AppColors.negative_button,
                           ),
-                        ),
-                        color: AppColors.negative_button,
-                      ))
-                  : Container(),
+                          SizedBox(
+                            width: 2,
+                          ),
+                          Container(
+                            height: 20,
+                            width: 80,
+                            child: Center(
+                              child: Text(
+                                "Last ${product.quantity} in stock",
+                                style: TextStyle(
+                                    color: AppColors.background, fontSize: 11),
+                              ),
+                            ),
+                            color: AppColors.negative_button,
+                          )
+                        ],
+                      )
+                    : product.discount_rate != 0 && product.quantity >= 5
+                        ? Row(
+                            children: [
+                              Container(
+                                height: 20,
+                                width: 40,
+                                child: Center(
+                                  child: Text(
+                                    "${product.discount_rate}%",
+                                    style:
+                                        TextStyle(color: AppColors.background),
+                                  ),
+                                ),
+                                color: AppColors.negative_button,
+                              )
+                            ],
+                          )
+                        : product.discount_rate == 0 && product.quantity < 5
+                            ? Row(
+                                children: [
+                                  Container(
+                                    height: 20,
+                                    width: 80,
+                                    child: Center(
+                                      child: Text(
+                                        "Last ${product.quantity} in stock",
+                                        style: TextStyle(
+                                            color: AppColors.background,
+                                            fontSize: 11),
+                                      ),
+                                    ),
+                                    color: AppColors.negative_button,
+                                  )
+                                ],
+                              )
+                            : Container(),
+              ),
             ],
           ),
           Container(
@@ -356,51 +399,51 @@ class QuickObjects {
                   SizedBox(
                     height: 3,
                   ),
-                  Expanded(
-                    child: Text(
-                      product.sex + "'s " + product.category + " shoe",
-                      style:
-                          TextStyle(color: AppColors.system_gray, fontSize: 12),
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                  Text(
+                    product.sex + "'s " + product.category + " shoe",
+                    style:
+                        TextStyle(color: AppColors.system_gray, fontSize: 12),
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("${product.price.toStringAsFixed(2)} ₺",
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  decoration: TextDecoration.lineThrough,
-                                  color: AppColors.secondary_text)),
-                          Text(
-                              "${(product.price - (product.price * product.discount_rate / 100)).toStringAsFixed(2)} ₺",
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  color: AppColors.negative_button)),
-                        ],
-                      ),
-                      Expanded(child: Container()),
-                      customer.basket.contains(product.id)
-                          ? IconButton(
-                              onPressed: () {},
-                              icon: Icon(
-                                CupertinoIcons.cart_fill_badge_minus,
-                                color: AppColors.active_icon,
-                                size: 30,
-                              ))
-                          : IconButton(
-                              onPressed: () {},
-                              icon: Icon(
-                                CupertinoIcons.cart_badge_plus,
-                                color: AppColors.active_icon,
-                                size: 30,
-                              ))
-                    ],
-                  )
+                  SizedBox(height: 3),
+                  product.discount_rate != 0
+                      ? Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("${product.price.toStringAsFixed(2)} ₺",
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        decoration: TextDecoration.lineThrough,
+                                        color: AppColors.secondary_text)),
+                                Text(
+                                    "${(product.price - (product.price * product.discount_rate / 100)).toStringAsFixed(2)} ₺",
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        color: AppColors.negative_button)),
+                              ],
+                            ),
+                          ],
+                        )
+                      : Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("${(product.price).toStringAsFixed(2)} ₺",
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        color: AppColors.title_text)),
+                              ],
+                            ),
+                          ],
+                        )
                 ],
               ),
             ),
