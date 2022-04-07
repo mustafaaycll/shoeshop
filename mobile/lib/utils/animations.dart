@@ -45,6 +45,15 @@ class Animations {
     );
   }
 
+  Widget scaffoldLoadingScreen_without_appbar() {
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      body: Center(
+        child: SpinKitFadingCircle(color: AppColors.spinner, size: 50.0),
+      ),
+    );
+  }
+
   Widget scaffoldLoadingScreen_opposite_case_without_appbar() {
     return Scaffold(
       backgroundColor: AppColors.opposite_case_background,

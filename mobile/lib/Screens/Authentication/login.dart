@@ -26,11 +26,7 @@ import 'package:mobile/Services/authentication.dart';
 import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
-  const Login({Key? key, required this.analytics, required this.observer})
-      : super(key: key);
-
-  final FirebaseAnalytics analytics;
-  final FirebaseAnalyticsObserver observer;
+  const Login({Key? key}) : super(key: key);
 
   @override
   _LoginState createState() => _LoginState();
@@ -406,10 +402,7 @@ class _LoginState extends State<Login> {
                                             .opposite_case_filled_button_border)
                                     .outlined_button_style(),
                                 onPressed: () {
-                                  pushNewScreen(context,
-                                      screen: Signup(
-                                          analytics: analytics,
-                                          observer: observer));
+                                  pushNewScreen(context, screen: Signup());
                                 },
                                 child: Text(
                                   'Sign Up',
@@ -443,7 +436,7 @@ class _LoginState extends State<Login> {
         ),
       );
     } else {
-      return NavBar(analytics: analytics, observer: observer);
+      return NavBar();
     }
   }
 }

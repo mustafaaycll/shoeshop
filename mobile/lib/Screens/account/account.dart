@@ -13,6 +13,7 @@ import 'package:mobile/utils/animations.dart';
 import 'package:mobile/utils/colors.dart';
 import 'package:mobile/utils/objects.dart';
 import 'package:mobile/utils/shapes_dimensions.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 
 import '../../utils/styles.dart';
@@ -124,14 +125,15 @@ class _AccountState extends State<Account> {
                         child: OutlinedButton(
                       onPressed: () {
                         if (customer.method != "anonymous") {
-                          Navigator.push(
+                          pushNewScreen(context, screen: ChangeName());
+                          /*Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => ChangeName(
                                       analytics: FirebaseAnalytics.instance,
                                       observer: FirebaseAnalyticsObserver(
                                           analytics:
-                                              FirebaseAnalytics.instance))));
+                                              FirebaseAnalytics.instance))));*/
                         }
                       },
                       child: Align(

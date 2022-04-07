@@ -17,11 +17,7 @@ import 'dart:io' show Platform;
 import '../../models/users/customer.dart';
 
 class ChangeName extends StatefulWidget {
-  const ChangeName({Key? key, required this.analytics, required this.observer})
-      : super(key: key);
-
-  final FirebaseAnalytics analytics;
-  final FirebaseAnalyticsObserver observer;
+  const ChangeName({Key? key}) : super(key: key);
 
   @override
   _ChangeNameState createState() => _ChangeNameState();
@@ -33,9 +29,6 @@ class _ChangeNameState extends State<ChangeName> {
   String _message = "";
 
   FirebaseAuth auth = FirebaseAuth.instance;
-  static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-  static FirebaseAnalyticsObserver observer =
-      FirebaseAnalyticsObserver(analytics: analytics);
 
   void setMessage(String msg) {
     setState(() {

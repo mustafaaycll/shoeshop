@@ -28,9 +28,6 @@ class _ResetPassState extends State<ResetPass> {
   String _message = "";
 
   FirebaseAuth auth = FirebaseAuth.instance;
-  static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-  static FirebaseAnalyticsObserver observer =
-      FirebaseAnalyticsObserver(analytics: analytics);
 
   void setMessage(String msg) {
     setState(() {

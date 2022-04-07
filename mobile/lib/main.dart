@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -72,9 +74,6 @@ class _FirebaseInitState extends State<FirebaseInit> {
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
-  static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-  static FirebaseAnalyticsObserver observer =
-      FirebaseAnalyticsObserver(analytics: analytics);
 
   @override
   Widget build(BuildContext context) {
@@ -83,8 +82,7 @@ class MyApp extends StatelessWidget {
       initialData: null,
       child: MaterialApp(
         routes: {
-          '/NavBar': (context) =>
-              NavBar(analytics: analytics, observer: observer),
+          '/NavBar': (context) => NavBar(),
         },
         initialRoute: '/NavBar',
       ),
