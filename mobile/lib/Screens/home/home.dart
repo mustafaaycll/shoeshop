@@ -78,6 +78,7 @@ class _HomeState extends State<Home> {
                               child: allSellers != null
                                   ? ListView.builder(
                                       scrollDirection: Axis.horizontal,
+                                      itemExtent: MediaQuery.of(context).size.width*6,
                                       itemCount: allSellers.length,
                                       itemBuilder: (context, i) {
                                         return Row(

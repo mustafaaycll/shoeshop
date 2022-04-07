@@ -71,6 +71,81 @@ class QuickObjects {
       ),
     );
   }
+  Widget ImageBoxProducts(
+      String model,String name,String sex,double price, int amm,String src, double h, double w, bool network) {
+    return SizedBox(
+      height: h,
+      width: w-49,
+      child: Card(
+        color: AppColors.circleAvatarBackground,
+        elevation: 0,
+        child: Padding(
+          padding: const EdgeInsets.all(5.0),
+          
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                     network
+                      ? Image.network(src,
+                      width: 50.0,
+                      height: 50.0,
+                      )
+                      : Image.asset('assets/category_pictures/${src}.png'),
+             
+            ],
+                ),
+                SizedBox(
+                  height: h,
+                  width: 20.0,
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                   
+                    Text(
+                name,
+                style: TextStyle(color: AppColors.title_text, fontSize: 15),
+              ),
+               Text(
+                model,
+                style: TextStyle(color: AppColors.title_text, fontSize: 15),
+              ),
+              Text(
+                sex,
+                style: TextStyle(color: AppColors.title_text, fontSize: 15),
+              ),
+              
+                  ],
+                ),
+                SizedBox(
+                  height: h,
+                  width: 20.0,
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                   
+               Text(
+                '\$ '+price.toString(),
+                style: TextStyle(color: AppColors.title_text, fontSize: 15),
+              ),
+              Text(
+                'x'+amm.toString(),
+                style: TextStyle(color: AppColors.title_text, fontSize: 15),
+              ),
+              
+                  ],
+                ),                
+              ],
+          ),
+          ),
+        ),
+    );
+  }
 
   Widget discountedProductTile_listView(
       Product product, Customer customer, Seller seller, double h, double w) {
