@@ -92,7 +92,7 @@ class QuickObjects {
                      network
                       ? Image.network(src,
                       width: 50.0,
-                      height: 50.0,
+                      height: 80.0,
                       )
                       : Image.asset('assets/category_pictures/${src}.png'),
              
@@ -108,15 +108,15 @@ class QuickObjects {
                    
                     Text(
                 name,
-                style: TextStyle(color: AppColors.title_text, fontSize: 15),
+                style: TextStyle(color: AppColors.filled_button_text, fontSize: 15),
               ),
                Text(
                 model,
-                style: TextStyle(color: AppColors.title_text, fontSize: 15),
+                style: TextStyle(color: AppColors.filled_button_text, fontSize: 15),
               ),
               Text(
                 sex,
-                style: TextStyle(color: AppColors.title_text, fontSize: 15),
+                style: TextStyle(color: AppColors.filled_button_text, fontSize: 15),
               ),
               
                   ],
@@ -131,11 +131,11 @@ class QuickObjects {
                    
                Text(
                 '\$ '+price.toString(),
-                style: TextStyle(color: AppColors.title_text, fontSize: 15),
+                style: TextStyle(color: AppColors.filled_button_text, fontSize: 15),
               ),
               Text(
                 'x'+amm.toString(),
-                style: TextStyle(color: AppColors.title_text, fontSize: 15),
+                style: TextStyle(color: AppColors.filled_button_text, fontSize: 15),
               ),
               
                   ],

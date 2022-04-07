@@ -34,7 +34,7 @@ class _CartState extends State<Cart> {
       List productlist = customer.basket;
       List amountlist = customer.amounts;
       //print(productlist);
-      if (productlist != []) {
+      if (productlist[0] != "") {
         return StreamBuilder<List<Product>>(
             stream: DatabaseService(id: customer.id, ids: []).allProducts,
             builder: ((context, snapshot) {
@@ -68,7 +68,7 @@ class _CartState extends State<Cart> {
                                             scrollDirection: Axis.vertical,
                                             controller: ScrollController(),
                                             shrinkWrap: true,
-                                            itemExtent: 150.0,
+                                            itemExtent: 100.0,
                                             itemCount: productlist.length,
                                             itemBuilder: (context, i) {
                                              return  Row(
@@ -82,7 +82,9 @@ class _CartState extends State<Cart> {
                                                               side_color: Colors
                                                                   .transparent)
                                                           .outlined_button_style(),
-                                                      onPressed: () {},
+                                                      onPressed: () {
+                                                        
+                                                      },
                                                       child: QuickObjects()
                                                           .ImageBoxProducts(
                                                             specProducts[i].model,
@@ -123,7 +125,7 @@ class _CartState extends State<Cart> {
                                             'CHECKOUT',
                                             style: TextStyle(
                                               color: AppColors
-                                                  .circleAvatarBackground,
+                                                 .filled_button_text,
                                             ),
                                           )),
                                     ],
