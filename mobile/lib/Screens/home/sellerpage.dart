@@ -14,7 +14,6 @@ import 'package:mobile/utils/objects.dart';
 import 'package:mobile/utils/shapes_dimensions.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
-import 'package:after_layout/after_layout.dart';
 
 Size _getSizeOfWidget(GlobalKey key) {
   final RenderBox? renderBox =
