@@ -14,11 +14,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 
 class Signup extends StatefulWidget {
-  const Signup({Key? key, required this.analytics, required this.observer})
-      : super(key: key);
-
-  final FirebaseAnalytics analytics;
-  final FirebaseAnalyticsObserver observer;
+  const Signup({Key? key}) : super(key: key);
 
   @override
   _SignupState createState() => _SignupState();
@@ -32,9 +28,6 @@ class _SignupState extends State<Signup> {
   String _message = "";
 
   FirebaseAuth auth = FirebaseAuth.instance;
-  static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-  static FirebaseAnalyticsObserver observer =
-      FirebaseAnalyticsObserver(analytics: analytics);
 
   void setMessage(String msg) {
     setState(() {

@@ -80,7 +80,10 @@ class DatabaseService {
         color: snapshot.get("color"),
         description: snapshot.get("description"),
         sex: snapshot.get("sex"),
-        price: double.parse(snapshot.get("price")),
+        price: double.parse(snapshot.get("price")) -
+            (snapshot.get("discount_rate") *
+                double.parse(snapshot.get("price")) /
+                100),
         quantity: snapshot.get("quantity"),
         discount_rate: snapshot.get("discount_rate"),
         warranty: snapshot.get("warranty"),
@@ -101,7 +104,10 @@ class DatabaseService {
                 color: doc.get("color"),
                 description: doc.get("description"),
                 sex: doc.get("sex"),
-                price: double.parse(doc.get("price")),
+                price: double.parse(doc.get("price")) -
+                    (doc.get("discount_rate") *
+                        double.parse(doc.get("price")) /
+                        100),
                 quantity: doc.get("quantity"),
                 discount_rate: doc.get("discount_rate"),
                 warranty: doc.get("warranty"),
@@ -124,7 +130,8 @@ class DatabaseService {
           color: doc.get("color"),
           description: doc.get("description"),
           sex: doc.get("sex"),
-          price: double.parse(doc.get("price")),
+          price: double.parse(doc.get("price")) -
+              (doc.get("discount_rate") * double.parse(doc.get("price")) / 100),
           quantity: doc.get("quantity"),
           discount_rate: doc.get("discount_rate"),
           warranty: doc.get("warranty"),
@@ -145,7 +152,10 @@ class DatabaseService {
               color: doc.get("color"),
               description: doc.get("description"),
               sex: doc.get("sex"),
-              price: double.parse(doc.get("price")),
+              price: double.parse(doc.get("price")) -
+                  (doc.get("discount_rate") *
+                      double.parse(doc.get("price")) /
+                      100),
               quantity: doc.get("quantity"),
               discount_rate: doc.get("discount_rate"),
               warranty: doc.get("warranty"),

@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -16,10 +18,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
 class NavBar extends StatefulWidget {
-  const NavBar({Key? key, required this.analytics, required this.observer})
-      : super(key: key);
-  final FirebaseAnalytics analytics;
-  final FirebaseAnalyticsObserver observer;
+  const NavBar({Key? key}) : super(key: key);
   @override
   State<NavBar> createState() => _NavBarState();
 }
@@ -118,7 +117,7 @@ class _NavBarState extends State<NavBar> {
             ),
           ));
     } else {
-      return Login(analytics: analytics, observer: observer);
+      return Login();
     }
   }
 }
