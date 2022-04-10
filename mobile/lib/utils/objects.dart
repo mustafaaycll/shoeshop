@@ -212,13 +212,13 @@ class QuickObjects {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("${product.price.toStringAsFixed(2)} ₺",
+                          Text(
+                              "${((product.price * 100) / (100 - product.discount_rate)).toStringAsFixed(2)} ₺",
                               style: TextStyle(
                                   fontSize: 15,
                                   decoration: TextDecoration.lineThrough,
                                   color: AppColors.secondary_text)),
-                          Text(
-                              "${(product.price - (product.price * product.discount_rate / 100)).toStringAsFixed(2)} ₺",
+                          Text("${product.price.toStringAsFixed(2)} ₺",
                               style: TextStyle(
                                   fontSize: 20,
                                   color: AppColors.negative_button)),
@@ -414,13 +414,13 @@ class QuickObjects {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("${product.price.toStringAsFixed(2)} ₺",
+                                Text(
+                                    "${((product.price * 100) / (100 - product.discount_rate)).toStringAsFixed(2)} ₺",
                                     style: TextStyle(
                                         fontSize: 15,
                                         decoration: TextDecoration.lineThrough,
                                         color: AppColors.secondary_text)),
-                                Text(
-                                    "${(product.price - (product.price * product.discount_rate / 100)).toStringAsFixed(2)} ₺",
+                                Text("${product.price.toStringAsFixed(2)} ₺",
                                     style: TextStyle(
                                         fontSize: 20,
                                         color: AppColors.negative_button)),
