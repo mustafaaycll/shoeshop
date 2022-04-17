@@ -9,6 +9,8 @@ import 'package:mobile/utils/shapes_dimensions.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 
+import '../../Services/database.dart';
+
 class ProductPage extends StatefulWidget {
   final Seller seller;
   final Product product;
@@ -98,7 +100,15 @@ class _ProductPageState extends State<ProductPage> {
                                             customer.fav_products
                                                     .contains(product.id)
                                                 ? IconButton(
-                                                    onPressed: () {},
+                                                    onPressed: () async {
+                                                      await DatabaseService(
+                                                              id: customer.id,
+                                                              ids: [])
+                                                          .removeFromFavs(
+                                                              customer
+                                                                  .fav_products,
+                                                              product.id);
+                                                    },
                                                     icon: Icon(
                                                       CupertinoIcons.heart_fill,
                                                       color: AppColors
@@ -106,7 +116,15 @@ class _ProductPageState extends State<ProductPage> {
                                                       size: 40,
                                                     ))
                                                 : IconButton(
-                                                    onPressed: () {},
+                                                    onPressed: () async {
+                                                      await DatabaseService(
+                                                              id: customer.id,
+                                                              ids: [])
+                                                          .addToFavs(
+                                                              customer
+                                                                  .fav_products,
+                                                              product.id);
+                                                    },
                                                     icon: Icon(
                                                       CupertinoIcons.heart,
                                                       color: AppColors
@@ -268,7 +286,10 @@ class _ProductPageState extends State<ProductPage> {
                             bg_color: AppColors.filled_button,
                             side_color: AppColors.filled_button)
                         .outlined_button_style(),
-                    onPressed: () {},
+                    onPressed: () async {
+                      await DatabaseService(id: customer.id, ids: []).addToCart(
+                          customer.amounts, customer.basket, product.id);
+                    },
                     icon: Icon(
                       CupertinoIcons.cart_badge_plus,
                       color: AppColors.filled_button_text,

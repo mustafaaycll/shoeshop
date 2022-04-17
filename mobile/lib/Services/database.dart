@@ -68,6 +68,54 @@ class DatabaseService {
   Future changeName(String fullname) async {
     await customerCollection.doc(id).update({'fullname': fullname});
   }
+
+  Future removeFromFavs(List<dynamic> oldFavs, String idToBeRemoved) async {
+    List<dynamic> newFavs = [];
+
+    for (var i = 0; i < oldFavs.length; i++) {
+      if (oldFavs[i] != idToBeRemoved) {
+        newFavs.add(oldFavs[i]);
+      }
+    }
+    await customerCollection.doc(id).update({'fav_products': newFavs});
+  }
+
+  Future addToFavs(List<dynamic> oldFavs, String newId) async {
+    List<dynamic> newFavs = [];
+    for (var i = 0; i < oldFavs.length; i++) {
+      newFavs.add(oldFavs[i]);
+    }
+    newFavs.add(newId);
+    await customerCollection.doc(id).update({'fav_products': newFavs});
+  }
+
+  Future addToCart(
+      List<dynamic> oldAmounts, List<dynamic> oldCart, String newItem) async {
+    bool exists = false;
+    int index = -1;
+    List<dynamic> newAmounts = [];
+    List<dynamic> newCart = [];
+
+    for (var i = 0; i < oldCart.length; i++) {
+      newCart.add(oldCart[i]);
+      newAmounts.add(oldAmounts[i]);
+
+      if (oldCart[i] == newItem) {
+        index = i;
+        exists = true;
+      }
+    }
+    if (exists) {
+      newAmounts[index] += 1;
+    } else {
+      newAmounts.add(1);
+      newCart.add(newItem);
+    }
+
+    await customerCollection
+        .doc(id)
+        .update({'basket': newCart, 'amounts': newAmounts});
+  }
   /*--CUSTOMER--CUSTOMER--CUSTOMER--CUSTOMER--CUSTOMER--CUSTOMER--*/
 
   /*--PRODUCT--PRODUCT--PRODUCT--PRODUCT--PRODUCT--PRODUCT--PRODUCT--PRODUCT--*/
