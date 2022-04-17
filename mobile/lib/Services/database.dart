@@ -116,6 +116,62 @@ class DatabaseService {
         .doc(id)
         .update({'basket': newCart, 'amounts': newAmounts});
   }
+
+  Future removeFromCart(List<dynamic> oldAmounts, List<dynamic> oldCart,
+      String IDtoBeRemoved) async {
+    List<dynamic> newAmounts = [];
+    List<dynamic> newCart = [];
+
+    for (var i = 0; i < oldCart.length; i++) {
+      if (oldCart[i] != IDtoBeRemoved) {
+        newAmounts.add(oldAmounts[i]);
+        newCart.add(oldCart[i]);
+      }
+    }
+
+    await customerCollection
+        .doc(id)
+        .update({'basket': newCart, 'amounts': newAmounts});
+  }
+
+  Future increaseAmount(List<dynamic> oldAmounts, List<dynamic> oldCart,
+      String IDtoBeIncreased) async {
+    List<dynamic> newAmounts = [];
+    List<dynamic> newCart = [];
+    for (var i = 0; i < oldCart.length; i++) {
+      if (oldCart[i] != IDtoBeIncreased) {
+        newAmounts.add(oldAmounts[i]);
+      } else {
+        newAmounts.add(oldAmounts[i] + 1);
+      }
+      newCart.add(oldCart[i]);
+    }
+
+    await customerCollection
+        .doc(id)
+        .update({'basket': newCart, 'amounts': newAmounts});
+  }
+
+  Future decreaseAmount(List<dynamic> oldAmounts, List<dynamic> oldCart,
+      String IDtoBeDecreased) async {
+    List<dynamic> newAmounts = [];
+    List<dynamic> newCart = [];
+    for (var i = 0; i < oldCart.length; i++) {
+      if (oldCart[i] != IDtoBeDecreased) {
+        newAmounts.add(oldAmounts[i]);
+        newCart.add(oldCart[i]);
+      } else {
+        if (oldAmounts[i] != 1) {
+          newAmounts.add(oldAmounts[i] - 1);
+          newCart.add(oldCart[i]);
+        }
+      }
+    }
+
+    await customerCollection
+        .doc(id)
+        .update({'basket': newCart, 'amounts': newAmounts});
+  }
   /*--CUSTOMER--CUSTOMER--CUSTOMER--CUSTOMER--CUSTOMER--CUSTOMER--*/
 
   /*--PRODUCT--PRODUCT--PRODUCT--PRODUCT--PRODUCT--PRODUCT--PRODUCT--PRODUCT--*/

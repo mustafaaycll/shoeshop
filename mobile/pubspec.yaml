@@ -92,6 +92,7 @@ flutter:
     - assets/category_pictures/mens.png
     - assets/category_pictures/womens.png
     - assets/category_pictures/unisex.png
+    - assets/cartfadeout.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
