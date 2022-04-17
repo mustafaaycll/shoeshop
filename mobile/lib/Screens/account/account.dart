@@ -13,6 +13,7 @@ import 'package:mobile/utils/animations.dart';
 import 'package:mobile/utils/colors.dart';
 import 'package:mobile/utils/objects.dart';
 import 'package:mobile/utils/shapes_dimensions.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 
 import '../../utils/styles.dart';
@@ -44,218 +45,143 @@ class _AccountState extends State<Account> {
           ),
           body: Column(
             children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: ListTile(
+                      title: Text(customer.fullname),
+                      subtitle: Text(
+                        customer.email,
+                        style: TextStyle(fontSize: 11),
+                      ),
+                      leading: QuickObjects()
+                          .profilePicture(customer.fullname, 100, 100),
+                      trailing: IconButton(
+                        onPressed: () {
+                          AuthService().signOut();
+                        },
+                        icon: Icon(
+                          CupertinoIcons.square_arrow_left,
+                          color: AppColors.negative_button,
+                          size: 30,
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: ListTile(
-                        title: Text(customer.fullname),
-                        subtitle: Text(
-                          customer.email,
-                          style: TextStyle(fontSize: 11),
-                        ),
-                        leading: QuickObjects()
-                            .profilePicture(customer.fullname, 100, 100),
-                        trailing: IconButton(
-                          onPressed: () {
-                            AuthService().signOut();
-                          },
-                          icon: Icon(
-                            CupertinoIcons.square_arrow_left,
-                            color: AppColors.negative_button,
-                            size: 30,
-                          ),
-                        ),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 10,
                       ),
-                    )
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(Dimen.regularMargin),
-                child: Row(
-                  children: [
-                    Expanded(
-                        child: OutlinedButton(
-                      onPressed: () {},
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Orders",
-                          style: TextStyle(
-                              color: IfInactive(customer.method), fontSize: 16),
-                        ),
+                      Text(
+                        "Account Information",
+                        style: TextStyle(color: AppColors.system_gray),
                       ),
-                      style: ElevatedButton.styleFrom(
-                        primary: AppColors.filled_button,
+                      ListTile(
+                        onTap: () {
+                          if (customer.method != "anonymous") {
+                            pushNewScreen(context, screen: ChangeName());
+                            /*Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ChangeName(
+                                        analytics: FirebaseAnalytics.instance,
+                                        observer: FirebaseAnalyticsObserver(
+                                            analytics:
+                                                FirebaseAnalytics.instance))));*/
+                          }
+                        },
+                        title: Text("Change Name"),
+                        trailing: Icon(CupertinoIcons.chevron_right),
+                        leading: Icon(CupertinoIcons.person),
                       ),
-                    ))
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(Dimen.regularMargin),
-                child: Row(
-                  children: [
-                    Expanded(
-                        child: OutlinedButton(
-                      onPressed: () {},
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Comments & Reviews",
-                          style: TextStyle(
-                              color: IfInactive(customer.method), fontSize: 16),
-                        ),
+                      ListTile(
+                        onTap: () {
+                          if (customer.method != "anonymous") {
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text(
+                                      "We will send you an email to change your password",
+                                      style: TextStyle(
+                                          color: AppColors.empty_button_text),
+                                    ),
+                                    content: Text(
+                                      "Are you sure?",
+                                      style: TextStyle(
+                                          color: AppColors.empty_button_text),
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () {
+                                            auth.sendPasswordResetEmail(
+                                                email: customer.email);
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text(
+                                            "Yes",
+                                            style: TextStyle(
+                                                color:
+                                                    AppColors.positive_button),
+                                          )),
+                                      TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text(
+                                            "No",
+                                            style: TextStyle(
+                                                color:
+                                                    AppColors.negative_button),
+                                          ))
+                                    ],
+                                  );
+                                });
+                          }
+                        },
+                        title: Text("Change Password"),
+                        trailing: Icon(CupertinoIcons.chevron_right),
+                        leading: Icon(CupertinoIcons.lock),
                       ),
-                      style: ElevatedButton.styleFrom(
-                        primary: AppColors.filled_button,
+                      ListTile(
+                        onTap: () {},
+                        title: Text("Manage Addresses"),
+                        trailing: Icon(CupertinoIcons.chevron_right),
+                        leading: Icon(CupertinoIcons.home),
                       ),
-                    ))
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(Dimen.regularMargin),
-                child: Row(
-                  children: [
-                    Expanded(
-                        child: OutlinedButton(
-                      onPressed: () {
-                        if (customer.method != "anonymous") {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ChangeName(
-                                      analytics: FirebaseAnalytics.instance,
-                                      observer: FirebaseAnalyticsObserver(
-                                          analytics:
-                                              FirebaseAnalytics.instance))));
-                        }
-                      },
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Change Name",
-                          style: TextStyle(
-                              color: IfInactive(customer.method), fontSize: 16),
-                        ),
+                      ListTile(
+                        onTap: () {},
+                        title: Text("Manage Payment Options"),
+                        trailing: Icon(CupertinoIcons.chevron_right),
+                        leading: Icon(CupertinoIcons.creditcard),
                       ),
-                      style: ElevatedButton.styleFrom(
-                        primary: AppColors.filled_button,
+                      SizedBox(
+                        height: 10,
                       ),
-                    ))
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(Dimen.regularMargin),
-                child: Row(
-                  children: [
-                    Expanded(
-                        child: OutlinedButton(
-                      onPressed: () {
-                        if (customer.method != "anonymous") {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text(
-                                    "We will send you an email to change your password",
-                                    style: TextStyle(
-                                        color: AppColors.empty_button_text),
-                                  ),
-                                  content: Text(
-                                    "Are you sure?",
-                                    style: TextStyle(
-                                        color: AppColors.empty_button_text),
-                                  ),
-                                  actions: [
-                                    TextButton(
-                                        onPressed: () {
-                                          auth.sendPasswordResetEmail(
-                                              email: customer.email);
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Text(
-                                          "Yes",
-                                          style: TextStyle(
-                                              color: AppColors.positive_button),
-                                        )),
-                                    TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Text(
-                                          "No",
-                                          style: TextStyle(
-                                              color: AppColors.negative_button),
-                                        ))
-                                  ],
-                                );
-                              });
-                        }
-                      },
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Change Password",
-                          style: TextStyle(
-                              color: IfInactive(customer.method), fontSize: 16),
-                        ),
+                      Text(
+                        "Account Activity",
+                        style: TextStyle(color: AppColors.system_gray),
                       ),
-                      style: ElevatedButton.styleFrom(
-                        primary: AppColors.filled_button,
+                      ListTile(
+                        onTap: () {},
+                        title: Text("Previous Orders"),
+                        trailing: Icon(CupertinoIcons.chevron_right),
+                        leading: Icon(CupertinoIcons.square_stack_3d_up),
                       ),
-                    ))
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(Dimen.regularMargin),
-                child: Row(
-                  children: [
-                    Expanded(
-                        child: OutlinedButton(
-                      onPressed: () {},
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Adresses",
-                          style: TextStyle(
-                              color: IfInactive(customer.method), fontSize: 16),
-                        ),
+                      ListTile(
+                        onTap: () {},
+                        title: Text("Comments & Reviews"),
+                        trailing: Icon(CupertinoIcons.chevron_right),
+                        leading: Icon(CupertinoIcons.chat_bubble),
                       ),
-                      style: ElevatedButton.styleFrom(
-                        primary: AppColors.filled_button,
-                      ),
-                    ))
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(Dimen.regularMargin),
-                child: Row(
-                  children: [
-                    Expanded(
-                        child: OutlinedButton(
-                      onPressed: () {},
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Payment Options",
-                          style: TextStyle(
-                              color: IfInactive(customer.method), fontSize: 16),
-                        ),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        primary: AppColors.filled_button,
-                      ),
-                    ))
-                  ],
-                ),
-              ),
+                    ]),
+              )
             ],
           ));
     } else {

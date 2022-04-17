@@ -3,6 +3,8 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile/Screens/home/productpage.dart';
+import 'package:mobile/Screens/home/sellerpage.dart';
 import 'package:mobile/Services/authentication.dart';
 import 'package:mobile/Services/database.dart';
 import 'package:mobile/models/products/product.dart';
@@ -62,16 +64,29 @@ class _HomeState extends State<Home> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
                                   "Explore by brands",
                                   style:
                                       TextStyle(color: AppColors.system_gray),
+                                ),
+                                TextButton(
+                                  onPressed: () {},
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        "All",
+                                        style: TextStyle(
+                                            color: AppColors.secondary_text),
+                                      ),
+                                      Icon(CupertinoIcons.right_chevron,
+                                          size: 13,
+                                          color: AppColors.secondary_text)
+                                    ],
+                                  ),
                                 )
                               ],
-                            ),
-                            SizedBox(
-                              height: 10,
                             ),
                             SizedBox(
                               height: 105,
@@ -90,7 +105,12 @@ class _HomeState extends State<Home> {
                                                         side_color:
                                                             Colors.transparent)
                                                     .outlined_button_style(),
-                                                onPressed: () {},
+                                                onPressed: () {
+                                                  pushNewScreen(context,
+                                                      screen: SellerPage(
+                                                          seller:
+                                                              allSellers[i]));
+                                                },
                                                 child: QuickObjects()
                                                     .namedImageBox(
                                                         allSellers[i].name,
@@ -107,20 +127,30 @@ class _HomeState extends State<Home> {
                                     )
                                   : Animations().loading(),
                             ),
-                            SizedBox(
-                              height: 10,
-                            ),
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
                                   "Explore by categories",
                                   style:
                                       TextStyle(color: AppColors.system_gray),
+                                ),
+                                TextButton(
+                                  onPressed: () {},
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        "All",
+                                        style: TextStyle(
+                                            color: AppColors.secondary_text),
+                                      ),
+                                      Icon(CupertinoIcons.right_chevron,
+                                          size: 13,
+                                          color: AppColors.secondary_text)
+                                    ],
+                                  ),
                                 )
                               ],
-                            ),
-                            SizedBox(
-                              height: 10,
                             ),
                             SizedBox(
                               height: 105,
@@ -217,59 +247,30 @@ class _HomeState extends State<Home> {
                                 ),
                               ],
                             ),
-                            /*ListView(
-                                scrollDirection: Axis.horizontal,
-                                children: [
-                                  OutlinedButton(
-                                      style: ShapeRules(
-                                              bg_color: AppColors.empty_button,
-                                              side_color: Colors.transparent)
-                                          .outlined_button_style(),
-                                      onPressed: () {},
-                                      child: QuickObjects().namedImageBox(
-                                          "Men's", "mens", 105, 100, false)),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  OutlinedButton(
-                                      style: ShapeRules(
-                                              bg_color: AppColors.empty_button,
-                                              side_color: Colors.transparent)
-                                          .outlined_button_style(),
-                                      onPressed: () {},
-                                      child: QuickObjects().namedImageBox(
-                                          "Women's",
-                                          "womens",
-                                          105,
-                                          100,
-                                          false)),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  OutlinedButton(
-                                      style: ShapeRules(
-                                              bg_color: AppColors.empty_button,
-                                              side_color: Colors.transparent)
-                                          .outlined_button_style(),
-                                      onPressed: () {},
-                                      child: QuickObjects().namedImageBox(
-                                          "Unisex", "unisex", 105, 100, false)),
-                                ],
-                              ),*/
-                            SizedBox(
-                              height: 10,
-                            ),
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
                                   "Products on discount",
                                   style:
                                       TextStyle(color: AppColors.system_gray),
+                                ),
+                                TextButton(
+                                  onPressed: () {},
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        "All",
+                                        style: TextStyle(
+                                            color: AppColors.secondary_text),
+                                      ),
+                                      Icon(CupertinoIcons.right_chevron,
+                                          size: 13,
+                                          color: AppColors.secondary_text)
+                                    ],
+                                  ),
                                 )
                               ],
-                            ),
-                            SizedBox(
-                              height: 10,
                             ),
                             StreamBuilder<List<Product>>(
                                 stream: DatabaseService(id: "", ids: [])
@@ -292,7 +293,18 @@ class _HomeState extends State<Home> {
                                                               side_color: AppColors
                                                                   .empty_button_border)
                                                           .outlined_button_style_no_padding(),
-                                                      onPressed: () {},
+                                                      onPressed: () {
+                                                        pushNewScreen(context,
+                                                            screen: ProductPage(
+                                                                seller: allSellers!
+                                                                    .where((element) =>
+                                                                        element
+                                                                            .name ==
+                                                                        discounteds[l]
+                                                                            .name)
+                                                                    .toList()[0],
+                                                                product: discounteds[l]));
+                                                      },
                                                       child: QuickObjects()
                                                           .discountedProductTile_listView(
                                                               discounteds[l],
