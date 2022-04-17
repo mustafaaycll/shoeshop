@@ -542,4 +542,139 @@ class QuickObjects {
       ),
     );
   }
+
+  Widget cartItem(
+      Customer customer, Product product, int quantity, double width) {
+    double height = 200;
+    return Container(
+      height: height,
+      width: width,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              children: [
+                Container(
+                    height: width / 2,
+                    width: width / 2,
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: NetworkImage(product.photos[0])))),
+                Positioned(
+                  top: width / 2 - 50,
+                  left: 0,
+                  child: Row(
+                    children: [
+                      IconButton(
+                          padding: EdgeInsets.all(0),
+                          onPressed: () async {
+                            await DatabaseService(id: customer.id, ids: [])
+                                .removeFromCart(customer.amounts,
+                                    customer.basket, product.id);
+                          },
+                          icon: Icon(
+                            CupertinoIcons.bin_xmark,
+                            color: AppColors.negative_button,
+                          )),
+                      SizedBox(
+                        width: 45,
+                      ),
+                      IconButton(
+                          padding: EdgeInsets.all(0),
+                          onPressed: () async {
+                            await DatabaseService(id: customer.id, ids: [])
+                                .decreaseAmount(customer.amounts,
+                                    customer.basket, product.id);
+                          },
+                          icon: Icon(
+                            CupertinoIcons.minus,
+                            color: AppColors.active_icon,
+                          )),
+                      IconButton(
+                          padding: EdgeInsets.all(0),
+                          onPressed: () async {
+                            await DatabaseService(id: customer.id, ids: [])
+                                .increaseAmount(customer.amounts,
+                                    customer.basket, product.id);
+                          },
+                          icon: Icon(
+                            CupertinoIcons.plus,
+                            color: AppColors.active_icon,
+                          )),
+                    ],
+                  ),
+                )
+              ],
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 8,
+                ),
+                Text(
+                  product.name,
+                  style: TextStyle(color: AppColors.title_text, fontSize: 20),
+                ),
+                SizedBox(
+                  height: 1,
+                ),
+                Text(
+                  product.model,
+                  style: TextStyle(color: AppColors.title_text, fontSize: 15),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                SizedBox(
+                  height: 1,
+                ),
+                Text(
+                  product.sex + "'s " + product.category + " shoe",
+                  style: TextStyle(color: AppColors.system_gray, fontSize: 12),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "Quantity: " + quantity.toString(),
+                  style: TextStyle(color: AppColors.system_gray, fontSize: 12),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                SizedBox(
+                  height: 1,
+                ),
+                Text(
+                  "Size: 40",
+                  style: TextStyle(color: AppColors.system_gray, fontSize: 12),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                SizedBox(
+                  height: 1,
+                ),
+                Text(
+                  product.warranty ? "Warranty: Yes" : "Warranty: No",
+                  style: TextStyle(color: AppColors.system_gray, fontSize: 12),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Expanded(child: Container()),
+                Text("${(product.price * quantity).toStringAsFixed(2)} ₺",
+                    style:
+                        TextStyle(color: AppColors.title_text, fontSize: 20)),
+                SizedBox(
+                  height: 8,
+                )
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
 }
