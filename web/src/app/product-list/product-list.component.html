@@ -1,27 +1,28 @@
-<h2>Products</h2>
+<div class="layout_padding gallery_section">
+  <div class="product-container">
+    
 
-<div *ngFor="let product of products">
-  <h3>
-    <a 
-      [title]="product.name + ' details'"
-      [routerLink]="['/products', product.id]">
-      {{ product.name }}
-    </a>
-  </h3>
+      
+        <div  *ngFor="let product of products" class="card">
+          <img src="{{ product.photos[0]}}" alt="Denim Jeans" style="width:100%"
+           style="height:60%">
+          <h2><a class="product_text" [routerLink] ="['products', product.id]" [title]="product.name + ' details'">
+            {{ product.name }}</a>
+          </h2>
+          <p class="price">{{ product.price | currency }}</p>
+          <p>{{product.description}}</p>
+          <p><button class="cardbutton">Add to Cart</button></p>
+            
+        </div>
+         
+  </div>
+    
 
-  <p *ngIf="product.description">Description: {{ product.description }}</p>
 
-  <button type="button" (click)="share()">
-    Share
-  </button>
+  
+  
+  
 
-  <app-product-alerts
-    [product]="product" 
-    (notify)="onNotify()">
-  </app-product-alerts>
 </div>
-<!-- 
-Copyright Google LLC. All Rights Reserved.
-Use of this source code is governed by an MIT-style license that
-can be found in the LICENSE file at https://angular.io/license
--->
+
+
