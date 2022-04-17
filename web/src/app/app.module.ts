@@ -14,6 +14,7 @@ import { ProductComponent } from './product/product.component';
 import { environment } from 'src/environments/environment';
 import { CommentListComponent } from './comment-list/comment-list.component';
 import { RatingComponent } from './rating/rating.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 @NgModule({
@@ -32,6 +33,7 @@ import { RatingComponent } from './rating/rating.component';
       { path: 'products/:productid', component: ProductComponent},
     ]),
     AngularFireModule.initializeApp(environment.firebase),
+    BrowserAnimationsModule,
 
 
     
