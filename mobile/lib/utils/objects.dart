@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:mobile/Services/database.dart';
 import 'package:mobile/models/products/product.dart';
 import 'package:mobile/models/users/customer.dart';
 import 'package:mobile/models/users/seller.dart';
@@ -117,14 +118,21 @@ class QuickObjects {
                 ),
                 customer.fav_products.contains(product.id)
                     ? IconButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          await DatabaseService(id: customer.id, ids: [])
+                              .removeFromFavs(
+                                  customer.fav_products, product.id);
+                        },
                         icon: Icon(
                           CupertinoIcons.heart_fill,
                           color: AppColors.negative_button,
                           size: 30,
                         ))
                     : IconButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          await DatabaseService(id: customer.id, ids: [])
+                              .addToFavs(customer.fav_products, product.id);
+                        },
                         icon: Icon(
                           CupertinoIcons.heart,
                           color: AppColors.negative_button,
@@ -225,7 +233,7 @@ class QuickObjects {
                         ],
                       ),
                       Expanded(child: Container()),
-                      customer.basket.contains(product.id)
+                      /*customer.basket.contains(product.id)
                           ? IconButton(
                               onPressed: () {},
                               icon: Icon(
@@ -239,7 +247,7 @@ class QuickObjects {
                                 CupertinoIcons.cart_badge_plus,
                                 color: AppColors.active_icon,
                                 size: 30,
-                              ))
+                              ))*/
                     ],
                   )
                 ],
@@ -278,14 +286,21 @@ class QuickObjects {
                   ),
                   customer.fav_products.contains(product.id)
                       ? IconButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            await DatabaseService(id: customer.id, ids: [])
+                                .removeFromFavs(
+                                    customer.fav_products, product.id);
+                          },
                           icon: Icon(
                             CupertinoIcons.heart_fill,
                             color: AppColors.negative_button,
                             size: 30,
                           ))
                       : IconButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            await DatabaseService(id: customer.id, ids: [])
+                                .addToFavs(customer.fav_products, product.id);
+                          },
                           icon: Icon(
                             CupertinoIcons.heart,
                             color: AppColors.negative_button,
