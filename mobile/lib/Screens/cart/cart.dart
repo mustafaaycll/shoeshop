@@ -83,66 +83,6 @@ class _CartState extends State<Cart> {
                   ),
                 ),
               );
-              /*
-                body: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      ListView.builder(
-                          scrollDirection: Axis.vertical,
-                          controller: ScrollController(),
-                          shrinkWrap: true,
-                          itemExtent: 100.0,
-                          itemCount: basket.length,
-                          itemBuilder: (context, i) {
-                            return Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                OutlinedButton(
-                                    style: ShapeRules(
-                                            bg_color: AppColors.empty_button,
-                                            side_color: Colors.transparent)
-                                        .outlined_button_style(),
-                                    onPressed: () {},
-                                    child: QuickObjects().ImageBoxProducts(
-                                        basket[i].model,
-                                        basket[i].name,
-                                        basket[i].sex,
-                                        basket[i].price * amounts[i],
-                                        amounts[i],
-                                        basket[i].photos[0],
-                                        100,
-                                        MediaQuery.of(context).size.width,
-                                        true)),
-                              ],
-                            );
-                          }),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          OutlinedButton(
-                              style: ShapeRules(
-                                      bg_color: AppColors.filled_button,
-                                      side_color: Colors.transparent)
-                                  .outlined_button_style(),
-                              onPressed: () {},
-                              child: Text(
-                                'CHECKOUT',
-                                style: TextStyle(
-                                  color: AppColors.filled_button_text,
-                                ),
-                              )),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              );*/
             } else {
               return Scaffold(
                 backgroundColor: AppColors.background,
