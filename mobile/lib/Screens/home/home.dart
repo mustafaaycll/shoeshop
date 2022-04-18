@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/Screens/home/productpage.dart';
 import 'package:mobile/Screens/home/sellerpage.dart';
-import 'package:mobile/Services/authentication.dart';
 import 'package:mobile/Services/database.dart';
 import 'package:mobile/models/products/product.dart';
 import 'package:mobile/models/users/seller.dart';
@@ -15,7 +14,6 @@ import 'package:mobile/utils/objects.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 
-import '../../models/users/customer.dart';
 import '../../models/users/customer.dart';
 import '../../utils/shapes_dimensions.dart';
 
@@ -56,6 +54,20 @@ class _HomeState extends State<Home> {
                         style: TextStyle(
                             color: AppColors.title_text, fontSize: 30),
                       ),
+                      actions: [
+                        IconButton(
+                            onPressed: () {
+                              showSearch(
+                                  context: context,
+                                  delegate: ShoeShopSearchDelegate(
+                                      allProducts: allProducts));
+                            },
+                            icon: Icon(
+                              CupertinoIcons.search,
+                              color: AppColors.title_text,
+                              size: 30,
+                            ))
+                      ],
                     ),
                     body: Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -341,6 +353,113 @@ class _HomeState extends State<Home> {
     } else {
       return Animations().scaffoldLoadingScreen('HOME');
     }
+  }
+}
+
+class ShoeShopSearchDelegate extends SearchDelegate {
+  final List<Product>? allProducts;
+  ShoeShopSearchDelegate({required this.allProducts});
+  @override
+  Widget? buildLeading(BuildContext context) => IconButton(
+      onPressed: () => Navigator.pop(context),
+      icon: Icon(
+        CupertinoIcons.chevron_back,
+        color: AppColors.active_icon,
+      ));
+
+  @override
+  List<Widget>? buildActions(BuildContext context) => [
+        IconButton(
+            onPressed: () {
+              if (query.isEmpty) {
+                close(context, null);
+              } else {
+                query = '';
+              }
+            },
+            icon: Icon(
+              CupertinoIcons.xmark,
+              color: AppColors.active_icon,
+            )),
+      ];
+
+  @override
+  Widget buildResults(BuildContext context) => Container();
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    List<Product> suggestions = allProducts!.where((product) {
+      final name = product.name.toLowerCase();
+      final model = product.model.toLowerCase();
+      final description = product.description.toLowerCase();
+      final sex = product.sex.toLowerCase();
+      final cat = product.category.toLowerCase();
+      final input = query.toLowerCase();
+
+      final result =
+          name + " " + model + " " + description + " " + sex + " " + cat;
+
+      return result.contains(input);
+    }).toList();
+
+    return ListView.builder(
+      itemCount: !query.isEmpty ? suggestions.length : 0,
+      itemBuilder: (context, index) {
+        return StreamBuilder<Seller>(
+            stream: DatabaseService(
+                id: suggestions[index].distributor_information,
+                ids: []).sellerData,
+            builder: (context, snapshot) {
+              Seller? seller = snapshot.data;
+              if (seller != null) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(
+                    onTap: () {
+                      pushNewScreen(context,
+                          screen: ProductPage(
+                              seller: seller, product: suggestions[index]));
+                    },
+                    leading: Container(
+                        width: 75,
+                        height: 50,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: NetworkImage(
+                                    suggestions[index].photos[0])))),
+                    title: Text(
+                      suggestions[index].name + " " + suggestions[index].model,
+                      style:
+                          TextStyle(color: AppColors.title_text, fontSize: 13),
+                    ),
+                    subtitle: Text(
+                      suggestions[index].sex +
+                          "'s " +
+                          suggestions[index].category +
+                          " shoe",
+                      style:
+                          TextStyle(color: AppColors.system_gray, fontSize: 10),
+                    ),
+                    trailing: Container(
+                      width: 25,
+                      height: 25,
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                              fit: BoxFit.contain,
+                              image: NetworkImage(seller.logo))),
+                    ),
+                  ),
+                );
+              } else {
+                return Center(
+                  child: Animations().loading(),
+                );
+              }
+            });
+      },
+    );
   }
 }
 

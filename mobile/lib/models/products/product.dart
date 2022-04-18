@@ -1,5 +1,6 @@
 class Product {
   final String id;
+  final String distributor_information;
   final String name;
   final String model;
   final String category;
@@ -16,6 +17,7 @@ class Product {
 
   Product({
     required this.id,
+    required this.distributor_information,
     required this.name,
     required this.model,
     required this.category,

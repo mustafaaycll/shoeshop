@@ -178,6 +178,7 @@ class DatabaseService {
   Product _productDataFromSnapshot(DocumentSnapshot snapshot) {
     return Product(
         id: id,
+        distributor_information: snapshot.get("distributor_information"),
         name: snapshot.get("name"),
         model: snapshot.get("model"),
         category: snapshot.get("category"),
@@ -202,6 +203,7 @@ class DatabaseService {
           if (ids.contains(doc.id)) {
             return Product(
                 id: doc.id,
+                distributor_information: doc.get("distributor_information"),
                 name: doc.get("name"),
                 model: doc.get("model"),
                 category: doc.get("category"),
@@ -228,6 +230,7 @@ class DatabaseService {
     return snapshot.docs.map((doc) {
       return Product(
           id: doc.get("id"),
+          distributor_information: doc.get("distributor_information"),
           name: doc.get("name"),
           model: doc.get("model"),
           category: doc.get("category"),
@@ -250,6 +253,7 @@ class DatabaseService {
         .map((doc) {
           return Product(
               id: doc.id,
+              distributor_information: doc.get("distributor_information"),
               name: doc.get("name"),
               model: doc.get("model"),
               category: doc.get("category"),
