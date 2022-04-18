@@ -8,7 +8,6 @@ import 'package:mobile/utils/animations.dart';
 import 'package:mobile/utils/colors.dart';
 import 'package:mobile/utils/objects.dart';
 import 'package:provider/provider.dart';
-import 'package:icon_badge/icon_badge.dart';
 import '../../models/users/customer.dart';
 import '../../utils/shapes_dimensions.dart';
 

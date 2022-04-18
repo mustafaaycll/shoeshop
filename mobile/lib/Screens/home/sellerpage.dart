@@ -1,5 +1,4 @@
-import 'dart:async';
-import 'dart:io';
+// ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -36,6 +35,13 @@ class SellerPage extends StatefulWidget {
 }
 
 class _SellerPageState extends State<SellerPage> {
+  List<String> sortMethods = [
+    "Price: Ascending",
+    "Price: Descending",
+    "Popularity: Ascending",
+    "Popularity: Descending"
+  ];
+  String sorting = "natural";
   @override
   Widget build(BuildContext context) {
     Seller seller = widget.seller;
@@ -44,6 +50,7 @@ class _SellerPageState extends State<SellerPage> {
         stream: DatabaseService(id: "", ids: seller.products).specifiedProducts,
         builder: (context, snapshot) {
           List<Product>? products = snapshot.data;
+          products = reOrder(products, sorting);
           if (products != null) {
             return Scaffold(
               backgroundColor: AppColors.background,
@@ -112,29 +119,41 @@ class _SellerPageState extends State<SellerPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          /*Text(
-                                "Products from ${seller.name}",
-                                style: TextStyle(color: AppColors.system_gray),
-                              ),*/
                           Expanded(child: Container()),
-                          TextButton(
-                            onPressed: () {},
-                            child: Row(
-                              children: [
-                                Icon(
-                                    CupertinoIcons
-                                        .line_horizontal_3_decrease_circle,
-                                    size: 18,
-                                    color: AppColors.secondary_text),
-                                SizedBox(width: 2),
-                                Text(
-                                  "Sort by",
-                                  style: TextStyle(
-                                      color: AppColors.secondary_text),
-                                ),
-                              ],
+                          DropdownButtonHideUnderline(
+                            child: DropdownButton(
+                              icon: Icon(
+                                  CupertinoIcons
+                                      .line_horizontal_3_decrease_circle,
+                                  size: 18,
+                                  color: AppColors.secondary_text),
+                              alignment: AlignmentDirectional.centerEnd,
+                              dropdownColor: AppColors.background,
+                              hint: Row(
+                                children: [
+                                  Text(
+                                    "Sort by",
+                                    style: TextStyle(
+                                        color: AppColors.secondary_text),
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  )
+                                ],
+                              ),
+                              items: sortMethods.map((element) {
+                                return DropdownMenuItem(
+                                  value: element,
+                                  child: Text(element),
+                                );
+                              }).toList(),
+                              onChanged: (String? val) {
+                                setState(() {
+                                  sorting = val!;
+                                });
+                              },
                             ),
-                          ),
+                          )
                         ],
                       ),
                       Expanded(child: LayoutBuilder(
@@ -143,7 +162,8 @@ class _SellerPageState extends State<SellerPage> {
                               crossAxisCount: 2,
                               primary: true,
                               childAspectRatio: 0.75,
-                              children: List.generate(products.length, (index) {
+                              children:
+                                  List.generate(products!.length, (index) {
                                 return OutlinedButton(
                                   style: ShapeRules(
                                           bg_color: AppColors.empty_button,
@@ -153,10 +173,10 @@ class _SellerPageState extends State<SellerPage> {
                                     pushNewScreen(context,
                                         screen: ProductPage(
                                             seller: seller,
-                                            product: products[index]));
+                                            product: products![index]));
                                   },
                                   child: QuickObjects().productTile_gridView(
-                                      products[index],
+                                      products![index],
                                       customer,
                                       seller,
                                       constraints.heightConstraints().maxHeight,
@@ -172,5 +192,19 @@ class _SellerPageState extends State<SellerPage> {
             return Animations().scaffoldLoadingScreen_without_appbar();
           }
         });
+  }
+}
+
+List<Product>? reOrder(List<Product>? productList, String method) {
+  if (method == "natural") {
+    return productList;
+  } else if (method == "Price: Ascending") {
+    productList!.sort((a, b) => a.price.compareTo(b.price));
+    return productList;
+  } else if (method == "Price: Descending") {
+    productList!.sort((a, b) => b.price.compareTo(a.price));
+    return productList;
+  } else {
+    return productList;
   }
 }
