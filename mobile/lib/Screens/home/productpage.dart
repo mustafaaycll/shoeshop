@@ -273,22 +273,39 @@ class _ProductPageState extends State<ProductPage> {
                           ),
                         )
                       : null,
-                  trailing: OutlinedButton.icon(
-                    style: ShapeRules(
-                            bg_color: AppColors.filled_button,
-                            side_color: AppColors.filled_button)
-                        .outlined_button_style(),
-                    onPressed: () async {
-                      await DatabaseService(id: customer.id, ids: []).addToCart(
-                          customer.amounts, customer.basket, product.id);
-                    },
-                    icon: Icon(
-                      CupertinoIcons.cart_badge_plus,
-                      color: AppColors.filled_button_text,
-                    ),
-                    label: Text("Add to Cart",
-                        style: TextStyle(color: AppColors.filled_button_text)),
-                  ),
+                  trailing: product.quantity != 0
+                      ? OutlinedButton.icon(
+                          style: ShapeRules(
+                                  bg_color: AppColors.filled_button,
+                                  side_color: AppColors.filled_button)
+                              .outlined_button_style(),
+                          onPressed: () async {
+                            await DatabaseService(id: customer.id, ids: [])
+                                .addToCart(customer.amounts, customer.basket,
+                                    product.id);
+                          },
+                          icon: Icon(
+                            CupertinoIcons.cart_badge_plus,
+                            color: AppColors.filled_button_text,
+                          ),
+                          label: Text("Add to Cart",
+                              style: TextStyle(
+                                  color: AppColors.filled_button_text)),
+                        )
+                      : OutlinedButton.icon(
+                          style: ShapeRules(
+                                  bg_color: AppColors.negative_button,
+                                  side_color: AppColors.negative_button)
+                              .outlined_button_style(),
+                          onPressed: () {},
+                          icon: Icon(
+                            CupertinoIcons.cube_box,
+                            color: AppColors.filled_button_text,
+                          ),
+                          label: Text("Out-of-stock",
+                              style: TextStyle(
+                                  color: AppColors.filled_button_text)),
+                        ),
                 )
               ],
             ),

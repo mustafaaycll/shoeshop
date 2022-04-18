@@ -308,21 +308,6 @@ class QuickObjects {
                         ],
                       ),
                       Expanded(child: Container()),
-                      /*customer.basket.contains(product.id)
-                          ? IconButton(
-                              onPressed: () {},
-                              icon: Icon(
-                                CupertinoIcons.cart_fill_badge_minus,
-                                color: AppColors.active_icon,
-                                size: 30,
-                              ))
-                          : IconButton(
-                              onPressed: () {},
-                              icon: Icon(
-                                CupertinoIcons.cart_badge_plus,
-                                color: AppColors.active_icon,
-                                size: 30,
-                              ))*/
                     ],
                   )
                 ],
@@ -346,6 +331,12 @@ class QuickObjects {
           Stack(
             children: [
               Container(
+                foregroundDecoration: product.quantity == 0
+                    ? BoxDecoration(
+                        color: Colors.grey,
+                        backgroundBlendMode: BlendMode.saturation,
+                      )
+                    : null,
                 width: w,
                 height: 6 * h / 12,
                 decoration: BoxDecoration(
@@ -410,11 +401,19 @@ class QuickObjects {
                             height: 20,
                             width: 80,
                             child: Center(
-                              child: Text(
-                                "Last ${product.quantity} in stock",
-                                style: TextStyle(
-                                    color: AppColors.background, fontSize: 11),
-                              ),
+                              child: product.quantity != 0
+                                  ? Text(
+                                      "Last ${product.quantity} in stock",
+                                      style: TextStyle(
+                                          color: AppColors.background,
+                                          fontSize: 11),
+                                    )
+                                  : Text(
+                                      "Out-of-stock",
+                                      style: TextStyle(
+                                          color: AppColors.background,
+                                          fontSize: 11),
+                                    ),
                             ),
                             color: AppColors.negative_button,
                           )
@@ -444,12 +443,19 @@ class QuickObjects {
                                     height: 20,
                                     width: 80,
                                     child: Center(
-                                      child: Text(
-                                        "Last ${product.quantity} in stock",
-                                        style: TextStyle(
-                                            color: AppColors.background,
-                                            fontSize: 11),
-                                      ),
+                                      child: product.quantity != 0
+                                          ? Text(
+                                              "Last ${product.quantity} in stock",
+                                              style: TextStyle(
+                                                  color: AppColors.background,
+                                                  fontSize: 11),
+                                            )
+                                          : Text(
+                                              "Out-of-stock",
+                                              style: TextStyle(
+                                                  color: AppColors.background,
+                                                  fontSize: 11),
+                                            ),
                                     ),
                                     color: AppColors.negative_button,
                                   )
