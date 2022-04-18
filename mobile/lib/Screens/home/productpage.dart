@@ -50,23 +50,11 @@ class _ProductPageState extends State<ProductPage> {
                               return Stack(
                                 children: [
                                   SizedBox(
-                                    height: constraints
-                                        .heightConstraints()
-                                        .maxHeight,
-                                    width:
-                                        constraints.widthConstraints().maxWidth,
                                     child: PageView.builder(
                                       scrollDirection: Axis.horizontal,
                                       itemCount: product.photos.length,
                                       itemBuilder: (context, index) {
                                         return Container(
-                                          height: constraints
-                                                  .heightConstraints()
-                                                  .maxHeight /
-                                              2,
-                                          width: constraints
-                                              .widthConstraints()
-                                              .maxWidth,
                                           decoration: BoxDecoration(
                                               borderRadius: BorderRadius.all(
                                                   Radius.circular(30)),
@@ -81,7 +69,9 @@ class _ProductPageState extends State<ProductPage> {
                                   Positioned(
                                     left: 10,
                                     top: 10,
-                                    child: Expanded(
+                                    child: SizedBox(
+                                      width: MediaQuery.of(context).size.width -
+                                          16,
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Row(
@@ -97,6 +87,7 @@ class _ProductPageState extends State<ProductPage> {
                                                   color: AppColors.title_text,
                                                   size: 40,
                                                 )),
+                                            Expanded(child: Container()),
                                             customer.fav_products
                                                     .contains(product.id)
                                                 ? IconButton(
@@ -131,6 +122,7 @@ class _ProductPageState extends State<ProductPage> {
                                                           .negative_button,
                                                       size: 40,
                                                     )),
+                                            SizedBox(width: 20)
                                           ],
                                         ),
                                       ),
