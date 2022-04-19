@@ -61,8 +61,7 @@ class _FirebaseInitState extends State<FirebaseInit> {
         return MaterialApp(
           home: Scaffold(
             body: Center(
-              child:
-                  SpinKitFadingCircle(color: AppColors.background, size: 50.0),
+              child: SpinKitFadingCircle(color: AppColors.background, size: 50.0),
             ),
             backgroundColor: AppColors.title_text,
           ),
