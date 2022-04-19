@@ -11,12 +11,9 @@ class DatabaseService {
 
   DatabaseService({required this.id, required this.ids});
 
-  final CollectionReference customerCollection =
-      FirebaseFirestore.instance.collection('customers');
-  final CollectionReference productCollection =
-      FirebaseFirestore.instance.collection('products');
-  final CollectionReference sellerCollection =
-      FirebaseFirestore.instance.collection('sellers');
+  final CollectionReference customerCollection = FirebaseFirestore.instance.collection('customers');
+  final CollectionReference productCollection = FirebaseFirestore.instance.collection('products');
+  final CollectionReference sellerCollection = FirebaseFirestore.instance.collection('sellers');
 
   /*--CUSTOMER--CUSTOMER--CUSTOMER--CUSTOMER--CUSTOMER--CUSTOMER--*/
   Customer _customerDataFromSnapshot(DocumentSnapshot snapshot) {
@@ -27,8 +24,6 @@ class DatabaseService {
       method: snapshot.get('method'),
       fav_products: snapshot.get('fav_products'),
       addresses: snapshot.get('addresses'),
-      amounts: snapshot.get('amounts'),
-      basket: snapshot.get('basket'),
       basketMap: snapshot.get('basketMap'),
       prev_orders: snapshot.get('prev_orders'),
       tax_id: snapshot.get('tax_id'),
@@ -37,14 +32,12 @@ class DatabaseService {
   }
 
   Stream<Customer> get customerData {
-    return customerCollection
-        .doc(id)
-        .snapshots()
-        .map(_customerDataFromSnapshot);
+    return customerCollection.doc(id).snapshots().map(_customerDataFromSnapshot);
   }
 
   Future addCustomer(String? fullname, String? email, String method) async {
-    List<String> emptyList = [''];
+    List<String> emptyList = [];
+    Map<dynamic, dynamic> emptyMap = {};
 
     await customerCollection
         .doc(id)
@@ -55,15 +48,13 @@ class DatabaseService {
           'method': method,
           'fav_products': emptyList,
           'addresses': emptyList,
-          'amounts': [0],
-          'basket': emptyList,
+          'basketMap': emptyMap,
           'prev_orders': emptyList,
           'tax_id': "",
           'credit_cards': emptyList,
         })
         .then((value) => print('Customer Added'))
-        .catchError(
-            (error) => print('Adding customer failed ${error.toString()}'));
+        .catchError((error) => print('Adding customer failed ${error.toString()}'));
   }
 
   Future changeName(String fullname) async {
@@ -90,88 +81,51 @@ class DatabaseService {
     await customerCollection.doc(id).update({'fav_products': newFavs});
   }
 
-  Future addToCart(
-      List<dynamic> oldAmounts, List<dynamic> oldCart, String newItem) async {
+  Future addToCart(Map<dynamic, dynamic> oldCart, String idToBeInserted, dynamic size) async {
+    Map<dynamic, dynamic> newCart = oldCart;
     bool exists = false;
-    int index = -1;
-    List<dynamic> newAmounts = [];
-    List<dynamic> newCart = [];
 
-    for (var i = 0; i < oldCart.length; i++) {
-      newCart.add(oldCart[i]);
-      newAmounts.add(oldAmounts[i]);
+    newCart.update(idToBeInserted, (value) => [oldCart[idToBeInserted][0] + 1, size], ifAbsent: () => [1, size]);
 
-      if (oldCart[i] == newItem) {
-        index = i;
-        exists = true;
-      }
-    }
-    if (exists) {
-      newAmounts[index] += 1;
-    } else {
-      newAmounts.add(1);
-      newCart.add(newItem);
-    }
-
-    await customerCollection
-        .doc(id)
-        .update({'basket': newCart, 'amounts': newAmounts});
+    await customerCollection.doc(id).update({'basketMap': newCart});
   }
 
-  Future removeFromCart(List<dynamic> oldAmounts, List<dynamic> oldCart,
-      String IDtoBeRemoved) async {
-    List<dynamic> newAmounts = [];
-    List<dynamic> newCart = [];
+  Future removeFromCart(Map<dynamic, dynamic> oldCart, String idToBeRemoved) async {
+    Map<dynamic, dynamic> newCart = {};
 
-    for (var i = 0; i < oldCart.length; i++) {
-      if (oldCart[i] != IDtoBeRemoved) {
-        newAmounts.add(oldAmounts[i]);
-        newCart.add(oldCart[i]);
+    oldCart.forEach((key, value) {
+      if (key != idToBeRemoved) {
+        newCart[key] = value;
       }
-    }
+    });
 
-    await customerCollection
-        .doc(id)
-        .update({'basket': newCart, 'amounts': newAmounts});
+    await customerCollection.doc(id).update({'basketMap': newCart});
   }
 
-  Future increaseAmount(List<dynamic> oldAmounts, List<dynamic> oldCart,
-      String IDtoBeIncreased) async {
-    List<dynamic> newAmounts = [];
-    List<dynamic> newCart = [];
-    for (var i = 0; i < oldCart.length; i++) {
-      if (oldCart[i] != IDtoBeIncreased) {
-        newAmounts.add(oldAmounts[i]);
+  Future increaseAmount(Map<dynamic, dynamic> oldCart, String idToBeIncreased) async {
+    Map<dynamic, dynamic> newCart = {};
+
+    oldCart.forEach((key, value) {
+      if (key == idToBeIncreased) {
+        newCart[key] = [value[0] + 1, value[1]];
       } else {
-        newAmounts.add(oldAmounts[i] + 1);
+        newCart[key] = [value[0], value[1]];
       }
-      newCart.add(oldCart[i]);
-    }
-
-    await customerCollection
-        .doc(id)
-        .update({'basket': newCart, 'amounts': newAmounts});
+    });
+    await customerCollection.doc(id).update({'basketMap': newCart});
   }
 
-  Future decreaseAmount(List<dynamic> oldAmounts, List<dynamic> oldCart,
-      String IDtoBeDecreased) async {
-    List<dynamic> newAmounts = [];
-    List<dynamic> newCart = [];
-    for (var i = 0; i < oldCart.length; i++) {
-      if (oldCart[i] != IDtoBeDecreased) {
-        newAmounts.add(oldAmounts[i]);
-        newCart.add(oldCart[i]);
+  Future decreaseAmount(Map<dynamic, dynamic> oldCart, String idToBeDecreased) async {
+    Map<dynamic, dynamic> newCart = {};
+    oldCart.forEach((key, value) {
+      if (key == idToBeDecreased) {
+        newCart[key] = [value[0] - 1, value[1]];
       } else {
-        if (oldAmounts[i] != 1) {
-          newAmounts.add(oldAmounts[i] - 1);
-          newCart.add(oldCart[i]);
-        }
+        newCart[key] = [value[0], value[1]];
       }
-    }
+    });
 
-    await customerCollection
-        .doc(id)
-        .update({'basket': newCart, 'amounts': newAmounts});
+    await customerCollection.doc(id).update({'basketMap': newCart});
   }
   /*--CUSTOMER--CUSTOMER--CUSTOMER--CUSTOMER--CUSTOMER--CUSTOMER--*/
 
@@ -186,15 +140,11 @@ class DatabaseService {
         color: snapshot.get("color"),
         description: snapshot.get("description"),
         sex: snapshot.get("sex"),
-        price: double.parse(snapshot.get("price")) -
-            (snapshot.get("discount_rate") *
-                double.parse(snapshot.get("price")) /
-                100),
+        price: double.parse(snapshot.get("price")) - (snapshot.get("discount_rate") * double.parse(snapshot.get("price")) / 100),
         quantity: getQuantity(snapshot.get("sizesMap")),
         discount_rate: snapshot.get("discount_rate"),
         warranty: snapshot.get("warranty"),
         comments: snapshot.get("comments"),
-        sizes: snapshot.get("sizes"),
         sizesMap: snapshot.get("sizesMap"),
         photos: snapshot.get("photos"));
   }
@@ -212,15 +162,11 @@ class DatabaseService {
                 color: doc.get("color"),
                 description: doc.get("description"),
                 sex: doc.get("sex"),
-                price: double.parse(doc.get("price")) -
-                    (doc.get("discount_rate") *
-                        double.parse(doc.get("price")) /
-                        100),
+                price: double.parse(doc.get("price")) - (doc.get("discount_rate") * double.parse(doc.get("price")) / 100),
                 quantity: getQuantity(doc.get("sizesMap")),
                 discount_rate: doc.get("discount_rate"),
                 warranty: doc.get("warranty"),
                 comments: doc.get("comments"),
-                sizes: doc.get("sizes"),
                 sizesMap: doc.get("sizesMap"),
                 photos: doc.get("photos"));
           }
@@ -240,13 +186,11 @@ class DatabaseService {
           color: doc.get("color"),
           description: doc.get("description"),
           sex: doc.get("sex"),
-          price: double.parse(doc.get("price")) -
-              (doc.get("discount_rate") * double.parse(doc.get("price")) / 100),
+          price: double.parse(doc.get("price")) - (doc.get("discount_rate") * double.parse(doc.get("price")) / 100),
           quantity: getQuantity(doc.get("sizesMap")),
           discount_rate: doc.get("discount_rate"),
           warranty: doc.get("warranty"),
           comments: doc.get("comments"),
-          sizes: doc.get("sizes"),
           sizesMap: doc.get("sizesMap"),
           photos: doc.get("photos"));
     }).toList();
@@ -264,15 +208,11 @@ class DatabaseService {
               color: doc.get("color"),
               description: doc.get("description"),
               sex: doc.get("sex"),
-              price: double.parse(doc.get("price")) -
-                  (doc.get("discount_rate") *
-                      double.parse(doc.get("price")) /
-                      100),
+              price: double.parse(doc.get("price")) - (doc.get("discount_rate") * double.parse(doc.get("price")) / 100),
               quantity: getQuantity(doc.get("sizesMap")),
               discount_rate: doc.get("discount_rate"),
               warranty: doc.get("warranty"),
               comments: doc.get("comments"),
-              sizes: doc.get("sizes"),
               sizesMap: doc.get("sizesMap"),
               photos: doc.get("photos"));
         })
@@ -295,9 +235,7 @@ class DatabaseService {
   }
 
   Stream<List<Product>> get specifiedProducts {
-    return productCollection
-        .snapshots()
-        .map(_productListFromSnapshot_specified);
+    return productCollection.snapshots().map(_productListFromSnapshot_specified);
   }
 
   Stream<List<Product>> get allProducts {
@@ -305,20 +243,14 @@ class DatabaseService {
   }
 
   Stream<List<Product>> get discountedProducts {
-    return productCollection
-        .snapshots()
-        .map(_discountedProductListFromSnapshot);
+    return productCollection.snapshots().map(_discountedProductListFromSnapshot);
   }
   /*--PRODUCT--PRODUCT--PRODUCT--PRODUCT--PRODUCT--PRODUCT--PRODUCT--PRODUCT--*/
 
   /*--SELLER--SELLER--SELLER--SELLER--SELLER--SELLER--SELLER--SELLER--*/
   Seller _sellerDataFromSnapshot(DocumentSnapshot snapshot) {
     return Seller(
-        id: id,
-        logo: snapshot.get("logo"),
-        name: snapshot.get("name"),
-        products: snapshot.get("products"),
-        ratings: snapshot.get("ratings"));
+        id: id, logo: snapshot.get("logo"), name: snapshot.get("name"), products: snapshot.get("products"), ratings: snapshot.get("ratings"));
   }
 
   List<Seller> _sellerListFromSnapshot_specified(QuerySnapshot snapshot) {
@@ -326,11 +258,7 @@ class DatabaseService {
         .map((doc) {
           if (ids.contains(doc.id)) {
             return Seller(
-                id: doc.get("id"),
-                logo: doc.get("logo"),
-                name: doc.get("name"),
-                products: doc.get("products"),
-                ratings: doc.get("ratings"));
+                id: doc.get("id"), logo: doc.get("logo"), name: doc.get("name"), products: doc.get("products"), ratings: doc.get("ratings"));
           }
         })
         .toList()
@@ -339,12 +267,7 @@ class DatabaseService {
 
   List<Seller> _sellerListFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {
-      return Seller(
-          id: doc.get("id"),
-          logo: doc.get("logo"),
-          name: doc.get("name"),
-          products: doc.get("products"),
-          ratings: doc.get("ratings"));
+      return Seller(id: doc.get("id"), logo: doc.get("logo"), name: doc.get("name"), products: doc.get("products"), ratings: doc.get("ratings"));
     }).toList();
   }
 

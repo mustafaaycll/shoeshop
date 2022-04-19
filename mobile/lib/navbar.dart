@@ -25,19 +25,13 @@ class NavBar extends StatefulWidget {
 
 class _NavBarState extends State<NavBar> {
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-  static FirebaseAnalyticsObserver observer =
-      FirebaseAnalyticsObserver(analytics: analytics);
+  static FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(analytics: analytics);
 
   List<Widget> _buildScreens() {
-    return [
-      Home(analytics: analytics, observer: observer),
-      Cart(),
-      Wishlist(),
-      Account()
-    ];
+    return [Home(analytics: analytics, observer: observer), Cart(), Wishlist(), Account()];
   }
 
-  List<PersistentBottomNavBarItem> _navBarsItems(List<dynamic>? basket) {
+  List<PersistentBottomNavBarItem> _navBarsItems() {
     return [
       PersistentBottomNavBarItem(
         icon: Icon(CupertinoIcons.home),
@@ -48,7 +42,7 @@ class _NavBarState extends State<NavBar> {
       PersistentBottomNavBarItem(
         icon: IconBadge(
           icon: Icon(CupertinoIcons.cart),
-          itemCount: basket == null ? 0 : basket.length,
+          itemCount: 0,
           badgeColor: AppColors.negative_button,
           itemColor: AppColors.opposite_case_title_text,
           hideZero: true,
@@ -72,8 +66,7 @@ class _NavBarState extends State<NavBar> {
     ];
   }
 
-  PersistentTabController _controller =
-      PersistentTabController(initialIndex: 0);
+  PersistentTabController _controller = PersistentTabController(initialIndex: 0);
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User?>(context);
@@ -91,7 +84,7 @@ class _NavBarState extends State<NavBar> {
               context,
               controller: _controller,
               screens: _buildScreens(),
-              items: _navBarsItems(Provider.of<Customer?>(context)?.basket),
+              items: _navBarsItems(),
               confineInSafeArea: true,
               backgroundColor: Color(0xfff5f3f5),
               handleAndroidBackButtonPress: true,

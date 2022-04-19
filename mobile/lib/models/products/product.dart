@@ -14,7 +14,6 @@ class Product {
   final int discount_rate;
   final bool warranty;
   final List<dynamic> comments;
-  final List<dynamic> sizes;
   final Map<dynamic, dynamic> sizesMap;
   final List<dynamic> photos;
 
@@ -32,7 +31,6 @@ class Product {
     required this.discount_rate,
     required this.warranty,
     required this.comments,
-    required this.sizes,
     required this.sizesMap,
     required this.photos,
   });

@@ -1,3 +1,6 @@
+// ignore_for_file: prefer_const_constructors
+
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -32,15 +35,13 @@ class QuickObjects {
         child: Center(
             child: Text(
           getInitials(fullname),
-          style: TextStyle(
-              color: AppColors.opposite_case_title_text, fontSize: h / 3),
+          style: TextStyle(color: AppColors.opposite_case_title_text, fontSize: h / 3),
         )),
       ),
     );
   }
 
-  Widget namedImageBox(
-      String name, String src, double h, double w, bool network) {
+  Widget namedImageBox(String name, String src, double h, double w, bool network) {
     return SizedBox(
       height: h,
       width: w,
@@ -84,8 +85,7 @@ class QuickObjects {
     );
   }
 
-  Widget ImageBoxProducts(String model, String name, String sex, double price,
-      int amm, String src, double h, double w, bool network) {
+  Widget ImageBoxProducts(String model, String name, String sex, double price, int amm, String src, double h, double w, bool network) {
     return SizedBox(
       height: h,
       width: w - 49,
@@ -118,18 +118,15 @@ class QuickObjects {
                 children: [
                   Text(
                     name,
-                    style: TextStyle(
-                        color: AppColors.filled_button_text, fontSize: 15),
+                    style: TextStyle(color: AppColors.filled_button_text, fontSize: 15),
                   ),
                   Text(
                     model,
-                    style: TextStyle(
-                        color: AppColors.filled_button_text, fontSize: 15),
+                    style: TextStyle(color: AppColors.filled_button_text, fontSize: 15),
                   ),
                   Text(
                     sex,
-                    style: TextStyle(
-                        color: AppColors.filled_button_text, fontSize: 15),
+                    style: TextStyle(color: AppColors.filled_button_text, fontSize: 15),
                   ),
                 ],
               ),
@@ -142,13 +139,11 @@ class QuickObjects {
                 children: [
                   Text(
                     '\$ ' + price.toStringAsFixed(2),
-                    style: TextStyle(
-                        color: AppColors.filled_button_text, fontSize: 15),
+                    style: TextStyle(color: AppColors.filled_button_text, fontSize: 15),
                   ),
                   Text(
                     'x' + amm.toString(),
-                    style: TextStyle(
-                        color: AppColors.filled_button_text, fontSize: 15),
+                    style: TextStyle(color: AppColors.filled_button_text, fontSize: 15),
                   ),
                 ],
               ),
@@ -159,8 +154,7 @@ class QuickObjects {
     );
   }
 
-  Widget discountedProductTile_listView(
-      Product product, Customer customer, Seller seller, double h, double w) {
+  Widget discountedProductTile_listView(Product product, Customer customer, Seller seller, double h, double w) {
     return Container(
       height: h,
       width: w,
@@ -170,10 +164,7 @@ class QuickObjects {
             Container(
               width: w,
               height: 3 * h / 5,
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: NetworkImage(product.photos[0]))),
+              decoration: BoxDecoration(image: DecorationImage(fit: BoxFit.cover, image: NetworkImage(product.photos[0]))),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -194,9 +185,7 @@ class QuickObjects {
                 customer.fav_products.contains(product.id)
                     ? IconButton(
                         onPressed: () async {
-                          await DatabaseService(id: customer.id, ids: [])
-                              .removeFromFavs(
-                                  customer.fav_products, product.id);
+                          await DatabaseService(id: customer.id, ids: []).removeFromFavs(customer.fav_products, product.id);
                         },
                         icon: Icon(
                           CupertinoIcons.heart_fill,
@@ -205,8 +194,7 @@ class QuickObjects {
                         ))
                     : IconButton(
                         onPressed: () async {
-                          await DatabaseService(id: customer.id, ids: [])
-                              .addToFavs(customer.fav_products, product.id);
+                          await DatabaseService(id: customer.id, ids: []).addToFavs(customer.fav_products, product.id);
                         },
                         icon: Icon(
                           CupertinoIcons.heart,
@@ -242,8 +230,7 @@ class QuickObjects {
                       child: Center(
                         child: Text(
                           "Last ${product.quantity} in stock",
-                          style: TextStyle(
-                              color: AppColors.background, fontSize: 11),
+                          style: TextStyle(color: AppColors.background, fontSize: 11),
                         ),
                       ),
                       color: AppColors.negative_button,
@@ -263,15 +250,13 @@ class QuickObjects {
                     children: [
                       Text(
                         product.name + " ",
-                        style:
-                            TextStyle(color: AppColors.body_text, fontSize: 15),
+                        style: TextStyle(color: AppColors.body_text, fontSize: 15),
                         overflow: TextOverflow.ellipsis,
                       ),
                       Expanded(
                         child: Text(
                           product.model,
-                          style: TextStyle(
-                              color: AppColors.body_text, fontSize: 15),
+                          style: TextStyle(color: AppColors.body_text, fontSize: 15),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -283,8 +268,7 @@ class QuickObjects {
                   Expanded(
                     child: Text(
                       product.sex + "'s " + product.category + " shoe",
-                      style:
-                          TextStyle(color: AppColors.system_gray, fontSize: 12),
+                      style: TextStyle(color: AppColors.system_gray, fontSize: 12),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
@@ -295,16 +279,9 @@ class QuickObjects {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                              "${((product.price * 100) / (100 - product.discount_rate)).toStringAsFixed(2)} ₺",
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  decoration: TextDecoration.lineThrough,
-                                  color: AppColors.secondary_text)),
-                          Text("${product.price.toStringAsFixed(2)} ₺",
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  color: AppColors.negative_button)),
+                          Text("${((product.price * 100) / (100 - product.discount_rate)).toStringAsFixed(2)} ₺",
+                              style: TextStyle(fontSize: 15, decoration: TextDecoration.lineThrough, color: AppColors.secondary_text)),
+                          Text("${product.price.toStringAsFixed(2)} ₺", style: TextStyle(fontSize: 20, color: AppColors.negative_button)),
                         ],
                       ),
                       Expanded(child: Container()),
@@ -319,8 +296,7 @@ class QuickObjects {
     );
   }
 
-  Widget productTile_gridView(Product product, Customer customer, Seller seller,
-      double height, double width) {
+  Widget productTile_gridView(Product product, Customer customer, Seller seller, double height, double width) {
     double h = height / 2;
     double w = width / 2;
     return Container(
@@ -339,10 +315,7 @@ class QuickObjects {
                     : null,
                 width: w,
                 height: 6 * h / 12,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: NetworkImage(product.photos[0]))),
+                decoration: BoxDecoration(image: DecorationImage(fit: BoxFit.cover, image: NetworkImage(product.photos[0]))),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -353,9 +326,7 @@ class QuickObjects {
                   customer.fav_products.contains(product.id)
                       ? IconButton(
                           onPressed: () async {
-                            await DatabaseService(id: customer.id, ids: [])
-                                .removeFromFavs(
-                                    customer.fav_products, product.id);
+                            await DatabaseService(id: customer.id, ids: []).removeFromFavs(customer.fav_products, product.id);
                           },
                           icon: Icon(
                             CupertinoIcons.heart_fill,
@@ -364,8 +335,7 @@ class QuickObjects {
                           ))
                       : IconButton(
                           onPressed: () async {
-                            await DatabaseService(id: customer.id, ids: [])
-                                .addToFavs(customer.fav_products, product.id);
+                            await DatabaseService(id: customer.id, ids: []).addToFavs(customer.fav_products, product.id);
                           },
                           icon: Icon(
                             CupertinoIcons.heart,
@@ -404,15 +374,11 @@ class QuickObjects {
                               child: product.quantity != 0
                                   ? Text(
                                       "Last ${product.quantity} in stock",
-                                      style: TextStyle(
-                                          color: AppColors.background,
-                                          fontSize: 11),
+                                      style: TextStyle(color: AppColors.background, fontSize: 11),
                                     )
                                   : Text(
                                       "Out-of-stock",
-                                      style: TextStyle(
-                                          color: AppColors.background,
-                                          fontSize: 11),
+                                      style: TextStyle(color: AppColors.background, fontSize: 11),
                                     ),
                             ),
                             color: AppColors.negative_button,
@@ -428,8 +394,7 @@ class QuickObjects {
                                 child: Center(
                                   child: Text(
                                     "${product.discount_rate}%",
-                                    style:
-                                        TextStyle(color: AppColors.background),
+                                    style: TextStyle(color: AppColors.background),
                                   ),
                                 ),
                                 color: AppColors.negative_button,
@@ -446,15 +411,11 @@ class QuickObjects {
                                       child: product.quantity != 0
                                           ? Text(
                                               "Last ${product.quantity} in stock",
-                                              style: TextStyle(
-                                                  color: AppColors.background,
-                                                  fontSize: 11),
+                                              style: TextStyle(color: AppColors.background, fontSize: 11),
                                             )
                                           : Text(
                                               "Out-of-stock",
-                                              style: TextStyle(
-                                                  color: AppColors.background,
-                                                  fontSize: 11),
+                                              style: TextStyle(color: AppColors.background, fontSize: 11),
                                             ),
                                     ),
                                     color: AppColors.negative_button,
@@ -478,15 +439,13 @@ class QuickObjects {
                     children: [
                       Text(
                         product.name + " ",
-                        style:
-                            TextStyle(color: AppColors.body_text, fontSize: 15),
+                        style: TextStyle(color: AppColors.body_text, fontSize: 15),
                         overflow: TextOverflow.ellipsis,
                       ),
                       Expanded(
                         child: Text(
                           product.model,
-                          style: TextStyle(
-                              color: AppColors.body_text, fontSize: 15),
+                          style: TextStyle(color: AppColors.body_text, fontSize: 15),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -497,8 +456,7 @@ class QuickObjects {
                   ),
                   Text(
                     product.sex + "'s " + product.category + " shoe",
-                    style:
-                        TextStyle(color: AppColors.system_gray, fontSize: 12),
+                    style: TextStyle(color: AppColors.system_gray, fontSize: 12),
                     overflow: TextOverflow.ellipsis,
                   ),
                   SizedBox(height: 3),
@@ -510,16 +468,9 @@ class QuickObjects {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                    "${((product.price * 100) / (100 - product.discount_rate)).toStringAsFixed(2)} ₺",
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        decoration: TextDecoration.lineThrough,
-                                        color: AppColors.secondary_text)),
-                                Text("${product.price.toStringAsFixed(2)} ₺",
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        color: AppColors.negative_button)),
+                                Text("${((product.price * 100) / (100 - product.discount_rate)).toStringAsFixed(2)} ₺",
+                                    style: TextStyle(fontSize: 15, decoration: TextDecoration.lineThrough, color: AppColors.secondary_text)),
+                                Text("${product.price.toStringAsFixed(2)} ₺", style: TextStyle(fontSize: 20, color: AppColors.negative_button)),
                               ],
                             ),
                           ],
@@ -532,10 +483,7 @@ class QuickObjects {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("${(product.price).toStringAsFixed(2)} ₺",
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        color: AppColors.title_text)),
+                                Text("${(product.price).toStringAsFixed(2)} ₺", style: TextStyle(fontSize: 20, color: AppColors.title_text)),
                               ],
                             ),
                           ],
@@ -549,9 +497,11 @@ class QuickObjects {
     );
   }
 
-  Widget cartItem(
-      Customer customer, Product product, int quantity, double width) {
+  Widget cartItem(Customer customer, Map<Product, dynamic> basket, int index, double width) {
     double height = 200;
+    Product product = basket.keys.toList()[index];
+    Map<dynamic, dynamic> extractedBasket = customer.basketMap;
+
     return Container(
       height: height,
       width: width,
@@ -565,10 +515,7 @@ class QuickObjects {
                 Container(
                     height: width / 2,
                     width: width / 2,
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: NetworkImage(product.photos[0])))),
+                    decoration: BoxDecoration(image: DecorationImage(fit: BoxFit.cover, image: NetworkImage(product.photos[0])))),
                 Positioned(
                   top: width / 2 - 50,
                   left: 0,
@@ -577,9 +524,7 @@ class QuickObjects {
                       IconButton(
                           padding: EdgeInsets.all(0),
                           onPressed: () async {
-                            await DatabaseService(id: customer.id, ids: [])
-                                .removeFromCart(customer.amounts,
-                                    customer.basket, product.id);
+                            await DatabaseService(id: customer.id, ids: []).removeFromCart(customer.basketMap, product.id);
                           },
                           icon: Icon(
                             CupertinoIcons.bin_xmark,
@@ -591,24 +536,27 @@ class QuickObjects {
                       IconButton(
                           padding: EdgeInsets.all(0),
                           onPressed: () async {
-                            await DatabaseService(id: customer.id, ids: [])
-                                .decreaseAmount(customer.amounts,
-                                    customer.basket, product.id);
+                            if (extractedBasket[product.id][0] > 1) {
+                              await DatabaseService(id: customer.id, ids: []).decreaseAmount(extractedBasket, product.id);
+                            }
                           },
                           icon: Icon(
                             CupertinoIcons.minus,
-                            color: AppColors.active_icon,
+                            color: extractedBasket[product.id][0] > 1 ? AppColors.active_icon : AppColors.system_gray,
                           )),
                       IconButton(
                           padding: EdgeInsets.all(0),
                           onPressed: () async {
-                            await DatabaseService(id: customer.id, ids: [])
-                                .increaseAmount(customer.amounts,
-                                    customer.basket, product.id);
+                            dynamic available = product.sizesMap[extractedBasket[product.id][1].toString()] as int;
+                            if (extractedBasket[product.id][0] < available) {
+                              await DatabaseService(id: customer.id, ids: []).increaseAmount(extractedBasket, product.id);
+                            }
                           },
                           icon: Icon(
                             CupertinoIcons.plus,
-                            color: AppColors.active_icon,
+                            color: (extractedBasket[product.id][0] < product.sizesMap[extractedBasket[product.id][1].toString()])
+                                ? AppColors.active_icon
+                                : AppColors.system_gray,
                           )),
                     ],
                   ),
@@ -649,7 +597,7 @@ class QuickObjects {
                   height: 10,
                 ),
                 Text(
-                  "Quantity: " + quantity.toString(),
+                  "Quantity: " + extractedBasket[product.id][0].toString(),
                   style: TextStyle(color: AppColors.system_gray, fontSize: 12),
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -657,7 +605,7 @@ class QuickObjects {
                   height: 1,
                 ),
                 Text(
-                  "Size: 40",
+                  "Size: " + extractedBasket[product.id][1].toString(),
                   style: TextStyle(color: AppColors.system_gray, fontSize: 12),
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -670,9 +618,8 @@ class QuickObjects {
                   overflow: TextOverflow.ellipsis,
                 ),
                 Expanded(child: Container()),
-                Text("${(product.price * quantity).toStringAsFixed(2)} ₺",
-                    style:
-                        TextStyle(color: AppColors.title_text, fontSize: 20)),
+                Text("${getIndividualPriceForCartItem(product, basket).toStringAsFixed(2)} ₺",
+                    style: TextStyle(color: AppColors.title_text, fontSize: 20)),
                 SizedBox(
                   height: 8,
                 )
@@ -683,4 +630,15 @@ class QuickObjects {
       ),
     );
   }
+}
+
+double getIndividualPriceForCartItem(Product product, Map<Product, dynamic> basket) {
+  double price = 0;
+  basket.forEach((key, value) {
+    if (key.id == product.id) {
+      price = product.price * value[0];
+    }
+  });
+
+  return price;
 }

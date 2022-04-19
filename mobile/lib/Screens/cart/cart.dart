@@ -23,14 +23,17 @@ class _CartState extends State<Cart> {
   Widget build(BuildContext context) {
     Customer? customer = Provider.of<Customer?>(context);
     if (customer != null) {
-      List basketIDs = customer.basket;
-      List amounts = customer.amounts;
+      List basketIDs = customer.basketMap.keys.toList();
+
       return StreamBuilder<List<Product>>(
           stream: DatabaseService(id: "", ids: basketIDs).specifiedProducts,
           builder: (context, snapshot) {
-            List<Product>? basket = snapshot.data;
+            List<Product>? basketItems = snapshot.data;
 
-            if (basket != null && basket.isNotEmpty) {
+            if (basketItems != null && basketItems.isNotEmpty) {
+              Map<Product, dynamic> basket =
+                  recreateBasketMap(basketItems, customer.basketMap);
+
               return Scaffold(
                 backgroundColor: AppColors.background,
                 appBar: AppBar(
@@ -48,20 +51,16 @@ class _CartState extends State<Cart> {
                     children: [
                       Expanded(
                         child: ListView.builder(
-                          itemCount: basket.length,
+                          itemCount: basket.keys.toList().length,
                           itemBuilder: (context, index) {
-                            print(customer.basketMap);
-                            return QuickObjects().cartItem(
-                                customer,
-                                basket[index],
-                                amounts[index + 1],
-                                MediaQuery.of(context).size.width - 16);
+                            return QuickObjects().cartItem(customer, basket,
+                                index, MediaQuery.of(context).size.width - 16);
                           },
                         ),
                       ),
                       ListTile(
                           title: Text(
-                            "${totalAmount(amounts, basket).toStringAsFixed(2)} ₺",
+                            "${totalAmount(basket).toStringAsFixed(2)} ₺",
                             style: TextStyle(
                                 fontSize: 25, color: AppColors.title_text),
                           ),
@@ -154,10 +153,25 @@ class _CartState extends State<Cart> {
   }
 }
 
-double totalAmount(List<dynamic> amounts, List<Product> cart) {
-  double sum = 0;
-  for (var i = 0; i < cart.length; i++) {
-    sum += cart[i].price * amounts[i + 1];
+Map<Product, dynamic> recreateBasketMap(
+    List<Product>? basketItems, Map<dynamic, dynamic> basketMap) {
+  Map<Product, dynamic> basket = {};
+
+  for (var i = 0; i < basketItems!.length; i++) {
+    basketMap.forEach((key, value) {
+      if (key == basketItems[i].id) {
+        basket[basketItems[i]] = value;
+      }
+    });
   }
+
+  return basket;
+}
+
+double totalAmount(Map<Product, dynamic> basketMap) {
+  double sum = 0;
+  basketMap.forEach((key, value) {
+    sum += key.price * value[0];
+  });
   return sum;
 }
