@@ -29,6 +29,7 @@ class DatabaseService {
       addresses: snapshot.get('addresses'),
       amounts: snapshot.get('amounts'),
       basket: snapshot.get('basket'),
+      basketMap: snapshot.get('basketMap'),
       prev_orders: snapshot.get('prev_orders'),
       tax_id: snapshot.get('tax_id'),
       credit_cards: snapshot.get('credit_cards'),
@@ -189,11 +190,12 @@ class DatabaseService {
             (snapshot.get("discount_rate") *
                 double.parse(snapshot.get("price")) /
                 100),
-        quantity: snapshot.get("quantity"),
+        quantity: getQuantity(snapshot.get("sizesMap")),
         discount_rate: snapshot.get("discount_rate"),
         warranty: snapshot.get("warranty"),
         comments: snapshot.get("comments"),
         sizes: snapshot.get("sizes"),
+        sizesMap: snapshot.get("sizesMap"),
         photos: snapshot.get("photos"));
   }
 
@@ -214,11 +216,12 @@ class DatabaseService {
                     (doc.get("discount_rate") *
                         double.parse(doc.get("price")) /
                         100),
-                quantity: doc.get("quantity"),
+                quantity: getQuantity(doc.get("sizesMap")),
                 discount_rate: doc.get("discount_rate"),
                 warranty: doc.get("warranty"),
                 comments: doc.get("comments"),
                 sizes: doc.get("sizes"),
+                sizesMap: doc.get("sizesMap"),
                 photos: doc.get("photos"));
           }
         })
@@ -239,11 +242,12 @@ class DatabaseService {
           sex: doc.get("sex"),
           price: double.parse(doc.get("price")) -
               (doc.get("discount_rate") * double.parse(doc.get("price")) / 100),
-          quantity: doc.get("quantity"),
+          quantity: getQuantity(doc.get("sizesMap")),
           discount_rate: doc.get("discount_rate"),
           warranty: doc.get("warranty"),
           comments: doc.get("comments"),
           sizes: doc.get("sizes"),
+          sizesMap: doc.get("sizesMap"),
           photos: doc.get("photos"));
     }).toList();
   }
@@ -264,15 +268,26 @@ class DatabaseService {
                   (doc.get("discount_rate") *
                       double.parse(doc.get("price")) /
                       100),
-              quantity: doc.get("quantity"),
+              quantity: getQuantity(doc.get("sizesMap")),
               discount_rate: doc.get("discount_rate"),
               warranty: doc.get("warranty"),
               comments: doc.get("comments"),
               sizes: doc.get("sizes"),
+              sizesMap: doc.get("sizesMap"),
               photos: doc.get("photos"));
         })
         .toList()
         .where((element) => element.discount_rate != 0));
+  }
+
+  int getQuantity(dynamic dmap) {
+    Map<dynamic, dynamic> map = dmap as Map<dynamic, dynamic>;
+    dynamic dquantity = 0;
+    map.forEach((key, value) {
+      dquantity += value;
+    });
+    int quantity = dquantity as int;
+    return quantity;
   }
 
   Stream<Product> get productData {

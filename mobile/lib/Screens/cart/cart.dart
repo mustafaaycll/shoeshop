@@ -50,6 +50,7 @@ class _CartState extends State<Cart> {
                         child: ListView.builder(
                           itemCount: basket.length,
                           itemBuilder: (context, index) {
+                            print(customer.basketMap);
                             return QuickObjects().cartItem(
                                 customer,
                                 basket[index],

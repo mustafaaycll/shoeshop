@@ -47,6 +47,7 @@ class _ProductPageState extends State<ProductPage> {
                           width: MediaQuery.of(context).size.width - 16,
                           child: LayoutBuilder(
                             builder: (context, constraints) {
+                              print(product.sizesMap);
                               return Stack(
                                 children: [
                                   SizedBox(
@@ -232,7 +233,7 @@ class _ProductPageState extends State<ProductPage> {
                                 style: TextStyle(color: AppColors.system_gray),
                               ),
                               Text(
-                                "Available Sizes: ${product.sizes.join(", ")}",
+                                "Available Sizes: ${getAvailableSizes(product.sizesMap).join(", ")}",
                                 style: TextStyle(color: AppColors.system_gray),
                               ),
                             ],
@@ -312,4 +313,16 @@ class _ProductPageState extends State<ProductPage> {
           ),
         ));
   }
+}
+
+List<dynamic> getAvailableSizes(Map<dynamic, dynamic> map) {
+  List<dynamic> sizes = [];
+
+  map.forEach((key, value) {
+    if (value != 0) {
+      sizes.add(key);
+    }
+  });
+
+  return sizes;
 }

@@ -7,6 +7,7 @@ class Customer {
   final List<dynamic> addresses;
   final List<dynamic> amounts;
   final List<dynamic> basket;
+  final Map<dynamic, dynamic> basketMap;
   final List<dynamic> prev_orders;
   final String tax_id;
   final List<dynamic> credit_cards;
@@ -20,6 +21,7 @@ class Customer {
       required this.addresses,
       required this.amounts,
       required this.basket,
+      required this.basketMap,
       required this.prev_orders,
       required this.tax_id,
       required this.credit_cards});
