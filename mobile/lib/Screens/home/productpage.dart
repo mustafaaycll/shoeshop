@@ -7,6 +7,7 @@ import 'package:mobile/models/products/product.dart';
 import 'package:mobile/models/users/customer.dart';
 import 'package:mobile/models/users/seller.dart';
 import 'package:mobile/utils/colors.dart';
+import 'package:mobile/utils/objects.dart';
 import 'package:mobile/utils/shapes_dimensions.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
@@ -272,9 +273,22 @@ class _ProductPageState extends State<ProductPage> {
                                               color: AppColors.background,
                                               child: ListTile(
                                                 onTap: () async {
-                                                  await DatabaseService(id: customer.id, ids: [])
-                                                      .addToCart(customer.basketMap, product.id, availableSizes.keys.toList()[index]);
                                                   Navigator.pop(context);
+                                                  if (customer.basketMap[product.id][0] < product.sizesMap[availableSizes.keys.toList()[index]]) {
+                                                    DatabaseService(id: customer.id, ids: [])
+                                                        .addToCart(customer.basketMap, product.id, availableSizes.keys.toList()[index]);
+                                                    showDialog(
+                                                        context: context,
+                                                        builder: (BuildContext context) {
+                                                          return QuickObjects().addedToCart();
+                                                        });
+                                                  } else {
+                                                    showDialog(
+                                                        context: context,
+                                                        builder: (BuildContext context) {
+                                                          return QuickObjects().failedToAddToCart();
+                                                        });
+                                                  }
                                                 },
                                                 leading: Container(
                                                   decoration:

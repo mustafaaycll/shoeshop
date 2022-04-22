@@ -630,6 +630,74 @@ class QuickObjects {
       ),
     );
   }
+
+  Widget failedToAddToCart() {
+    return AlertDialog(
+        backgroundColor: AppColors.background,
+        scrollable: true,
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  CupertinoIcons.cube_box,
+                  color: AppColors.negative_button,
+                  size: 20,
+                ),
+                SizedBox(
+                  width: 5,
+                ),
+                Text(
+                  "No more left",
+                  style: TextStyle(color: AppColors.negative_button, fontSize: 20),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            Row(
+              children: [
+                SizedBox(
+                  width: 25,
+                ),
+                Text(
+                  "all available stock is in your cart",
+                  style: TextStyle(color: AppColors.title_text, fontSize: 15),
+                ),
+              ],
+            ),
+          ],
+        ));
+  }
+
+  Widget addedToCart() {
+    return AlertDialog(
+        backgroundColor: AppColors.background,
+        scrollable: true,
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  CupertinoIcons.cart,
+                  color: AppColors.positive_button,
+                  size: 20,
+                ),
+                SizedBox(
+                  width: 5,
+                ),
+                Text(
+                  "Added to your cart",
+                  style: TextStyle(color: AppColors.positive_button, fontSize: 20),
+                ),
+              ],
+            ),
+          ],
+        ));
+  }
 }
 
 double getIndividualPriceForCartItem(Product product, Map<Product, dynamic> basket) {
