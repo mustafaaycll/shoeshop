@@ -1,0 +1,28 @@
+<div class="layout_padding gallery_section">
+  <div class="product-container">
+    
+
+      
+        <div  *ngFor="let product of products" class="card">
+          <img src="{{ product.photos[0]}}" alt="Denim Jeans" style="width:100%"
+           style="height:60%">
+          <h2><a class="product_text" [routerLink] ="['products', product.id]" [title]="product.name + ' details'">
+            {{ product.name }}</a>
+          </h2>
+          <p class="price">{{ product.price | currency }}</p>
+          <p>{{product.description}}</p>
+          <p><button class="cardbutton">Add to Cart</button></p>
+            
+        </div>
+         
+  </div>
+    
+
+
+  
+  
+  
+
+</div>
+
+

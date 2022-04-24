@@ -1,0 +1,13 @@
+  .defaultcolor{
+    position: relative;
+    display: inline-block;
+    color: gray;
+    
+  }
+  
+  .paintedcolor {
+    position: relative;
+    display: inline-block;
+    color: #FFD700;
+
+  }
