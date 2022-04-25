@@ -274,9 +274,16 @@ class _ProductPageState extends State<ProductPage> {
                                               child: ListTile(
                                                 onTap: () async {
                                                   Navigator.pop(context);
+                                                  bool firstIfWorked = false;
                                                   if (customer.basketMap.isEmpty) {
                                                     DatabaseService(id: customer.id, ids: [])
                                                         .addToCart(customer.basketMap, product.id, availableSizes.keys.toList()[index]);
+                                                    showDialog(
+                                                        context: context,
+                                                        builder: (BuildContext context) {
+                                                          return QuickObjects().addedToCart();
+                                                        });
+                                                    firstIfWorked = true;
                                                   }
                                                   if (customer.basketMap[product.id][0] < product.sizesMap[availableSizes.keys.toList()[index]]) {
                                                     DatabaseService(id: customer.id, ids: [])
@@ -286,7 +293,9 @@ class _ProductPageState extends State<ProductPage> {
                                                         builder: (BuildContext context) {
                                                           return QuickObjects().addedToCart();
                                                         });
-                                                  } else {
+                                                  } else if (customer.basketMap[product.id][0] >=
+                                                          product.sizesMap[availableSizes.keys.toList()[index]] &&
+                                                      !firstIfWorked) {
                                                     showDialog(
                                                         context: context,
                                                         builder: (BuildContext context) {
