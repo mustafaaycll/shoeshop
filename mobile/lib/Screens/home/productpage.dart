@@ -274,6 +274,10 @@ class _ProductPageState extends State<ProductPage> {
                                               child: ListTile(
                                                 onTap: () async {
                                                   Navigator.pop(context);
+                                                  if (customer.basketMap.isEmpty) {
+                                                    DatabaseService(id: customer.id, ids: [])
+                                                        .addToCart(customer.basketMap, product.id, availableSizes.keys.toList()[index]);
+                                                  }
                                                   if (customer.basketMap[product.id][0] < product.sizesMap[availableSizes.keys.toList()[index]]) {
                                                     DatabaseService(id: customer.id, ids: [])
                                                         .addToCart(customer.basketMap, product.id, availableSizes.keys.toList()[index]);

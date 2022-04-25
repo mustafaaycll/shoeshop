@@ -631,6 +631,104 @@ class QuickObjects {
     );
   }
 
+    Widget wishlistItem(Customer customer, List<Product> wishlistItems, int index, double width) {
+    double height = 200;
+    Product product = wishlistItems[index];
+
+    return Container(
+      height: height,
+      width: width,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              children: [
+                Container(
+                    height: width / 2,
+                    width: width / 2,
+                    decoration: BoxDecoration(image: DecorationImage(fit: BoxFit.cover, image: NetworkImage(product.photos[0])))),
+                Positioned(
+                  top: width / 2 - 50,
+                  left: 0,
+                  child: Row(
+                    children: [
+                      IconButton(
+                          padding: EdgeInsets.all(0),
+                          onPressed: () async {
+                            await DatabaseService(id: customer.id, ids: []).removeFromFavs(customer.fav_products, product.id);
+                          },
+                          icon: Icon(
+                            CupertinoIcons.bin_xmark,
+                            color: AppColors.negative_button,
+                          )),
+                      SizedBox(
+                        width: 45,
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 8,
+                ),
+                Text(
+                  product.name,
+                  style: TextStyle(color: AppColors.title_text, fontSize: 20),
+                ),
+                SizedBox(
+                  height: 1,
+                ),
+                Text(
+                  product.model,
+                  style: TextStyle(color: AppColors.title_text, fontSize: 15),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                SizedBox(
+                  height: 1,
+                ),
+                Text(
+                  product.sex + "'s " + product.category + " shoe",
+                  style: TextStyle(color: AppColors.system_gray, fontSize: 12),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                SizedBox(
+                  height: 1,
+                ),
+                SizedBox(
+                  height: 1,
+                ),
+                Text(
+                  product.warranty ? "Warranty: Yes" : "Warranty: No",
+                  style: TextStyle(color: AppColors.system_gray, fontSize: 12),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Expanded(child: Container()),
+                Text("${getIndividualPriceForWishlistItem(product).toStringAsFixed(2)} ₺",
+                    style: TextStyle(color: AppColors.title_text, fontSize: 20)),
+                SizedBox(
+                  height: 8,
+                )
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget failedToAddToCart() {
     return AlertDialog(
         backgroundColor: AppColors.background,
@@ -708,5 +806,10 @@ double getIndividualPriceForCartItem(Product product, Map<Product, dynamic> bask
     }
   });
 
+  return price;
+}
+
+double getIndividualPriceForWishlistItem(Product product) {
+  double price = product.price;
   return price;
 }
