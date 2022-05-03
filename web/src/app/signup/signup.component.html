@@ -25,7 +25,9 @@
         <div *ngIf="firebaseErrorMessage != ''" class="error-style">
             <span>{{ firebaseErrorMessage }}</span>
         </div>
-
+        <p>Already have an account?
+            <a routerLink="/login">Login</a>
+        </p>
         <button mat-raised-button color="primary">Signup</button>
     </form>
 </mat-card>

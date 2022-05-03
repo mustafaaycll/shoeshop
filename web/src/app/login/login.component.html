@@ -19,7 +19,9 @@
         <div *ngIf="firebaseErrorMessage != ''" class="error-style">
             <span>{{ firebaseErrorMessage }}</span>
         </div>
-
+        <p>Don't have an account?
+            <a routerLink="/signup">Signup</a>
+        </p>
         <button mat-raised-button color="primary">Login</button>
     </form>
 </mat-card>
