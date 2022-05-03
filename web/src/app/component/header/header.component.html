@@ -4,13 +4,21 @@
       <i style="font-size: 40px;" class="fas fa-shipping-fast">&nbsp;
 
       </i>
-      <strong style="font-size: 30px;" routerLink="products">ShoeStore</strong>
+      <button style="font-size: 30px;" routerLink="products">ShoeStore</button>
       <div class="form-group">
         <input type="text" class="form-control" [(ngModel)]="searchTerm" (keyup)="search($event)" placeholder="search product">
       </div>
       <span class="fas fa-search search-icon"> </span>
     </div>
     <button style="font-size: 30px;" routerLink="login">Login</button>
+    <strong style="font-size: 30px;">
+      <div *ngIf="!(afAuth.user | async)">
+        Hello, visitor
+      </div>
+      <div *ngIf="(afAuth.user | async)">
+        Hello, user 
+      </div>
+    </strong>
     <button class="btn btn-primary" routerLink="cart">
       <i style="font-size: 30px;" class="fas fa-cart-plus"></i>
       <div style="font-size: 10px;" class="badge bg-danger"> {{ totalItem }} </div>

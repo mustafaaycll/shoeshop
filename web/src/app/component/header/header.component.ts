@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CartService } from 'src/app/service/cart.service';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 
 @Component({
   selector: 'app-header',
@@ -10,7 +11,7 @@ export class HeaderComponent implements OnInit {
 
   public totalItem: number = 0;
   public searchTerm: string ='';
-  constructor(private cartService: CartService) { }
+  constructor(private cartService: CartService, public afAuth: AngularFireAuth) { }
 
   ngOnInit(): void {
     this.cartService.getProducts().subscribe(res=>{
@@ -26,6 +27,9 @@ export class HeaderComponent implements OnInit {
     
   }
 
+  logout(): void {
+    this.afAuth.signOut();
+  }
 }
 
 
