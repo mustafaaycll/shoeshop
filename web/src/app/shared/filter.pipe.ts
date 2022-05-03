@@ -1,3 +1,4 @@
+import { EventListenerFocusTrapInertStrategy } from '@angular/cdk/a11y';
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
@@ -11,6 +12,12 @@ export class FilterPipe implements PipeTransform{
         }
         value.forEach((a:any)=>{
             if(a[propName].trim().toLowerCase().includes(filterString.toLowerCase())){
+                result.push(a);
+            }
+            else if(a.category.trim().toLowerCase().includes(filterString.toLowerCase())){
+                result.push(a);
+            }
+            else if(a.description.trim().toLowerCase().includes(filterString.toLowerCase())){
                 result.push(a);
             };
 

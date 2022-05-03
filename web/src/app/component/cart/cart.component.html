@@ -34,7 +34,7 @@
                           <td colspan="4"></td>
                           <td><button class="btn btn-danger" (click)="emptycart()">Empty Cart</button></td>
                           <td><button class="btn btn-primary" routerLink="/products">Shop More</button></td>
-                          <td><button class="btn btn-success">Checkout</button></td>
+                          <td><button class="btn btn-success"> <div *ngIf="!(afAuth.user | async)" routerLink="/login">Checkout</div> <div *ngIf="(afAuth.user | async)" routerLink="/dashboard">Checkout</div></button></td>
                           <td><strong>Grand Total: ${{grandTotal}}</strong></td>
                       </tr>
                   </tbody>
