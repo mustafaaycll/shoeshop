@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "cs308-202102": {
+      "hosting": {
+        "cs308Project": [
+          "cs308-202102"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "cs308-202102"
+  }
+}
