@@ -107,6 +107,9 @@ class _PaymentOptionsState extends State<PaymentOptions> {
         return Scaffold(
           backgroundColor: AppColors.background,
           appBar: AppBar(
+            iconTheme: IconThemeData(
+              color: AppColors.title_text,
+            ),
             backgroundColor: AppColors.background,
             elevation: 0,
           ),
