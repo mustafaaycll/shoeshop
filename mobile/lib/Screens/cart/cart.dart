@@ -2,11 +2,14 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile/Screens/home/productpage.dart';
 import 'package:mobile/Services/database.dart';
 import 'package:mobile/models/products/product.dart';
+import 'package:mobile/models/users/seller.dart';
 import 'package:mobile/utils/animations.dart';
 import 'package:mobile/utils/colors.dart';
 import 'package:mobile/utils/objects.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 import '../../models/users/customer.dart';
 import '../../utils/shapes_dimensions.dart';
@@ -31,8 +34,7 @@ class _CartState extends State<Cart> {
             List<Product>? basketItems = snapshot.data;
 
             if (basketItems != null && basketItems.isNotEmpty) {
-              Map<Product, dynamic> basket =
-                  recreateBasketMap(basketItems, customer.basketMap);
+              Map<Product, dynamic> basket = recreateBasketMap(basketItems, customer.basketMap);
 
               return Scaffold(
                 backgroundColor: AppColors.background,
@@ -53,30 +55,43 @@ class _CartState extends State<Cart> {
                         child: ListView.builder(
                           itemCount: basket.keys.toList().length,
                           itemBuilder: (context, index) {
-                            return QuickObjects().cartItem(customer, basket,
-                                index, MediaQuery.of(context).size.width - 16);
+                            return StreamBuilder<Seller>(
+                                stream: DatabaseService(id: basket.keys.toList()[index].distributor_information, ids: []).sellerData,
+                                builder: (context, snapshot) {
+                                  Seller? seller = snapshot.data;
+                                  if (seller != null) {
+                                    return OutlinedButton(
+                                      onPressed: () =>
+                                          {pushNewScreen(context, screen: ProductPage(seller: seller!, product: basket.keys.toList()[index]))},
+                                      style: ShapeRules(bg_color: AppColors.background, side_color: AppColors.background)
+                                          .outlined_button_style_no_padding(),
+                                      child: QuickObjects().cartItem(customer, basket, index, MediaQuery.of(context).size.width - 16),
+                                    );
+                                  } else {
+                                    return OutlinedButton(
+                                      onPressed: () => {},
+                                      style: ShapeRules(bg_color: AppColors.background, side_color: AppColors.background)
+                                          .outlined_button_style_no_padding(),
+                                      child: Animations().loading(),
+                                    );
+                                  }
+                                });
                           },
                         ),
                       ),
                       ListTile(
                           title: Text(
                             "${totalAmount(basket).toStringAsFixed(2)} ₺",
-                            style: TextStyle(
-                                fontSize: 25, color: AppColors.title_text),
+                            style: TextStyle(fontSize: 25, color: AppColors.title_text),
                           ),
                           trailing: OutlinedButton.icon(
-                            style: ShapeRules(
-                                    bg_color: AppColors.filled_button,
-                                    side_color: AppColors.filled_button)
-                                .outlined_button_style(),
+                            style: ShapeRules(bg_color: AppColors.filled_button, side_color: AppColors.filled_button).outlined_button_style(),
                             onPressed: () async {},
                             icon: Icon(
                               CupertinoIcons.creditcard,
                               color: AppColors.filled_button_text,
                             ),
-                            label: Text("Checkout",
-                                style: TextStyle(
-                                    color: AppColors.filled_button_text)),
+                            label: Text("Checkout", style: TextStyle(color: AppColors.filled_button_text)),
                           ))
                     ],
                   ),
@@ -134,8 +149,7 @@ class _CartState extends State<Cart> {
                                   ),
                                   Text(
                                     "When you add products, they'll appear here.",
-                                    style:
-                                        TextStyle(color: AppColors.system_gray),
+                                    style: TextStyle(color: AppColors.system_gray),
                                   ),
                                 ],
                               )
@@ -153,8 +167,7 @@ class _CartState extends State<Cart> {
   }
 }
 
-Map<Product, dynamic> recreateBasketMap(
-    List<Product>? basketItems, Map<dynamic, dynamic> basketMap) {
+Map<Product, dynamic> recreateBasketMap(List<Product>? basketItems, Map<dynamic, dynamic> basketMap) {
   Map<Product, dynamic> basket = {};
 
   for (var i = 0; i < basketItems!.length; i++) {
