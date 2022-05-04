@@ -128,16 +128,21 @@ class _CartState extends State<Cart> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Row(
-                                children: [
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Text(
-                                    "Your cart is empty",
-                                    style: TextStyle(fontSize: 30),
-                                  )
-                                ],
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width - 84,
+                                child: Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        "Your cart is empty",
+                                        style: TextStyle(fontSize: 30),
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
                               SizedBox(
                                 height: 5,
