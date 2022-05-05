@@ -9,6 +9,7 @@ import { SignupComponent } from './signup/signup.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 
 import { AuthGuard } from './services/auth.guard';
+import { ProductDetailsComponent } from './component/product-details/product-details.component';
 //import * as auth0 from "auth0-js";
 
 
@@ -16,6 +17,7 @@ import { AuthGuard } from './services/auth.guard';
 const routes: Routes = [
   {path:'', redirectTo:'products',pathMatch:'full'},
   {path:'products', component: ProductsComponent},
+  {path: 'product', component: ProductDetailsComponent},
   {path:'cart', component: CartComponent},
   { path: 'home', component: HomeComponent },
   { path: 'login', component: LoginComponent },

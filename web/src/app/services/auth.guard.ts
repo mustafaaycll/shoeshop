@@ -17,7 +17,7 @@ export class AuthGuard implements CanActivate {
         state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
         return new Promise((resolve, reject) => {
-            this.afAuth.onAuthStateChanged((user) => {
+            this.afAuth.onAuthStateChanged((user: any) => {
                 if (user) {
 
                     // if (!user.emailVerified)                            // if the user hasn't verified their email, send them to that page

@@ -8,6 +8,7 @@ interface Option {
   viewValue: string;
 }
 
+
 @Component({
   selector: 'app-products',
   templateUrl: './products.component.html',
