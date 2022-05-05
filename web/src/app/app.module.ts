@@ -35,6 +35,8 @@ import { provideAuth,getAuth } from '@angular/fire/auth';
 import { provideFirestore,getFirestore } from '@angular/fire/firestore';
 import { ProductDetailsComponent } from './component/product-details/product-details.component';
 
+import { ItemService } from './services/item.service';
+
 
 @NgModule({
   declarations: [
@@ -69,7 +71,7 @@ import { ProductDetailsComponent } from './component/product-details/product-det
     MatSelectModule,
     MatButtonToggleModule,
   ],
-  providers: [],
+  providers: [ItemService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
