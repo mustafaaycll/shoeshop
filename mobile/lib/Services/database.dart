@@ -160,6 +160,30 @@ class DatabaseService {
 
     await customerCollection.doc(id).update({'credit_cards': newOptions});
   }
+
+  Future addAddressOption(List<dynamic> oldOptions, String addressToBeAdded) async {
+    List<dynamic> newOptions = [];
+    for (var i = 0; i < oldOptions.length; i++) {
+      if (oldOptions[i] != addressToBeAdded) {
+        newOptions.add(oldOptions[i]);
+      }
+    }
+
+    newOptions.add(addressToBeAdded);
+
+    await customerCollection.doc(id).update({'addresses': newOptions});
+  }
+
+  Future removeAddressOption(List<dynamic> oldOptions, String addressToBeAdded) async {
+    List<dynamic> newOptions = [];
+    for (var i = 0; i < oldOptions.length; i++) {
+      if (oldOptions[i] != addressToBeAdded) {
+        newOptions.add(oldOptions[i]);
+      }
+    }
+
+    await customerCollection.doc(id).update({'addresses': newOptions});
+  }
   /*--CUSTOMER--CUSTOMER--CUSTOMER--CUSTOMER--CUSTOMER--CUSTOMER--*/
 
   /*--PRODUCT--PRODUCT--PRODUCT--PRODUCT--PRODUCT--PRODUCT--PRODUCT--PRODUCT--*/

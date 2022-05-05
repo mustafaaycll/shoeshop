@@ -186,7 +186,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
         );
       }
     } else {
-      return Animations().scaffoldLoadingScreen('PAYMENT');
+      return Animations().scaffoldLoadingScreen('');
     }
   }
 }
