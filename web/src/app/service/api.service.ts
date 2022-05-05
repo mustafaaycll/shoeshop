@@ -1,18 +1,37 @@
-import { HttpClient } from '@angular/common/http'
+import { HttpClient } from '@angular/common/http';
+import { AngularFirestore, AngularFirestoreCollection} from '@angular/fire/compat/firestore';
+import { AngularFireDatabase } from '@angular/fire/compat/database';
+
+import { map, Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
-import {map} from 'rxjs/operators';
+import { product } from 'src/products';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
 
-  constructor(private http : HttpClient) { }
+  constructor(private firestore: AngularFirestore, private db: AngularFireDatabase) { }
 
   getProduct(){
-    return this.http.get<any>("https://fakestoreapi.com/products")
-    .pipe(map((res:any)=> {
-      return res;
-    }))
+
+    
+    return this.firestore.collection<product>('products').snapshotChanges().pipe(map(snaps => 
+      {return snaps.map(a => {
+        const data = a.payload.doc.data();
+        data.id = a.payload.doc.id;
+        console.log(data);
+        return data;
+      })
+    })
+    );
+
+  
+  }
+
+  getProductWithId(id: string){
+
+    return this.firestore.doc(`products/${id}`).valueChanges();
   }
 }

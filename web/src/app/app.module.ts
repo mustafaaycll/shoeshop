@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule} from '@angular/forms';
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './component/header/header.component';
@@ -13,16 +14,23 @@ import { HomeComponent } from './home/home.component';
 import { SignupComponent } from './signup/signup.component';
 import { LoginComponent } from './login/login.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import {NgbRatingModule} from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
-import { MatButtonModule } from '@angular/material/button';
+
+import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
+
 
 import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from '../environments/environment';
 import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
+
 import { provideAuth,getAuth } from '@angular/fire/auth';
+
 import { provideFirestore,getFirestore } from '@angular/fire/firestore';
+import { ProductDetailsComponent } from './component/product-details/product-details.component';
 
 
 @NgModule({
@@ -35,7 +43,8 @@ import { provideFirestore,getFirestore } from '@angular/fire/firestore';
     HomeComponent,
     SignupComponent,
     LoginComponent,
-    DashboardComponent
+    DashboardComponent,
+    ProductDetailsComponent
   ],
   imports: [
     BrowserModule,
@@ -49,6 +58,8 @@ import { provideFirestore,getFirestore } from '@angular/fire/firestore';
     MatButtonModule,
     MatCardModule,
     MatInputModule,
+    NgbRatingModule,
+    NgbModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore())
