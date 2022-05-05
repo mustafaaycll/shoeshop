@@ -7,7 +7,7 @@ import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-
+import { PaymentComponent } from './component/payment/payment.component';
 import { AuthGuard } from './services/auth.guard';
 import { ProductDetailsComponent } from './component/product-details/product-details.component';
 //import * as auth0 from "auth0-js";
@@ -22,6 +22,7 @@ const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
+  { path: 'Payment', component: PaymentComponent},
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
   { path: '**', component: HomeComponent },  
 
