@@ -11,6 +11,7 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
     styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+    
 
     loginForm: FormGroup;
     firebaseErrorMessage: string;
@@ -42,5 +43,7 @@ export class LoginComponent implements OnInit {
                 this.firebaseErrorMessage = result.message;
             }
         });
+
     }
+    
 }
