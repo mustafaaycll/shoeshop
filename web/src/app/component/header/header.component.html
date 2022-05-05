@@ -1,16 +1,24 @@
 <header>
   <div class="navbar bg-primary shadow-sm">
     <div class="navbar-brand slign-item-center d-flex">
-      <i style="font-size: 40px;" class="fas fa-shipping-fast">&nbsp;
+      <i style="font-size: 40px; color: white;" class="fa-solid fa-shoe-prints">&nbsp;
 
       </i>
-      <strong style="font-size: 30px;">ShoeStore</strong>
+      <button style="font-size: 30px; color: white; background-color: transparent;" routerLink="products">ShoeStore</button>
       <div class="form-group">
         <input type="text" class="form-control" [(ngModel)]="searchTerm" (keyup)="search($event)" placeholder="search product">
       </div>
       <span class="fas fa-search search-icon"> </span>
     </div>
-
+    <button style="font-size: 30px; color: white; background-color: transparent;" routerLink="login">Login</button>
+    <strong style="font-size: 30px; color:white">
+      <div *ngIf="!(afAuth.user | async)">
+        Hello, visitor
+      </div>
+      <div *ngIf="(afAuth.user | async)">
+        Hello, user 
+      </div>
+    </strong>
     <button class="btn btn-primary" routerLink="cart">
       <i style="font-size: 30px;" class="fas fa-cart-plus"></i>
       <div style="font-size: 10px;" class="badge bg-danger"> {{ totalItem }} </div>
