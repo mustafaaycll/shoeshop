@@ -11,7 +11,8 @@ ngbd-table-filtering span.ngb-highlight {
   ngb-carousel .picsum-img-wrapper {
     position: relative;
     height: 0;
-    padding-top: 55%; /* Keep ratio for 900x500 images */
+    padding-top: 10%; 
+    ;/* Keep ratio for 900x500 images */
   }
   
   ngb-carousel .picsum-img-wrapper>img {
@@ -20,5 +21,23 @@ ngbd-table-filtering span.ngb-highlight {
     left: 0;
     bottom: 0;
     right: 0;
+  }
+  
+
+  .star {
+    position: relative;
+    display: inline-block;
+    font-size: 1.5rem;
+    color: #d3d3d3;
+    size: 0ch;
+  }
+  .full {
+    color: orange;
+  }
+  .half {
+    position: absolute;
+    display: inline-block;
+    overflow: hidden;
+    color:orange;
   }
   

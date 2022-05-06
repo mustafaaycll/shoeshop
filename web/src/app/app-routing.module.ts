@@ -16,8 +16,8 @@ import { ProductDetailsComponent } from './component/product-details/product-det
 
 const routes: Routes = [
   {path:'', redirectTo:'products',pathMatch:'full'},
-  {path:'products', component: ProductsComponent},
   {path: 'product', component: ProductDetailsComponent},
+  {path:'products', component: ProductsComponent},
   {path:'cart', component: CartComponent},
   { path: 'home', component: HomeComponent },
   { path: 'login', component: LoginComponent },

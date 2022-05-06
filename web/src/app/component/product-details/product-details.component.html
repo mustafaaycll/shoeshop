@@ -1,13 +1,18 @@
-<ngb-carousel *ngIf="product">
-    <ng-template ngbSlide *ngFor="let image of product.photos">
-      <div class="picsum-img-wrapper">
-        <img [src]="image" alt="Random first slide">
+
+<div *ngIf="product">
+  <div>
+    <div class="slideshow-container">
+      <div>
+        <ngb-carousel >
+          <ng-template ngbSlide *ngFor="let photo of product.photos" >
+            <div class="picsum-img-wrapper">
+              <img [src]="photo" alt="Random first slide" width="%100" height="%100">
+            </div>
+            
+          </ng-template>
+        </ngb-carousel>
       </div>
-      <div class="carousel-caption">
-        <h3>First slide label</h3>
-        <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-      </div>
-    </ng-template>
-    
-  
-  </ngb-carousel>
+      
+      
+    </div>
+

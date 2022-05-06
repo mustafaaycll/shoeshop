@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from 'src/app/service/api.service';
 import { CartService } from 'src/app/service/cart.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -12,7 +13,7 @@ export class ProductsComponent implements OnInit {
   public productList : any;
   public filterCategory : any;
   searchKey:string="";
-  constructor(private api : ApiService, private cartService: CartService) { }
+  constructor(private api : ApiService, private cartService: CartService, private router: Router) { }
 
   ngOnInit(): void {
     this.api.getProduct()
@@ -39,4 +40,10 @@ export class ProductsComponent implements OnInit {
       }
     })
   }
+
+  goToDetails(id: string){
+    this.router.navigate(["/product"], {queryParams: {productid: id}})
+    
+  
+}
 }
