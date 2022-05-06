@@ -629,6 +629,94 @@ class QuickObjects {
     );
   }
 
+  Widget cartItem_withoutButtons(Customer customer, Map<Product, dynamic> basket, int index, double width) {
+    double height = 200;
+    Product product = basket.keys.toList()[index];
+    Map<dynamic, dynamic> extractedBasket = customer.basketMap;
+
+    return Container(
+      height: height,
+      width: width,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+                height: width / 2,
+                width: width / 2,
+                decoration: BoxDecoration(image: DecorationImage(fit: BoxFit.cover, image: NetworkImage(product.photos[0])))),
+            SizedBox(
+              width: 10,
+            ),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 8,
+                  ),
+                  Text(
+                    product.name,
+                    style: TextStyle(color: AppColors.title_text, fontSize: 20),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(
+                    height: 1,
+                  ),
+                  Text(
+                    product.model,
+                    style: TextStyle(color: AppColors.title_text, fontSize: 15),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(
+                    height: 1,
+                  ),
+                  Text(
+                    product.sex + "'s " + product.category + " shoe",
+                    style: TextStyle(color: AppColors.system_gray, fontSize: 12),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "Quantity: " + extractedBasket[product.id][0].toString(),
+                    style: TextStyle(color: AppColors.system_gray, fontSize: 12),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(
+                    height: 1,
+                  ),
+                  Text(
+                    "Size: " + extractedBasket[product.id][1].toString(),
+                    style: TextStyle(color: AppColors.system_gray, fontSize: 12),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(
+                    height: 1,
+                  ),
+                  Text(
+                    product.warranty ? "Warranty: Yes" : "Warranty: No",
+                    style: TextStyle(color: AppColors.system_gray, fontSize: 12),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Expanded(child: Container()),
+                  Text("${getIndividualPriceForCartItem(product, basket).toStringAsFixed(2)} ₺",
+                      style: TextStyle(color: AppColors.title_text, fontSize: 20)),
+                  SizedBox(
+                    height: 8,
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget wishlistItem(Customer customer, List<Product> wishlistItems, int index, double width) {
     double height = 200;
     Product product = wishlistItems[index];
