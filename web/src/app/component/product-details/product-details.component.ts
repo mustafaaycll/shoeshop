@@ -14,12 +14,13 @@ import { CartService } from 'src/app/service/cart.service';
 })
 export class ProductDetailsComponent implements OnInit {
 
-  product!: product ;
+  product: product ;
   photoNum: number = 0;
-  discountedPrice!: number;
+  discountedPrice: number= 0;
+  sizesMap:  Map<string,number> = new Map<string,number>();;
+  
   constructor(private route: ActivatedRoute, private apiService: ApiService, private cartService: CartService) { 
       
-    
   }
 
   ngOnInit(): void {
@@ -30,9 +31,13 @@ export class ProductDetailsComponent implements OnInit {
     .subscribe((product_) =>
     {
       this.product = product_ as product;
-      this.getDiscount();
+      this.discountedPrice= this.product.price - (this.product.price * (this.product.discount_rate / 100));
+      Object.keys(this.product.sizesMap).forEach((key) => {
+        this.sizesMap.set(key, this.product.sizesMap[key]);
+      })
+      
     }
-  
+      
     );
    
     
@@ -41,25 +46,31 @@ export class ProductDetailsComponent implements OnInit {
 
     addtocart(item: any){
       this.cartService.addtoCart(item);
-      console.log(this.product);
-      console.log(this.product.discount_rate);
-      console.log(this.discountedPrice);
-      console.log(this.product.price - (this.product.price * (this.product.discount_rate / 100)));
+      
+
+      
+    }
+      
+  
+    isSizeAvailable(size: string): boolean{
+       let stock = this.sizesMap.get(size);
+       if(stock === 0){
+         console.log(stock);
+         return true;
+
+       }
+       else{
+        return false;
+       } 
     }
 
-    getDiscount(){
-      if(this.product.discount_rate === 0){
-        this.discountedPrice = this.product.price;
+    isinStock(){
+      let total = 0;
+      for(let size of this.sizesMap.keys()){
+       
+           total = total + (this.sizesMap.get(size) || 0);       
       }
-      else{
-        this.discountedPrice =this.product.price - (this.product.price * (this.product.discount_rate / 100));
-      }
+      return total;
+    }
     
-    }
-
-    getStockInfo(size: number){
-      let sizes= this.product.sizesMap as Map<number,number>;
-      let stock =sizes.get(size);
-      console.log(stock);
-    }
 }
