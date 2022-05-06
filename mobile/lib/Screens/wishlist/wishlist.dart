@@ -2,6 +2,8 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile/models/users/seller.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 
 import '../../Services/database.dart';
@@ -11,6 +13,7 @@ import '../../utils/animations.dart';
 import '../../utils/colors.dart';
 import '../../utils/objects.dart';
 import '../../utils/shapes_dimensions.dart';
+import '../home/productpage.dart';
 
 class Wishlist extends StatefulWidget {
   const Wishlist({Key? key}) : super(key: key);
@@ -22,7 +25,6 @@ class Wishlist extends StatefulWidget {
 class _WishlistState extends State<Wishlist> {
   @override
   Widget build(BuildContext context) {
-    
     Customer? customer = Provider.of<Customer?>(context);
     if (customer != null) {
       List wishIDList = customer.fav_products.toList();
@@ -33,15 +35,6 @@ class _WishlistState extends State<Wishlist> {
             List<Product>? wishlistItems = snapshot.data;
 
             if (wishlistItems != null && wishlistItems.isNotEmpty) {
-              
-              //Map<Product, dynamic> basket =
-                  //recreateBasketMap(basketItems, customer.basketMap);
-                  /*
-                  return Scaffold(
-                    body: Container(),
-                  );
-                    */
-              
               return Scaffold(
                 backgroundColor: AppColors.background,
                 appBar: AppBar(
@@ -61,8 +54,26 @@ class _WishlistState extends State<Wishlist> {
                         child: ListView.builder(
                           itemCount: wishlistItems.length,
                           itemBuilder: (context, index) {
-                            return QuickObjects().wishlistItem(customer, wishlistItems,
-                                index, MediaQuery.of(context).size.width - 16);
+                            return StreamBuilder<Seller>(
+                                stream: DatabaseService(id: wishlistItems[index].distributor_information, ids: []).sellerData,
+                                builder: (context, snapshot) {
+                                  Seller? seller = snapshot.data;
+                                  if (seller != null) {
+                                    return OutlinedButton(
+                                      onPressed: () => {pushNewScreen(context, screen: ProductPage(seller: seller!, product: wishlistItems[index]))},
+                                      style: ShapeRules(bg_color: AppColors.background, side_color: AppColors.background)
+                                          .outlined_button_style_no_padding(),
+                                      child: QuickObjects().wishlistItem(customer, wishlistItems, index, MediaQuery.of(context).size.width - 16),
+                                    );
+                                  } else {
+                                    return OutlinedButton(
+                                      onPressed: () => {},
+                                      style: ShapeRules(bg_color: AppColors.background, side_color: AppColors.background)
+                                          .outlined_button_style_no_padding(),
+                                      child: Animations().loading(),
+                                    );
+                                  }
+                                });
                           },
                         ),
                       ),
@@ -70,10 +81,7 @@ class _WishlistState extends State<Wishlist> {
                   ),
                 ),
               );
-              
-            }
-            
-            else {
+            } else {
               return Scaffold(
                 backgroundColor: AppColors.background,
                 appBar: AppBar(
@@ -104,16 +112,21 @@ class _WishlistState extends State<Wishlist> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Row(
-                                children: [
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Text(
-                                    "Your wishlist is empty",
-                                    style: TextStyle(fontSize: 30),
-                                  )
-                                ],
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width - 84,
+                                child: Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        "Your wishlist is empty",
+                                        style: TextStyle(fontSize: 30),
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
                               SizedBox(
                                 height: 5,
@@ -125,8 +138,7 @@ class _WishlistState extends State<Wishlist> {
                                   ),
                                   Text(
                                     "When you add products, they'll appear here.",
-                                    style:
-                                        TextStyle(color: AppColors.system_gray),
+                                    style: TextStyle(color: AppColors.system_gray),
                                   ),
                                 ],
                               )
@@ -138,12 +150,8 @@ class _WishlistState extends State<Wishlist> {
               );
             }
           });
-      
-    }
-
-    else {
+    } else {
       return Animations().scaffoldLoadingScreen('WISHLIST');
     }
-
   }
 }

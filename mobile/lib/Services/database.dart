@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/animation.dart';
+import 'package:mobile/models/bankCards/bankCard.dart';
 import 'package:mobile/models/users/customer.dart';
 import 'package:mobile/models/users/seller.dart';
 
@@ -14,6 +17,14 @@ class DatabaseService {
   final CollectionReference customerCollection = FirebaseFirestore.instance.collection('customers');
   final CollectionReference productCollection = FirebaseFirestore.instance.collection('products');
   final CollectionReference sellerCollection = FirebaseFirestore.instance.collection('sellers');
+  final CollectionReference cardCollection = FirebaseFirestore.instance.collection('cards');
+
+  String randID() {
+    const _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+    Random _rnd = Random();
+    String randID = String.fromCharCodes(Iterable.generate(28, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
+    return randID;
+  }
 
   /*--CUSTOMER--CUSTOMER--CUSTOMER--CUSTOMER--CUSTOMER--CUSTOMER--*/
   Customer _customerDataFromSnapshot(DocumentSnapshot snapshot) {
@@ -126,6 +137,52 @@ class DatabaseService {
     });
 
     await customerCollection.doc(id).update({'basketMap': newCart});
+  }
+
+  Future appendNewPaymentOption(List<dynamic> oldOptions, String idToBeAppended) async {
+    List<dynamic> newOptions = [];
+    for (var i = 0; i < oldOptions.length; i++) {
+      newOptions.add(oldOptions[i]);
+    }
+
+    newOptions.add(idToBeAppended);
+
+    await customerCollection.doc(id).update({'credit_cards': newOptions});
+  }
+
+  Future removePaymentOption(List<dynamic> oldOptions, String idToBeRemoved) async {
+    List<dynamic> newOptions = [];
+    for (var i = 0; i < oldOptions.length; i++) {
+      if (oldOptions[i] != idToBeRemoved) {
+        newOptions.add(oldOptions[i]);
+      }
+    }
+
+    await customerCollection.doc(id).update({'credit_cards': newOptions});
+  }
+
+  Future addAddressOption(List<dynamic> oldOptions, String addressToBeAdded) async {
+    List<dynamic> newOptions = [];
+    for (var i = 0; i < oldOptions.length; i++) {
+      if (oldOptions[i] != addressToBeAdded) {
+        newOptions.add(oldOptions[i]);
+      }
+    }
+
+    newOptions.add(addressToBeAdded);
+
+    await customerCollection.doc(id).update({'addresses': newOptions});
+  }
+
+  Future removeAddressOption(List<dynamic> oldOptions, String addressToBeAdded) async {
+    List<dynamic> newOptions = [];
+    for (var i = 0; i < oldOptions.length; i++) {
+      if (oldOptions[i] != addressToBeAdded) {
+        newOptions.add(oldOptions[i]);
+      }
+    }
+
+    await customerCollection.doc(id).update({'addresses': newOptions});
   }
   /*--CUSTOMER--CUSTOMER--CUSTOMER--CUSTOMER--CUSTOMER--CUSTOMER--*/
 
@@ -282,5 +339,88 @@ class DatabaseService {
   Stream<List<Seller>> get allSellers {
     return sellerCollection.snapshots().map(_sellerListFromSnapshot);
   }
+
   /*--SELLER--SELLER--SELLER--SELLER--SELLER--SELLER--SELLER--SELLER--*/
+  /*--CARD--CARD--CARD--CARD--CARD--CARD--CARD--CARD--CARD--CARD--CARD*/
+  BankCard _cardDataFromSnapshot(DocumentSnapshot snapshot) {
+    return BankCard(
+        id: id,
+        holderID: snapshot.get('holderID'),
+        cardNumber: snapshot.get('cardNumber'),
+        expiryDate: snapshot.get('expiryDate'),
+        cardHolderName: snapshot.get('cardHolderName'),
+        cvvCode: snapshot.get('cvvCode'));
+  }
+
+  List<BankCard> _cardListFromSnapshot_specified(QuerySnapshot snapshot) {
+    return List<BankCard>.from(snapshot.docs
+        .map((doc) {
+          if (ids.contains(doc.id)) {
+            return BankCard(
+                id: doc.id,
+                holderID: doc.get('holderID'),
+                cardNumber: doc.get('cardNumber'),
+                expiryDate: doc.get('expiryDate'),
+                cardHolderName: doc.get('cardHolderName'),
+                cvvCode: doc.get('cvvCode'));
+          }
+        })
+        .toList()
+        .where((element) => element != null));
+  }
+
+  List<BankCard> _cardListFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.docs.map((doc) {
+      return BankCard(
+          id: doc.id,
+          holderID: doc.get('holderID'),
+          cardNumber: doc.get('cardNumber'),
+          expiryDate: doc.get('expiryDate'),
+          cardHolderName: doc.get('cardHolderName'),
+          cvvCode: doc.get('cvvCode'));
+    }).toList();
+  }
+
+  Stream<BankCard> get cardData {
+    return cardCollection.doc(id).snapshots().map(_cardDataFromSnapshot);
+  }
+
+  Stream<List<BankCard>> get specifiedCards {
+    return cardCollection.snapshots().map(_cardListFromSnapshot_specified);
+  }
+
+  Stream<List<BankCard>> get allCards {
+    return cardCollection.snapshots().map(_cardListFromSnapshot);
+  }
+
+  List<dynamic> _existingIDs(QuerySnapshot snapshot) {
+    return snapshot.docs.map((doc) {
+      return doc.id;
+    }).toList();
+  }
+
+  Future createNewPaymentMethod(String cvvCode, String expiryDate, String cardHolderName, String cardNumber, Customer customer) async {
+    String randomID = randID();
+    /*while (cardCollection.doc(randomID).get() != null) {
+      randomID = randID();
+    }*/
+
+    await cardCollection.doc(randomID).set({
+      'id': randomID,
+      'holderID': customer.id,
+      'cvvCode': cvvCode,
+      'expiryDate': expiryDate,
+      'cardNumber': cardNumber,
+      'cardHolderName': cardHolderName,
+    });
+
+    await appendNewPaymentOption(customer.credit_cards, randomID);
+  }
+
+  Future deleteExistingPaymentMethod(Customer customer, String idToBeRemoved) async {
+    await removePaymentOption(customer.credit_cards, idToBeRemoved);
+
+    await cardCollection.doc(idToBeRemoved).delete();
+  }
+  /*--CARD--CARD--CARD--CARD--CARD--CARD--CARD--CARD--CARD--CARD--CARD*/
 }

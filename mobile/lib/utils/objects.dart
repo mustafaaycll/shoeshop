@@ -1,17 +1,12 @@
 // ignore_for_file: prefer_const_constructors
-
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:mobile/Services/database.dart';
 import 'package:mobile/models/products/product.dart';
 import 'package:mobile/models/users/customer.dart';
 import 'package:mobile/models/users/seller.dart';
 import 'package:mobile/utils/animations.dart';
 import 'package:mobile/utils/colors.dart';
-import 'package:mobile/utils/shapes_dimensions.dart';
-import 'package:mobile/utils/styles.dart';
 
 class QuickObjects {
   String getInitials(String text) {
@@ -566,64 +561,67 @@ class QuickObjects {
             SizedBox(
               width: 10,
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: 8,
-                ),
-                Text(
-                  product.name,
-                  style: TextStyle(color: AppColors.title_text, fontSize: 20),
-                ),
-                SizedBox(
-                  height: 1,
-                ),
-                Text(
-                  product.model,
-                  style: TextStyle(color: AppColors.title_text, fontSize: 15),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                SizedBox(
-                  height: 1,
-                ),
-                Text(
-                  product.sex + "'s " + product.category + " shoe",
-                  style: TextStyle(color: AppColors.system_gray, fontSize: 12),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  "Quantity: " + extractedBasket[product.id][0].toString(),
-                  style: TextStyle(color: AppColors.system_gray, fontSize: 12),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                SizedBox(
-                  height: 1,
-                ),
-                Text(
-                  "Size: " + extractedBasket[product.id][1].toString(),
-                  style: TextStyle(color: AppColors.system_gray, fontSize: 12),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                SizedBox(
-                  height: 1,
-                ),
-                Text(
-                  product.warranty ? "Warranty: Yes" : "Warranty: No",
-                  style: TextStyle(color: AppColors.system_gray, fontSize: 12),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Expanded(child: Container()),
-                Text("${getIndividualPriceForCartItem(product, basket).toStringAsFixed(2)} ₺",
-                    style: TextStyle(color: AppColors.title_text, fontSize: 20)),
-                SizedBox(
-                  height: 8,
-                )
-              ],
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 8,
+                  ),
+                  Text(
+                    product.name,
+                    style: TextStyle(color: AppColors.title_text, fontSize: 20),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(
+                    height: 1,
+                  ),
+                  Text(
+                    product.model,
+                    style: TextStyle(color: AppColors.title_text, fontSize: 15),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(
+                    height: 1,
+                  ),
+                  Text(
+                    product.sex + "'s " + product.category + " shoe",
+                    style: TextStyle(color: AppColors.system_gray, fontSize: 12),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "Quantity: " + extractedBasket[product.id][0].toString(),
+                    style: TextStyle(color: AppColors.system_gray, fontSize: 12),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(
+                    height: 1,
+                  ),
+                  Text(
+                    "Size: " + extractedBasket[product.id][1].toString(),
+                    style: TextStyle(color: AppColors.system_gray, fontSize: 12),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(
+                    height: 1,
+                  ),
+                  Text(
+                    product.warranty ? "Warranty: Yes" : "Warranty: No",
+                    style: TextStyle(color: AppColors.system_gray, fontSize: 12),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Expanded(child: Container()),
+                  Text("${getIndividualPriceForCartItem(product, basket).toStringAsFixed(2)} ₺",
+                      style: TextStyle(color: AppColors.title_text, fontSize: 20)),
+                  SizedBox(
+                    height: 8,
+                  )
+                ],
+              ),
             )
           ],
         ),
@@ -631,7 +629,7 @@ class QuickObjects {
     );
   }
 
-    Widget wishlistItem(Customer customer, List<Product> wishlistItems, int index, double width) {
+  Widget wishlistItem(Customer customer, List<Product> wishlistItems, int index, double width) {
     double height = 200;
     Product product = wishlistItems[index];
 
@@ -646,6 +644,12 @@ class QuickObjects {
             Stack(
               children: [
                 Container(
+                    foregroundDecoration: product.quantity == 0
+                        ? BoxDecoration(
+                            color: Colors.grey,
+                            backgroundBlendMode: BlendMode.saturation,
+                          )
+                        : null,
                     height: width / 2,
                     width: width / 2,
                     decoration: BoxDecoration(image: DecorationImage(fit: BoxFit.cover, image: NetworkImage(product.photos[0])))),
@@ -666,6 +670,30 @@ class QuickObjects {
                       SizedBox(
                         width: 45,
                       ),
+                      product.quantity == 0
+                          ? Container(
+                              height: 20,
+                              width: 80,
+                              child: Center(
+                                child: Text(
+                                  "Out-of-stock",
+                                  style: TextStyle(color: AppColors.background, fontSize: 11),
+                                ),
+                              ),
+                              color: AppColors.negative_button,
+                            )
+                          : product.quantity < 5
+                              ? Container(
+                                  height: 20,
+                                  width: 80,
+                                  child: Center(
+                                      child: Text(
+                                    "Last ${product.quantity} in stock",
+                                    style: TextStyle(color: AppColors.background, fontSize: 11),
+                                  )),
+                                  color: AppColors.negative_button,
+                                )
+                              : Container(),
                     ],
                   ),
                 )
@@ -674,54 +702,57 @@ class QuickObjects {
             SizedBox(
               width: 10,
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: 8,
-                ),
-                Text(
-                  product.name,
-                  style: TextStyle(color: AppColors.title_text, fontSize: 20),
-                ),
-                SizedBox(
-                  height: 1,
-                ),
-                Text(
-                  product.model,
-                  style: TextStyle(color: AppColors.title_text, fontSize: 15),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                SizedBox(
-                  height: 1,
-                ),
-                Text(
-                  product.sex + "'s " + product.category + " shoe",
-                  style: TextStyle(color: AppColors.system_gray, fontSize: 12),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                SizedBox(
-                  height: 1,
-                ),
-                SizedBox(
-                  height: 1,
-                ),
-                Text(
-                  product.warranty ? "Warranty: Yes" : "Warranty: No",
-                  style: TextStyle(color: AppColors.system_gray, fontSize: 12),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Expanded(child: Container()),
-                Text("${getIndividualPriceForWishlistItem(product).toStringAsFixed(2)} ₺",
-                    style: TextStyle(color: AppColors.title_text, fontSize: 20)),
-                SizedBox(
-                  height: 8,
-                )
-              ],
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 8,
+                  ),
+                  Text(
+                    product.name,
+                    style: TextStyle(color: AppColors.title_text, fontSize: 20),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(
+                    height: 1,
+                  ),
+                  Text(
+                    product.model,
+                    style: TextStyle(color: AppColors.title_text, fontSize: 15),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(
+                    height: 1,
+                  ),
+                  Text(
+                    product.sex + "'s " + product.category + " shoe",
+                    style: TextStyle(color: AppColors.system_gray, fontSize: 12),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  SizedBox(
+                    height: 1,
+                  ),
+                  SizedBox(
+                    height: 1,
+                  ),
+                  Text(
+                    product.warranty ? "Warranty: Yes" : "Warranty: No",
+                    style: TextStyle(color: AppColors.system_gray, fontSize: 12),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Expanded(child: Container()),
+                  Text("${getIndividualPriceForWishlistItem(product).toStringAsFixed(2)} ₺",
+                      style: TextStyle(color: AppColors.title_text, fontSize: 20)),
+                  SizedBox(
+                    height: 8,
+                  )
+                ],
+              ),
             )
           ],
         ),

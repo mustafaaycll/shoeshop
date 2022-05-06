@@ -274,7 +274,6 @@ class _ProductPageState extends State<ProductPage> {
                                               child: ListTile(
                                                 onTap: () async {
                                                   Navigator.pop(context);
-                                                  bool firstIfWorked = false;
                                                   if (customer.basketMap.isEmpty) {
                                                     DatabaseService(id: customer.id, ids: [])
                                                         .addToCart(customer.basketMap, product.id, availableSizes.keys.toList()[index]);
@@ -283,9 +282,16 @@ class _ProductPageState extends State<ProductPage> {
                                                         builder: (BuildContext context) {
                                                           return QuickObjects().addedToCart();
                                                         });
-                                                    firstIfWorked = true;
-                                                  }
-                                                  if (customer.basketMap[product.id][0] < product.sizesMap[availableSizes.keys.toList()[index]]) {
+                                                  } else if (customer.basketMap[product.id] == null) {
+                                                    DatabaseService(id: customer.id, ids: [])
+                                                        .addToCart(customer.basketMap, product.id, availableSizes.keys.toList()[index]);
+                                                    showDialog(
+                                                        context: context,
+                                                        builder: (BuildContext context) {
+                                                          return QuickObjects().addedToCart();
+                                                        });
+                                                  } else if (customer.basketMap[product.id] != null &&
+                                                      customer.basketMap[product.id][0] < product.sizesMap[availableSizes.keys.toList()[index]]) {
                                                     DatabaseService(id: customer.id, ids: [])
                                                         .addToCart(customer.basketMap, product.id, availableSizes.keys.toList()[index]);
                                                     showDialog(
@@ -294,8 +300,7 @@ class _ProductPageState extends State<ProductPage> {
                                                           return QuickObjects().addedToCart();
                                                         });
                                                   } else if (customer.basketMap[product.id][0] >=
-                                                          product.sizesMap[availableSizes.keys.toList()[index]] &&
-                                                      !firstIfWorked) {
+                                                      product.sizesMap[availableSizes.keys.toList()[index]]) {
                                                     showDialog(
                                                         context: context,
                                                         builder: (BuildContext context) {

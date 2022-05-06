@@ -6,6 +6,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:mobile/Screens/Authentication/resetpass.dart';
+import 'package:mobile/Screens/account/addressoptions.dart';
+import 'package:mobile/Screens/account/paymentoptions.dart';
 import 'package:mobile/Services/authentication.dart';
 import 'package:mobile/Services/database.dart';
 import 'package:mobile/models/users/customer.dart';
@@ -54,8 +56,7 @@ class _AccountState extends State<Account> {
                         customer.email,
                         style: TextStyle(fontSize: 11),
                       ),
-                      leading: QuickObjects()
-                          .profilePicture(customer.fullname, 100, 100),
+                      leading: QuickObjects().profilePicture(customer.fullname, 100, 100),
                       trailing: IconButton(
                         onPressed: () {
                           AuthService().signOut();
@@ -72,115 +73,102 @@ class _AccountState extends State<Account> {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        "Account Information",
-                        style: TextStyle(color: AppColors.system_gray),
-                      ),
-                      ListTile(
-                        onTap: () {
-                          if (customer.method != "anonymous") {
-                            pushNewScreen(context, screen: ChangeName());
-                            /*Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ChangeName(
-                                        analytics: FirebaseAnalytics.instance,
-                                        observer: FirebaseAnalyticsObserver(
-                                            analytics:
-                                                FirebaseAnalytics.instance))));*/
-                          }
-                        },
-                        title: Text("Change Name"),
-                        trailing: Icon(CupertinoIcons.chevron_right),
-                        leading: Icon(CupertinoIcons.person),
-                      ),
-                      ListTile(
-                        onTap: () {
-                          if (customer.method != "anonymous") {
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: Text(
-                                      "We will send you an email to change your password",
-                                      style: TextStyle(
-                                          color: AppColors.empty_button_text),
-                                    ),
-                                    content: Text(
-                                      "Are you sure?",
-                                      style: TextStyle(
-                                          color: AppColors.empty_button_text),
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                          onPressed: () {
-                                            auth.sendPasswordResetEmail(
-                                                email: customer.email);
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: Text(
-                                            "Yes",
-                                            style: TextStyle(
-                                                color:
-                                                    AppColors.positive_button),
-                                          )),
-                                      TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: Text(
-                                            "No",
-                                            style: TextStyle(
-                                                color:
-                                                    AppColors.negative_button),
-                                          ))
-                                    ],
-                                  );
-                                });
-                          }
-                        },
-                        title: Text("Change Password"),
-                        trailing: Icon(CupertinoIcons.chevron_right),
-                        leading: Icon(CupertinoIcons.lock),
-                      ),
-                      ListTile(
-                        onTap: () {},
-                        title: Text("Manage Addresses"),
-                        trailing: Icon(CupertinoIcons.chevron_right),
-                        leading: Icon(CupertinoIcons.home),
-                      ),
-                      ListTile(
-                        onTap: () {},
-                        title: Text("Manage Payment Options"),
-                        trailing: Icon(CupertinoIcons.chevron_right),
-                        leading: Icon(CupertinoIcons.creditcard),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        "Account Activity",
-                        style: TextStyle(color: AppColors.system_gray),
-                      ),
-                      ListTile(
-                        onTap: () {},
-                        title: Text("Previous Orders"),
-                        trailing: Icon(CupertinoIcons.chevron_right),
-                        leading: Icon(CupertinoIcons.square_stack_3d_up),
-                      ),
-                      ListTile(
-                        onTap: () {},
-                        title: Text("Comments & Reviews"),
-                        trailing: Icon(CupertinoIcons.chevron_right),
-                        leading: Icon(CupertinoIcons.chat_bubble),
-                      ),
-                    ]),
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "Account Information",
+                    style: TextStyle(color: AppColors.system_gray),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      if (customer.method != "anonymous") {
+                        pushNewScreen(context, screen: ChangeName());
+                      }
+                    },
+                    title: Text("Change Name"),
+                    trailing: Icon(CupertinoIcons.chevron_right),
+                    leading: Icon(CupertinoIcons.person),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      if (customer.method != "anonymous") {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text(
+                                  "We will send you an email to change your password",
+                                  style: TextStyle(color: AppColors.empty_button_text),
+                                ),
+                                content: Text(
+                                  "Are you sure?",
+                                  style: TextStyle(color: AppColors.empty_button_text),
+                                ),
+                                actions: [
+                                  TextButton(
+                                      onPressed: () {
+                                        auth.sendPasswordResetEmail(email: customer.email);
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text(
+                                        "Yes",
+                                        style: TextStyle(color: AppColors.positive_button),
+                                      )),
+                                  TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text(
+                                        "No",
+                                        style: TextStyle(color: AppColors.negative_button),
+                                      ))
+                                ],
+                              );
+                            });
+                      }
+                    },
+                    title: Text("Change Password"),
+                    trailing: Icon(CupertinoIcons.chevron_right),
+                    leading: Icon(CupertinoIcons.lock),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      pushNewScreen(context, screen: AddressOptions());
+                    },
+                    title: Text("Manage Addresses"),
+                    trailing: Icon(CupertinoIcons.chevron_right),
+                    leading: Icon(CupertinoIcons.home),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      pushNewScreen(context, screen: PaymentOptions());
+                    },
+                    title: Text("Manage Payment Options"),
+                    trailing: Icon(CupertinoIcons.chevron_right),
+                    leading: Icon(CupertinoIcons.creditcard),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "Account Activity",
+                    style: TextStyle(color: AppColors.system_gray),
+                  ),
+                  ListTile(
+                    onTap: () {},
+                    title: Text("Previous Orders"),
+                    trailing: Icon(CupertinoIcons.chevron_right),
+                    leading: Icon(CupertinoIcons.square_stack_3d_up),
+                  ),
+                  ListTile(
+                    onTap: () {},
+                    title: Text("Comments & Reviews"),
+                    trailing: Icon(CupertinoIcons.chevron_right),
+                    leading: Icon(CupertinoIcons.chat_bubble),
+                  ),
+                ]),
               )
             ],
           ));
