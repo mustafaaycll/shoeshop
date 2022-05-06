@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:mobile/Screens/Authentication/resetpass.dart';
+import 'package:mobile/Screens/account/addressoptions.dart';
 import 'package:mobile/Screens/account/paymentoptions.dart';
 import 'package:mobile/Services/authentication.dart';
 import 'package:mobile/Services/database.dart';
@@ -84,14 +85,6 @@ class _AccountState extends State<Account> {
                     onTap: () {
                       if (customer.method != "anonymous") {
                         pushNewScreen(context, screen: ChangeName());
-                        /*Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ChangeName(
-                                        analytics: FirebaseAnalytics.instance,
-                                        observer: FirebaseAnalyticsObserver(
-                                            analytics:
-                                                FirebaseAnalytics.instance))));*/
                       }
                     },
                     title: Text("Change Name"),
@@ -141,7 +134,9 @@ class _AccountState extends State<Account> {
                     leading: Icon(CupertinoIcons.lock),
                   ),
                   ListTile(
-                    onTap: () {},
+                    onTap: () {
+                      pushNewScreen(context, screen: AddressOptions());
+                    },
                     title: Text("Manage Addresses"),
                     trailing: Icon(CupertinoIcons.chevron_right),
                     leading: Icon(CupertinoIcons.home),

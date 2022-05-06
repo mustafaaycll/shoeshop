@@ -3,10 +3,12 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/animation.dart';
 import 'package:mobile/models/bankCards/bankCard.dart';
+import 'package:mobile/models/orders/order.dart';
 import 'package:mobile/models/users/customer.dart';
 import 'package:mobile/models/users/seller.dart';
 
 import '../models/products/product.dart';
+import 'package:intl/intl.dart';
 
 class DatabaseService {
   final String id;
@@ -18,6 +20,7 @@ class DatabaseService {
   final CollectionReference productCollection = FirebaseFirestore.instance.collection('products');
   final CollectionReference sellerCollection = FirebaseFirestore.instance.collection('sellers');
   final CollectionReference cardCollection = FirebaseFirestore.instance.collection('cards');
+  final CollectionReference orderCollection = FirebaseFirestore.instance.collection('orders');
 
   String randID() {
     const _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
@@ -160,6 +163,38 @@ class DatabaseService {
 
     await customerCollection.doc(id).update({'credit_cards': newOptions});
   }
+
+  Future addAddressOption(List<dynamic> oldOptions, String addressToBeAdded) async {
+    List<dynamic> newOptions = [];
+    for (var i = 0; i < oldOptions.length; i++) {
+      if (oldOptions[i] != addressToBeAdded) {
+        newOptions.add(oldOptions[i]);
+      }
+    }
+
+    newOptions.add(addressToBeAdded);
+
+    await customerCollection.doc(id).update({'addresses': newOptions});
+  }
+
+  Future removeAddressOption(List<dynamic> oldOptions, String addressToBeAdded) async {
+    List<dynamic> newOptions = [];
+    for (var i = 0; i < oldOptions.length; i++) {
+      if (oldOptions[i] != addressToBeAdded) {
+        newOptions.add(oldOptions[i]);
+      }
+    }
+
+    await customerCollection.doc(id).update({'addresses': newOptions});
+  }
+
+  Future addToPrevOrders(String orderString, List<dynamic> oldOrders) async {
+    Map<dynamic, dynamic> newCart = {};
+    List<dynamic> newOrders = oldOrders;
+    newOrders.add(orderString);
+
+    await customerCollection.doc(id).update({'prev_orders': newOrders, 'basketMap': newCart});
+  }
   /*--CUSTOMER--CUSTOMER--CUSTOMER--CUSTOMER--CUSTOMER--CUSTOMER--*/
 
   /*--PRODUCT--PRODUCT--PRODUCT--PRODUCT--PRODUCT--PRODUCT--PRODUCT--PRODUCT--*/
@@ -277,6 +312,21 @@ class DatabaseService {
 
   Stream<List<Product>> get discountedProducts {
     return productCollection.snapshots().map(_discountedProductListFromSnapshot);
+  }
+
+  Future decreaseAmountFromSpecifiedProducts(Map<Product, dynamic> basket) async {
+    Map<String, Map<dynamic, dynamic>> changes = {};
+
+    for (var i = 0; i < basket.keys.toList().length; i++) {
+      Map<dynamic, dynamic> sizeMapChanges = basket.keys.toList()[i].sizesMap;
+      sizeMapChanges[basket[basket.keys.toList()[i]][1]] -= basket[basket.keys.toList()[i]][0];
+      changes[basket.keys.toList()[i].id] = sizeMapChanges;
+    }
+
+    for (var i = 0; i < changes.keys.toList().length; i++) {
+      String productID = changes.keys.toList()[i];
+      await productCollection.doc(productID).update({'sizesMap': changes[productID]});
+    }
   }
   /*--PRODUCT--PRODUCT--PRODUCT--PRODUCT--PRODUCT--PRODUCT--PRODUCT--PRODUCT--*/
 
@@ -399,4 +449,33 @@ class DatabaseService {
     await cardCollection.doc(idToBeRemoved).delete();
   }
   /*--CARD--CARD--CARD--CARD--CARD--CARD--CARD--CARD--CARD--CARD--CARD*/
+  /*--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER*/
+
+  Future createNewOrder(List<Order> orderArr, List<dynamic> oldPrevOrder) async {
+    String orderString = "";
+    for (var i = 0; i < orderArr.length; i++) {
+      Order order = orderArr[i];
+      await orderCollection.doc(order.id).set({
+        'id': order.id,
+        'customerID': order.customerID,
+        'sellerID': order.sellerID,
+        'productID': order.productID,
+        'address': order.address,
+        'status': order.status,
+        'size': order.size,
+        'price': order.price.toStringAsFixed(2),
+        'quantity': order.quantity,
+        'date': DateFormat("dd-MM-yyyy").format(order.date),
+      });
+      orderString = orderString + order.id;
+      if (i != orderArr.length - 1) {
+        orderString = orderString + "-";
+      }
+    }
+
+    addToPrevOrders(orderString, oldPrevOrder);
+  }
+
+  /*--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER*/
+
 }

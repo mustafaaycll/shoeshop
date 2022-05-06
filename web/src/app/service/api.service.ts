@@ -34,4 +34,6 @@ export class ApiService {
 
     return this.firestore.doc(`products/${id}`).valueChanges();
   }
+
+  
 }

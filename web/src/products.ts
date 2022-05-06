@@ -6,8 +6,8 @@ export interface product{
     color: string;
     description: string;
     price: number;
-    discountRate: number;
-    quantity: number;
+    discount_rate: number;
+    sizesMap: any;
     sex: string;
     photos : string[];
     comments: string[];

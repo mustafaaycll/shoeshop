@@ -1,18 +1,30 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from 'src/app/service/api.service';
 import { CartService } from 'src/app/service/cart.service';
+import { Router } from '@angular/router';
+import {MatSelectModule} from '@angular/material/select';
+
+interface Option {
+  value: string;
+  viewValue: string;
+}
 
 
 @Component({
   selector: 'app-products',
   templateUrl: './products.component.html',
-  styleUrls: ['./products.component.scss']
+  styleUrls: ['./products.component.scss'],
 })
 export class ProductsComponent implements OnInit {
   public productList : any;
   public filterCategory : any;
   searchKey:string="";
-  constructor(private api : ApiService, private cartService: CartService) { }
+  options: Option[] = [
+    {value: 'price-1', viewValue: 'Sort by Price'},
+    {value: 'popularity-2', viewValue: 'Sort by Popularity'},
+  ];
+  constructor(private api : ApiService, private cartService: CartService, private router: Router) { }
+
 
   ngOnInit(): void {
     this.api.getProduct()
@@ -21,7 +33,7 @@ export class ProductsComponent implements OnInit {
       this.filterCategory = res;
       this.productList.forEach((a: any) => {
         Object.assign(a,{quantity:1, total: a.price});
-        
+
       });
     })
     this.cartService.search.subscribe((val:any)=>{
@@ -39,4 +51,10 @@ export class ProductsComponent implements OnInit {
       }
     })
   }
+
+  goToDetails(id: string){
+    this.router.navigate(["/product"], {queryParams: {productid: id}})
+    
+  
+}
 }
