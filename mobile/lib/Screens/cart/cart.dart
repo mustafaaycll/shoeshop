@@ -2,6 +2,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile/Screens/cart/checkoutscreen.dart';
 import 'package:mobile/Screens/home/productpage.dart';
 import 'package:mobile/Services/database.dart';
 import 'package:mobile/models/products/product.dart';
@@ -86,7 +87,9 @@ class _CartState extends State<Cart> {
                           ),
                           trailing: OutlinedButton.icon(
                             style: ShapeRules(bg_color: AppColors.filled_button, side_color: AppColors.filled_button).outlined_button_style(),
-                            onPressed: () async {},
+                            onPressed: () {
+                              pushNewScreen(context, screen: CheckoutScreen(basket: basket));
+                            },
                             icon: Icon(
                               CupertinoIcons.creditcard,
                               color: AppColors.filled_button_text,
