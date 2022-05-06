@@ -17,15 +17,8 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.addressForm = new FormGroup({
-      'address': new FormControl('', Validators.required),
-  });
   }
 
-  updateItem(customer: Customer){
-    this.itemService.updateItem(customer);
-    //this.clearState();
-  }
 
 
 
