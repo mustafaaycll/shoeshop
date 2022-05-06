@@ -5,6 +5,7 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
 
 import { AngularFirestore } from '@angular/fire/compat/firestore';
+//import { resourceLimits } from 'worker_threads';
 
 @Injectable({
     providedIn: 'root'
@@ -64,6 +65,13 @@ export class AuthService {
                 if (error.code)
                     return { isValid: false, message: error.message };
             });
+    }
+    updateAddress(user: any): Promise<any>{
+        console.log(user.uid);
+        return this.afs.doc('/customers/' + user.uid).update({
+            //addresses: user.address,
+            tax_id: user.address,
+        })
     }
 
 

@@ -36,6 +36,7 @@ import { provideFirestore,getFirestore } from '@angular/fire/firestore';
 import { ProductDetailsComponent } from './component/product-details/product-details.component';
 
 import { ItemService } from './services/item.service';
+import { AddresspageComponent } from './addresspage/addresspage.component';
 
 
 @NgModule({
@@ -49,7 +50,8 @@ import { ItemService } from './services/item.service';
     SignupComponent,
     LoginComponent,
     DashboardComponent,
-    ProductDetailsComponent
+    ProductDetailsComponent,
+    AddresspageComponent
   ],
   imports: [
     BrowserModule,
