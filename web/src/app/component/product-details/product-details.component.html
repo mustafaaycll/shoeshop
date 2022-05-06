@@ -56,9 +56,12 @@
                           <div class="size">
                               <h4>Size</h4>
                               <ul>  
-                                  <li *ngFor="let size of sizesMap.keys()"><a class="four" ><s style="color: red;" *ngIf="isSizeAvailable(size); else isstock">{{size}}</s>
-                                    <ng-template #isstock>{{size}}</ng-template>
-                                  </a></li>
+
+                                  <mat-button-toggle-group [(ngModel)]="selectedsize" (change)="quanti = 1">
+                                      <mat-button-toggle *ngFor="let size of sizesMap.keys()" [disabled]="isSizeAvailable(size)" [value]="size">
+                                          <s style="color: red;" *ngIf="isSizeAvailable(size); else isstock">{{size}}</s>
+                                        <ng-template #isstock>{{size}}</ng-template></mat-button-toggle>
+                                  </mat-button-toggle-group>
                                 
                               </ul>
                           </div>
@@ -69,19 +72,17 @@
                                   <h6>Quantity :</h6>
                                   <!-- Input Order -->
                                   <div class="input-group">
-                                      <div class="button minus">
-                                          <button type="button" class="btn btn-primary btn-number" disabled="disabled" data-type="minus" data-field="quant[1]">
-                                              <i class="ti-minus"></i>
-                                          </button>
-                                      </div>
-                                      <input type="text" name="quant[1]" class="input-number"  data-min="1" data-max="1000" value="1">
-                                      <div class="button plus">
-                                          <button type="button" class="btn btn-primary btn-number" data-type="plus" data-field="quant[1]">
-                                              <i class="ti-plus"></i>
-                                          </button>
-                                      </div>
+                                  
+                                  <div class="button minus">
+                                    <button type="button" class="btn btn-primary btn-number"><i class="ti-minus" (click)="minus()"></i></button>
                                   </div>
-                                  <!--/ End Input Order -->
+                                  
+                                  <input type="text" class="input-number" data-min="1" data-max="1000" [(ngModel)]="quanti">
+                                  <div class="button plus">
+                                    <button type="button" class="btn btn-primary btn-number"><i class="ti-plus" (click)="plus()"></i></button>
+                                  </div>
+                                  
+                                  </div>
                               </div>
                               <div class="add-to-cart">
                                   <button class="btn btn-primary btn1" (click)="addtocart(product)" [disabled]="!isinStock()">Add to Cart</button>

@@ -94,3 +94,8 @@ label.radio input:checked+span {
     color: #fff
 }
   
+
+li:visited{
+  background-color: blue;
+  border: 4px solid black;
+}

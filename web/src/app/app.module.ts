@@ -23,6 +23,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
+
 
 import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from '../environments/environment';
@@ -65,6 +67,7 @@ import { ProductDetailsComponent } from './component/product-details/product-det
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
     MatSelectModule,
+    MatButtonToggleModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

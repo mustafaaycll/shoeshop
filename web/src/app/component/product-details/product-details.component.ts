@@ -17,7 +17,9 @@ export class ProductDetailsComponent implements OnInit {
   product: product ;
   photoNum: number = 0;
   discountedPrice: number= 0;
-  sizesMap:  Map<string,number> = new Map<string,number>();;
+  sizesMap:  Map<string,number> = new Map<string,number>();
+  selectedsize:string;
+  quanti: number = 1;
   
   constructor(private route: ActivatedRoute, private apiService: ApiService, private cartService: CartService) { 
       
@@ -45,6 +47,8 @@ export class ProductDetailsComponent implements OnInit {
 }
 
     addtocart(item: any){
+      console.log(this.selectedsize);
+      Object.assign(item,{quantity: this.quanti, size: this.selectedsize, total: this.quanti *item.price});
       this.cartService.addtoCart(item);
       
 
@@ -52,16 +56,9 @@ export class ProductDetailsComponent implements OnInit {
     }
       
   
-    isSizeAvailable(size: string): boolean{
+    isSizeAvailable(size: string){
        let stock = this.sizesMap.get(size);
-       if(stock === 0){
-         console.log(stock);
-         return true;
-
-       }
-       else{
-        return false;
-       } 
+       return stock === 0;
     }
 
     isinStock(){
@@ -71,6 +68,25 @@ export class ProductDetailsComponent implements OnInit {
            total = total + (this.sizesMap.get(size) || 0);       
       }
       return total;
+    }
+
+
+    plus(){
+      if(this.sizesMap.get(this.selectedsize)){
+        if(this.quanti !==this.sizesMap.get(this.selectedsize) ){
+          this.quanti++;
+        }     
+        else{
+          window.alert("No more items left in the size you have selected");
+
+        }
+      }
+      
+    }
+
+    minus(){
+      if(this.quanti !== 1)
+        this.quanti--;
     }
     
 }

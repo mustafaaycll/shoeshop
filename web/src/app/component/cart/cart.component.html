@@ -10,6 +10,7 @@
                           <th>Product Image</th>
                           <th>Description</th>
                           <th>Price</th>
+                          <th>Size</th>
                           <th>Quantity</th>
                           <th>Total</th>
                           <th>Action</th>
@@ -18,12 +19,13 @@
                   <tbody>
                       <tr *ngFor="let item of products; let i= index">
                           <td>{{i+1}}</td>
-                          <td>{{item.title}}</td>
+                          <td>{{item.name}} - {{item.model}}</td>
                           <td><img style="width: 120px;" src="{{item.photos[0]}}" alt=""></td>
                           <td style="width: 25%;">{{item.description}}</td>
-                          <th style="width: 12%">{{item.price}}</th>
+                          <th style="width: 12%">${{item.price | number:'.2'}}</th>
+                          <th>{{item.size}}</th>
                           <td style="width: 12%">{{item.quantity}}</td>
-                          <td style="width: 12%">{{item.total}}</td>
+                          <td style="width: 12%">${{item.total | number:'.2'}}</td>
                           <td>
                               <button (click)="removeItem(item)"class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
                           </td>
