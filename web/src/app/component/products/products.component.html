@@ -35,6 +35,14 @@
           </i>
         </a>
     </div>
+    <mat-form-field appearance="fill">
+      <mat-label>Sort</mat-label>
+      <mat-select>
+        <mat-option *ngFor="let option of options" [value]="option.value">
+          {{option.viewValue}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
   </div>
 </div>
 

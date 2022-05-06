@@ -21,6 +21,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 
 
 import { AngularFireModule } from '@angular/fire/compat';
@@ -62,8 +63,8 @@ import { ProductDetailsComponent } from './component/product-details/product-det
     NgbModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
-    provideFirestore(() => getFirestore())
-
+    provideFirestore(() => getFirestore()),
+    MatSelectModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
