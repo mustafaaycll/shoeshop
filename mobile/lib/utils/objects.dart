@@ -915,6 +915,47 @@ class QuickObjects {
           ],
         ));
   }
+
+  Widget orderReceived() {
+    return AlertDialog(
+        backgroundColor: AppColors.background,
+        scrollable: true,
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  CupertinoIcons.cube_box,
+                  color: AppColors.title_text,
+                  size: 20,
+                ),
+                SizedBox(
+                  width: 5,
+                ),
+                Text(
+                  "Order received",
+                  style: TextStyle(color: AppColors.title_text, fontSize: 20),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            Row(
+              children: [
+                SizedBox(
+                  width: 25,
+                ),
+                Text(
+                  "Thank you for your purchase",
+                  style: TextStyle(color: AppColors.title_text, fontSize: 15),
+                ),
+              ],
+            ),
+          ],
+        ));
+  }
 }
 
 double getIndividualPriceForCartItem(Product product, Map<Product, dynamic> basket) {

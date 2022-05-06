@@ -6,6 +6,7 @@ import 'package:mobile/Screens/account/newaddress.dart';
 import 'package:mobile/Screens/account/newpayment.dart';
 import 'package:mobile/Services/database.dart';
 import 'package:mobile/models/bankCards/bankCard.dart';
+import 'package:mobile/models/orders/order.dart';
 import 'package:mobile/models/products/product.dart';
 import 'package:mobile/models/users/customer.dart';
 import 'package:mobile/models/users/seller.dart';
@@ -229,7 +230,32 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             side_color: _selectedAddress != null && _selectedCard != null ? AppColors.filled_button : AppColors.system_gray)
                         .outlined_button_style(),
                     onPressed: () {
-                      if (_selectedAddress != null && _selectedCard != null) {}
+                      if (_selectedAddress != null && _selectedCard != null) {
+                        List<Order> orderArr = [];
+
+                        for (var i = 0; i < widget.basket.keys.toList().length; i++) {
+                          Order order = Order(
+                              id: DatabaseService(id: "", ids: []).randID(),
+                              customerID: customer.id,
+                              sellerID: widget.basket.keys.toList()[i].distributor_information,
+                              productID: widget.basket.keys.toList()[i].id,
+                              address: _selectedAddress!,
+                              status: "processing",
+                              size: widget.basket[widget.basket.keys.toList()[i]][1],
+                              price: widget.basket.keys.toList()[i].price * widget.basket[widget.basket.keys.toList()[i]][0],
+                              quantity: widget.basket[widget.basket.keys.toList()[i]][0],
+                              date: DateTime.now());
+                          orderArr.add(order);
+                        }
+                        DatabaseService(id: customer.id, ids: []).createNewOrder(orderArr, customer.prev_orders);
+                        DatabaseService(id: "", ids: []).decreaseAmountFromSpecifiedProducts(widget.basket);
+                        Navigator.pop(context);
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return QuickObjects().orderReceived();
+                            });
+                      }
                     },
                     icon: Icon(
                       CupertinoIcons.check_mark_circled,
