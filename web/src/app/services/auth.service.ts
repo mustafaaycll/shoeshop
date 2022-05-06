@@ -66,13 +66,7 @@ export class AuthService {
                     return { isValid: false, message: error.message };
             });
     }
-    updateAddress(user: any): Promise<any>{
-        console.log(user.uid);
-        return this.afs.doc('/customers/' + user.uid).update({
-            //addresses: user.address,
-            tax_id: user.address,
-        })
-    }
+    
 
 
 }
