@@ -64,7 +64,7 @@
         <ngb-rating style="margin: 10px auto;"  [rate]="item.rating" [starTemplate]="t" [readonly]="true" [max]="5"></ngb-rating>
         
         <p><span class="price">{{ item.price | currency }} </span></p>
-        <a [routerLink] ="['product', item.id]"><button class="btn btn-primary btn1"  (click)=addtocart(item)>See Details</button></a>
+        <button class="btn btn-primary btn1"  (click)=goToDetails(item.id)>See Details</button>
         <button class="black_button" (click)=addtocart(item)>Add to cart</button>
         
 
