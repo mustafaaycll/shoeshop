@@ -183,6 +183,7 @@ class _RatePageState extends State<RatePage> {
                                   );
                                   DatabaseService(id: "", ids: []).createNewComment(commentObject);
                                   DatabaseService(id: seller.id, ids: []).addRatingToSeller(seller.ratings, rating);
+                                  DatabaseService(id: seller.id, ids: []).addRatingToSeller(product.ratings, rating);
                                   DatabaseService(id: product.id, ids: []).addCommentToProduct(product.comments, commentObject.id);
                                   DatabaseService(id: order.id, ids: []).updateRateInfoOfOrder(true);
                                   Navigator.pop(context);
@@ -201,36 +202,4 @@ class _RatePageState extends State<RatePage> {
           ),
         ));
   }
-}
-
-List<dynamic> getAvailableSizes(Map<dynamic, dynamic> map) {
-  List<dynamic> sizes = [];
-
-  map.forEach((key, value) {
-    if (value != 0) {
-      sizes.add(key);
-    }
-  });
-  sizes.sort(
-    (a, b) => a.compareTo(b),
-  );
-  return sizes;
-}
-
-Map<dynamic, dynamic> getAvailableSizesAsMap(Map<dynamic, dynamic> map) {
-  Map<dynamic, dynamic> sizes = {};
-  List<dynamic> keys = map.keys.toList();
-  keys.sort(
-    (a, b) => a.compareTo(b),
-  );
-  int index = 0;
-  for (var i = 0; i < keys.length; i++) {
-    map.forEach((key, value) {
-      if (key == keys[i] && value != 0) {
-        sizes[key] = value;
-      }
-    });
-  }
-
-  return sizes;
 }

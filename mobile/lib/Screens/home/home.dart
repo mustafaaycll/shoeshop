@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/Screens/home/productpage.dart';
 import 'package:mobile/Screens/home/sellerpage.dart';
 import 'package:mobile/Services/database.dart';
+import 'package:mobile/models/comments/comment.dart';
 import 'package:mobile/models/orders/order.dart';
 import 'package:mobile/models/products/product.dart';
 import 'package:mobile/models/users/seller.dart';
@@ -232,25 +233,41 @@ class _HomeState extends State<Home> {
                                             scrollDirection: Axis.horizontal,
                                             itemCount: discounteds.length,
                                             itemBuilder: (context, l) {
-                                              return Row(
-                                                children: [
-                                                  OutlinedButton(
-                                                      style: ShapeRules(bg_color: AppColors.empty_button, side_color: AppColors.empty_button_border)
-                                                          .outlined_button_style_no_padding(),
-                                                      onPressed: () {
-                                                        pushNewScreen(context,
-                                                            screen: ProductPage(
-                                                                seller:
-                                                                    allSellers!.where((element) => element.name == discounteds[l].name).toList()[0],
-                                                                product: discounteds[l]));
-                                                      },
-                                                      child: QuickObjects().discountedProductTile_listView(discounteds[l], customer,
-                                                          allSellers!.where((element) => element.name == discounteds[l].name).toList()[0], 250, 190)),
-                                                  SizedBox(
-                                                    width: 10,
-                                                  )
-                                                ],
-                                              );
+                                              return StreamBuilder<List<Comment>>(
+                                                  stream: DatabaseService(id: "", ids: discounteds[l].comments).specifiedComments,
+                                                  builder: (context, snapshot) {
+                                                    List<Comment>? comments = snapshot.data;
+                                                    if (comments != null) {
+                                                      return Row(
+                                                        children: [
+                                                          OutlinedButton(
+                                                              style: ShapeRules(
+                                                                      bg_color: AppColors.empty_button, side_color: AppColors.empty_button_border)
+                                                                  .outlined_button_style_no_padding(),
+                                                              onPressed: () {
+                                                                pushNewScreen(context,
+                                                                    screen: ProductPage(
+                                                                        seller: allSellers!
+                                                                            .where((element) => element.name == discounteds[l].name)
+                                                                            .toList()[0],
+                                                                        product: discounteds[l]));
+                                                              },
+                                                              child: QuickObjects().discountedProductTile_listView(
+                                                                  discounteds[l],
+                                                                  customer,
+                                                                  comments,
+                                                                  allSellers!.where((element) => element.name == discounteds[l].name).toList()[0],
+                                                                  250,
+                                                                  190)),
+                                                          SizedBox(
+                                                            width: 10,
+                                                          )
+                                                        ],
+                                                      );
+                                                    } else {
+                                                      return Animations().loading();
+                                                    }
+                                                  });
                                             },
                                           )
                                         : Animations().loading(),
@@ -304,33 +321,45 @@ class _HomeState extends State<Home> {
                                                 itemCount: OPMap.keys.toList().length,
                                                 itemBuilder: (context, k) {
                                                   Product? productToBeShown = OPMap[OPMap.keys.toList()[k]];
-                                                  return Row(
-                                                    children: [
-                                                      OutlinedButton(
-                                                          style:
-                                                              ShapeRules(bg_color: AppColors.empty_button, side_color: AppColors.empty_button_border)
-                                                                  .outlined_button_style_no_padding(),
-                                                          onPressed: () {
-                                                            pushNewScreen(context,
-                                                                screen: ProductPage(
-                                                                    seller: allSellers!
-                                                                        .where((element) => element.name == productToBeShown!.name)
-                                                                        .toList()[0],
-                                                                    product: productToBeShown!));
-                                                          },
-                                                          child: QuickObjects().orderProductTile_listView(
-                                                              context,
-                                                              OPMap.keys.toList()[k],
-                                                              productToBeShown!,
-                                                              customer,
-                                                              allSellers!.where((element) => element.name == productToBeShown.name).toList()[0],
-                                                              350,
-                                                              190)),
-                                                      SizedBox(
-                                                        width: 10,
-                                                      )
-                                                    ],
-                                                  );
+                                                  return StreamBuilder<List<Comment>>(
+                                                      stream: DatabaseService(id: "", ids: productToBeShown!.comments).specifiedComments,
+                                                      builder: (context, snapshot) {
+                                                        List<Comment>? comments = snapshot.data;
+                                                        if (comments != null) {
+                                                          return Row(
+                                                            children: [
+                                                              OutlinedButton(
+                                                                  style: ShapeRules(
+                                                                          bg_color: AppColors.empty_button, side_color: AppColors.empty_button_border)
+                                                                      .outlined_button_style_no_padding(),
+                                                                  onPressed: () {
+                                                                    pushNewScreen(context,
+                                                                        screen: ProductPage(
+                                                                            seller: allSellers!
+                                                                                .where((element) => element.name == productToBeShown.name)
+                                                                                .toList()[0],
+                                                                            product: productToBeShown));
+                                                                  },
+                                                                  child: QuickObjects().orderProductTile_listView(
+                                                                      context,
+                                                                      OPMap.keys.toList()[k],
+                                                                      productToBeShown,
+                                                                      customer,
+                                                                      comments,
+                                                                      allSellers!
+                                                                          .where((element) => element.name == productToBeShown.name)
+                                                                          .toList()[0],
+                                                                      350,
+                                                                      190)),
+                                                              SizedBox(
+                                                                width: 10,
+                                                              )
+                                                            ],
+                                                          );
+                                                        } else {
+                                                          return Animations().loading();
+                                                        }
+                                                      });
                                                 },
                                               ),
                                             );

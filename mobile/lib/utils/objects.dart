@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/Screens/cart/invoiceView.dart';
 import 'package:mobile/Screens/general/ratepage.dart';
 import 'package:mobile/Services/database.dart';
+import 'package:mobile/models/comments/comment.dart';
 import 'package:mobile/models/orders/order.dart';
 import 'package:mobile/models/products/product.dart';
 import 'package:mobile/models/users/customer.dart';
@@ -155,7 +156,7 @@ class QuickObjects {
     );
   }
 
-  Widget discountedProductTile_listView(Product product, Customer customer, Seller seller, double h, double w) {
+  Widget discountedProductTile_listView(Product product, Customer customer, List<Comment>? comments, Seller seller, double h, double w) {
     return Container(
       height: h,
       width: w,
@@ -221,6 +222,28 @@ class QuickObjects {
                   ),
                   color: AppColors.negative_button,
                 )),
+            Positioned(
+                right: 8,
+                top: (3 * h / 5) - 20,
+                child: Container(
+                    height: 20,
+                    width: 54,
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Icon(CupertinoIcons.star_fill, color: Colors.orange, size: 20),
+                          SizedBox(
+                            width: 2,
+                          ),
+                          Text(
+                            comments!.length == 0 ? "0" : "${getAveRating(comments)}",
+                            style: TextStyle(color: AppColors.title_text, fontSize: 17),
+                          ),
+                        ],
+                      ),
+                    ),
+                    color: Colors.transparent)),
             product.quantity <= 5
                 ? Positioned(
                     left: 50,
@@ -297,7 +320,8 @@ class QuickObjects {
     );
   }
 
-  Widget orderProductTile_listView(BuildContext context, Order order, Product product, Customer customer, Seller seller, double h, double w) {
+  Widget orderProductTile_listView(
+      BuildContext context, Order order, Product product, Customer customer, List<Comment>? comments, Seller seller, double h, double w) {
     return Container(
       height: h,
       width: w,
@@ -343,6 +367,28 @@ class QuickObjects {
                       ),
                     ),
                     color: getColor(order.status))),
+            Positioned(
+                right: 8,
+                top: (3 * h / 5) - 20,
+                child: Container(
+                    height: 20,
+                    width: 54,
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Icon(CupertinoIcons.star_fill, color: Colors.orange, size: 20),
+                          SizedBox(
+                            width: 2,
+                          ),
+                          Text(
+                            comments!.length == 0 ? "0" : "${getAveRating(comments)}",
+                            style: TextStyle(color: AppColors.title_text, fontSize: 17),
+                          ),
+                        ],
+                      ),
+                    ),
+                    color: Colors.transparent)),
           ]),
           Container(
             width: w,
@@ -429,7 +475,7 @@ class QuickObjects {
     );
   }
 
-  Widget productTile_gridView(Product product, Customer customer, Seller seller, double height, double width) {
+  Widget productTile_gridView(Product product, Customer customer, List<Comment>? comments, Seller seller, double height, double width) {
     double h = height / 2;
     double w = width / 2;
     return Container(
@@ -557,6 +603,28 @@ class QuickObjects {
                               )
                             : Container(),
               ),
+              Positioned(
+                  right: 8,
+                  top: (6 * h / 12) - 20,
+                  child: Container(
+                      height: 20,
+                      width: 54,
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Icon(CupertinoIcons.star_fill, color: Colors.orange, size: 20),
+                            SizedBox(
+                              width: 2,
+                            ),
+                            Text(
+                              comments!.length == 0 ? "0" : "${product.averageRate}",
+                              style: TextStyle(color: AppColors.title_text, fontSize: 17),
+                            ),
+                          ],
+                        ),
+                      ),
+                      color: Colors.transparent)),
             ],
           ),
           Container(
@@ -1115,6 +1183,57 @@ class QuickObjects {
           ],
         ));
   }
+
+  Widget prevention(BuildContext context) {
+    return AlertDialog(
+        backgroundColor: AppColors.background,
+        scrollable: true,
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  CupertinoIcons.person,
+                  color: AppColors.title_text,
+                  size: 20,
+                ),
+                SizedBox(
+                  width: 5,
+                ),
+                Text(
+                  "You need to log in",
+                  style: TextStyle(color: AppColors.title_text, fontSize: 20),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            Row(
+              children: [
+                SizedBox(
+                  width: 25,
+                ),
+                Text(
+                  "Thank you for your understanding",
+                  style: TextStyle(color: AppColors.title_text, fontSize: 15),
+                ),
+              ],
+            ),
+          ],
+        ));
+  }
+}
+
+double getAveRating(List<Comment>? comments) {
+  double sum = 0;
+  double count = comments!.length.toDouble();
+  for (var i = 0; i < comments.length; i++) {
+    sum += comments[i].rating;
+  }
+
+  return sum / count;
 }
 
 double getIndividualPriceForCartItem(Product product, Map<Product, dynamic> basket) {

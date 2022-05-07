@@ -94,6 +94,7 @@ flutter:
     - assets/bg_card.jpg
     - assets/mastercard.png
     - assets/mainlogo.png
+    - assets/pp.png
     - assets/category_pictures/basketball.png
     - assets/category_pictures/daily.png
     - assets/category_pictures/running.png

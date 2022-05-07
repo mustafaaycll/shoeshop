@@ -1,24 +1,15 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:mobile/Screens/Authentication/resetpass.dart';
 import 'package:mobile/Screens/account/addressoptions.dart';
 import 'package:mobile/Screens/account/paymentoptions.dart';
 import 'package:mobile/Services/authentication.dart';
-import 'package:mobile/Services/database.dart';
 import 'package:mobile/models/users/customer.dart';
 import 'package:mobile/utils/animations.dart';
 import 'package:mobile/utils/colors.dart';
 import 'package:mobile/utils/objects.dart';
-import 'package:mobile/utils/shapes_dimensions.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
-
-import '../../utils/styles.dart';
 import 'changename.dart';
 
 class Account extends StatefulWidget {
@@ -85,6 +76,12 @@ class _AccountState extends State<Account> {
                     onTap: () {
                       if (customer.method != "anonymous") {
                         pushNewScreen(context, screen: ChangeName());
+                      } else {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return QuickObjects().prevention(context);
+                            });
                       }
                     },
                     title: Text("Change Name"),
@@ -127,6 +124,12 @@ class _AccountState extends State<Account> {
                                 ],
                               );
                             });
+                      } else {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return QuickObjects().prevention(context);
+                            });
                       }
                     },
                     title: Text("Change Password"),
@@ -135,7 +138,15 @@ class _AccountState extends State<Account> {
                   ),
                   ListTile(
                     onTap: () {
-                      pushNewScreen(context, screen: AddressOptions());
+                      if (customer.method != "anonymous") {
+                        pushNewScreen(context, screen: AddressOptions());
+                      } else {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return QuickObjects().prevention(context);
+                            });
+                      }
                     },
                     title: Text("Manage Addresses"),
                     trailing: Icon(CupertinoIcons.chevron_right),
@@ -143,7 +154,15 @@ class _AccountState extends State<Account> {
                   ),
                   ListTile(
                     onTap: () {
-                      pushNewScreen(context, screen: PaymentOptions());
+                      if (customer.method != "anonymous") {
+                        pushNewScreen(context, screen: PaymentOptions());
+                      } else {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return QuickObjects().prevention(context);
+                            });
+                      }
                     },
                     title: Text("Manage Payment Options"),
                     trailing: Icon(CupertinoIcons.chevron_right),
