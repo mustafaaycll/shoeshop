@@ -3,9 +3,11 @@ import { AngularFirestore, AngularFirestoreCollection} from '@angular/fire/compa
 import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { map, Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { product } from 'src/products';
+import { product, customer } from 'src/products';
 import { AuthService } from '../services/auth.service';
 import { doc, setDoc } from '@angular/fire/firestore';
+
+
 
 
 @Injectable({
@@ -45,9 +47,8 @@ export class ApiService {
   }
 
 
-  createCustomer(data: customer){
-    
-    this.firestore.collection(`customers/${data.id}`).add(data)
+ 
 
-  }
+ 
+
 }

@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { BehaviorSubject } from 'rxjs';
+import { AuthService } from '../services/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +13,13 @@ export class CartService {
   public search = new BehaviorSubject<string>("");
   constructor() { }
 
+  
+  
+
+
   getProducts(){
     return this.productList.asObservable();
+    
   
   }
 

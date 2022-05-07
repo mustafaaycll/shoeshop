@@ -44,6 +44,31 @@ class _NewPaymentOptionState extends State<NewPaymentOption> {
           ),
         ),
         body: Column(children: [
+          Padding(
+            padding: EdgeInsets.all(20),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Let's add a new card!",
+                      style: TextStyle(color: AppColors.title_text, fontSize: 30),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Text("Please fill the form below.", style: TextStyle(color: AppColors.title_text)),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
           CreditCardWidget(
             isChipVisible: false,
             cardNumber: cardNumber,

@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service'
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+//import { Customer } from 'src/app/models/customer';
+import { ItemService } from 'src/app/services/item.service';
 
 @Component({
     selector: 'app-signup',
@@ -11,11 +13,11 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
     styleUrls: ['./signup.component.css']
 })
 export class SignupComponent implements OnInit {
-
+    
     signupForm: FormGroup;
     firebaseErrorMessage: string;
 
-    constructor(private authService: AuthService, private router: Router, private afAuth: AngularFireAuth) {
+    constructor(private authService: AuthService, private router: Router, private afAuth: AngularFireAuth, private itemService: ItemService) {
         this.firebaseErrorMessage = '';
     }
 

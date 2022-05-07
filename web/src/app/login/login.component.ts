@@ -12,6 +12,7 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 })
 
 export class LoginComponent implements OnInit {
+    
 
     loginForm: FormGroup;
     firebaseErrorMessage: string;
@@ -43,5 +44,7 @@ export class LoginComponent implements OnInit {
                 this.firebaseErrorMessage = result.message;
             }
         });
+
     }
+    
 }

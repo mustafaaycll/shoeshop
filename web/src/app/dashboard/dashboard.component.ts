@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { ItemService } from 'src/app/services/item.service';
+import { Customer } from '../models/customer';
 
 @Component({
   selector: 'app-dashboard',
@@ -7,9 +11,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DashboardComponent implements OnInit {
 
-  constructor() { }
+  customers: Customer[];
+  addressForm: FormGroup;
+  constructor(private itemService: ItemService) { 
+  }
 
   ngOnInit(): void {
   }
+
+
+
+
+
+
 
 }
