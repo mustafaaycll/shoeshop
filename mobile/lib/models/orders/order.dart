@@ -9,16 +9,19 @@ class Order {
   final double price;
   final int quantity;
   final DateTime date;
+  final bool rated;
 
-  Order(
-      {required this.id,
-      required this.customerID,
-      required this.sellerID,
-      required this.productID,
-      required this.address,
-      required this.status,
-      required this.size,
-      required this.price,
-      required this.quantity,
-      required this.date});
+  Order({
+    required this.id,
+    required this.customerID,
+    required this.sellerID,
+    required this.productID,
+    required this.address,
+    required this.status,
+    required this.size,
+    required this.price,
+    required this.quantity,
+    required this.date,
+    required this.rated,
+  });
 }

@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:mobile/Services/invoice.dart';
 import 'package:mobile/models/bankCards/bankCard.dart';
+import 'package:mobile/models/comments/comment.dart';
 import 'package:mobile/models/orders/order.dart';
 import 'package:mobile/models/users/customer.dart';
 import 'package:mobile/models/users/seller.dart';
@@ -22,6 +23,7 @@ class DatabaseService {
   final CollectionReference sellerCollection = FirebaseFirestore.instance.collection('sellers');
   final CollectionReference cardCollection = FirebaseFirestore.instance.collection('cards');
   final CollectionReference orderCollection = FirebaseFirestore.instance.collection('orders');
+  final CollectionReference commentCollection = FirebaseFirestore.instance.collection('comments');
 
   final Reference firebaseStorageRef = FirebaseStorage.instance.ref();
 
@@ -331,6 +333,17 @@ class DatabaseService {
       await productCollection.doc(productID).update({'sizesMap': changes[productID]});
     }
   }
+
+  Future addCommentToProduct(List<dynamic> oldComments, String commentID) async {
+    List<dynamic> newComments = [];
+    for (var i = 0; i < oldComments.length; i++) {
+      newComments.add(oldComments[i]);
+    }
+
+    newComments.add(commentID);
+
+    await productCollection.doc(id).update({'comments': newComments});
+  }
   /*--PRODUCT--PRODUCT--PRODUCT--PRODUCT--PRODUCT--PRODUCT--PRODUCT--PRODUCT--*/
 
   /*--SELLER--SELLER--SELLER--SELLER--SELLER--SELLER--SELLER--SELLER--*/
@@ -367,6 +380,17 @@ class DatabaseService {
 
   Stream<List<Seller>> get allSellers {
     return sellerCollection.snapshots().map(_sellerListFromSnapshot);
+  }
+
+  Future addRatingToSeller(List<dynamic> oldRatings, int rating) async {
+    List<dynamic> newRatings = [];
+    for (var i = 0; i < oldRatings.length; i++) {
+      newRatings.add(oldRatings[i]);
+    }
+
+    newRatings.add(rating);
+
+    await sellerCollection.doc(id).update({'ratings': newRatings});
   }
 
   /*--SELLER--SELLER--SELLER--SELLER--SELLER--SELLER--SELLER--SELLER--*/
@@ -454,6 +478,32 @@ class DatabaseService {
   /*--CARD--CARD--CARD--CARD--CARD--CARD--CARD--CARD--CARD--CARD--CARD*/
   /*--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER*/
 
+  List<Order> _orderListFromSnapshot_specified(QuerySnapshot snapshot) {
+    return List<Order>.from(snapshot.docs
+        .map((doc) {
+          if (ids.contains(doc.id)) {
+            return Order(
+                id: doc.id,
+                customerID: doc.get('customerID'),
+                sellerID: doc.get('sellerID'),
+                productID: doc.get('productID'),
+                address: doc.get('address'),
+                status: doc.get('status'),
+                size: doc.get('size'),
+                price: double.parse(doc.get('price')),
+                quantity: doc.get('quantity'),
+                date: DateFormat("dd-MM-yyyy").parse(doc.get('date')),
+                rated: doc.get('rated'));
+          }
+        })
+        .toList()
+        .where((element) => element != null));
+  }
+
+  Stream<List<Order>> get specifiedOrders {
+    return orderCollection.snapshots().map(_orderListFromSnapshot_specified);
+  }
+
   Future createNewOrder(List<Order> orderArr, Customer customer, Map<Product, dynamic> basket, String? address) async {
     List<dynamic> oldPrevOrder = customer.prev_orders;
     String orderString = "";
@@ -470,6 +520,7 @@ class DatabaseService {
         'price': order.price.toStringAsFixed(2),
         'quantity': order.quantity,
         'date': DateFormat("dd-MM-yyyy").format(order.date),
+        'rated': false
       });
       orderString = orderString + order.id;
       if (i != orderArr.length - 1) {
@@ -490,6 +541,24 @@ class DatabaseService {
     return url;
   }
 
+  Future updateRateInfoOfOrder(bool val) async {
+    await orderCollection.doc(id).update({'rated': val});
+  }
+
   /*--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER*/
+  /*--COMMENT--COMMENT--COMMENT--COMMENT--COMMENT--COMMENT--COMMENT--COMMENT*/
+  Future createNewComment(Comment commentObject) async {
+    await commentCollection.doc(commentObject.id).set({
+      'id': commentObject.id,
+      'productID': commentObject.productID,
+      'sellerID': commentObject.sellerID,
+      'customerID': commentObject.customerID,
+      'date': DateFormat("dd-MM-yyyy").format(commentObject.date),
+      'comment': commentObject.comment,
+      'rating': commentObject.rating,
+      'approved': commentObject.approved
+    });
+  }
+  /*--COMMENT--COMMENT--COMMENT--COMMENT--COMMENT--COMMENT--COMMENT--COMMENT*/
 
 }

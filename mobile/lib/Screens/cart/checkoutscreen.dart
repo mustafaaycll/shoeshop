@@ -244,7 +244,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               size: widget.basket[widget.basket.keys.toList()[i]][1],
                               price: widget.basket.keys.toList()[i].price * widget.basket[widget.basket.keys.toList()[i]][0],
                               quantity: widget.basket[widget.basket.keys.toList()[i]][0],
-                              date: DateTime.now());
+                              date: DateTime.now(),
+                              rated: false);
                           orderArr.add(order);
                         }
                         DatabaseService(id: customer.id, ids: []).createNewOrder(orderArr, customer, widget.basket, _selectedAddress);

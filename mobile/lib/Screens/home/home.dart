@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/Screens/home/productpage.dart';
 import 'package:mobile/Screens/home/sellerpage.dart';
 import 'package:mobile/Services/database.dart';
+import 'package:mobile/models/orders/order.dart';
 import 'package:mobile/models/products/product.dart';
 import 'package:mobile/models/users/seller.dart';
 import 'package:mobile/utils/animations.dart';
@@ -48,12 +49,6 @@ class _HomeState extends State<Home> {
                       backgroundColor: AppColors.background,
                       elevation: 0,
                       title: Container(width: 130, child: Image.asset('assets/mainlogo.png')),
-
-                      /*Text(
-                        'HOME',
-                        style: TextStyle(
-                            color: AppColors.title_text, fontSize: 30),
-                      ),*/
                       actions: [
                         IconButton(
                             onPressed: () {
@@ -261,9 +256,99 @@ class _HomeState extends State<Home> {
                                         : Animations().loading(),
                                   );
                                 }),
-                            SizedBox(
-                              height: 30,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Previous Orders",
+                                  style: TextStyle(color: AppColors.system_gray),
+                                ),
+                                TextButton(
+                                  onPressed: () {},
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        "All",
+                                        style: TextStyle(color: AppColors.secondary_text),
+                                      ),
+                                      Icon(CupertinoIcons.right_chevron, size: 13, color: AppColors.secondary_text)
+                                    ],
+                                  ),
+                                )
+                              ],
                             ),
+                            StreamBuilder<List<Seller>>(
+                              stream: DatabaseService(id: "", ids: []).allSellers,
+                              builder: (context, snapshot) {
+                                List<Seller>? allSellers = snapshot.data;
+
+                                return StreamBuilder<List<Order>>(
+                                  stream: DatabaseService(id: "", ids: getAllOrderIDsIntoList(customer.prev_orders)).specifiedOrders,
+                                  builder: (context, snapshot) {
+                                    List<Order>? orders = snapshot.data;
+
+                                    if (orders != null) {
+                                      orders.sort((a, b) => b.date.compareTo(a.date));
+
+                                      return StreamBuilder<List<Product>>(
+                                        stream: DatabaseService(id: "", ids: extractProductIDsfromOrders(orders)).specifiedProducts,
+                                        builder: (context, snapshot) {
+                                          List<Product>? products = snapshot.data;
+
+                                          if (products != null) {
+                                            Map<Order, Product> OPMap = getOrderProductMap(orders, products);
+                                            return SizedBox(
+                                              height: 350,
+                                              child: ListView.builder(
+                                                scrollDirection: Axis.horizontal,
+                                                itemCount: OPMap.keys.toList().length,
+                                                itemBuilder: (context, k) {
+                                                  Product? productToBeShown = OPMap[OPMap.keys.toList()[k]];
+                                                  return Row(
+                                                    children: [
+                                                      OutlinedButton(
+                                                          style:
+                                                              ShapeRules(bg_color: AppColors.empty_button, side_color: AppColors.empty_button_border)
+                                                                  .outlined_button_style_no_padding(),
+                                                          onPressed: () {
+                                                            pushNewScreen(context,
+                                                                screen: ProductPage(
+                                                                    seller: allSellers!
+                                                                        .where((element) => element.name == productToBeShown!.name)
+                                                                        .toList()[0],
+                                                                    product: productToBeShown!));
+                                                          },
+                                                          child: QuickObjects().orderProductTile_listView(
+                                                              context,
+                                                              OPMap.keys.toList()[k],
+                                                              productToBeShown!,
+                                                              customer,
+                                                              allSellers!.where((element) => element.name == productToBeShown.name).toList()[0],
+                                                              350,
+                                                              190)),
+                                                      SizedBox(
+                                                        width: 10,
+                                                      )
+                                                    ],
+                                                  );
+                                                },
+                                              ),
+                                            );
+                                          } else {
+                                            return Animations().loading();
+                                          }
+                                        },
+                                      );
+                                    } else {
+                                      return Animations().loading();
+                                    }
+                                  },
+                                );
+                              },
+                            ),
+                            SizedBox(
+                              height: 50,
+                            )
                           ],
                         ),
                       ),
@@ -275,6 +360,36 @@ class _HomeState extends State<Home> {
       return Animations().scaffoldLoadingScreen('HOME');
     }
   }
+}
+
+List<dynamic> getAllOrderIDsIntoList(List<dynamic> prev_orders) {
+  List<dynamic> IDs = [];
+  for (var i = 0; i < prev_orders.length; i++) {
+    List<dynamic> idList = prev_orders[i].split("-");
+    for (var i = 0; i < idList.length; i++) {
+      IDs.add(idList[i]);
+    }
+  }
+  return IDs;
+}
+
+List<dynamic> extractProductIDsfromOrders(List<Order>? orders) {
+  List<dynamic> IDs = [];
+  for (var i = 0; i < orders!.length; i++) {
+    IDs.add(orders[i].productID);
+  }
+
+  return IDs;
+}
+
+Map<Order, Product> getOrderProductMap(List<Order>? orders, List<Product>? products) {
+  Map<Order, Product> orderProductMap = {};
+  for (var i = 0; i < orders!.length; i++) {
+    Product includedproduct = products!.where((element) => element.id == orders[i].productID).toList()[0];
+    orderProductMap[orders[i]] = includedproduct;
+  }
+
+  return orderProductMap;
 }
 
 class ShoeShopSearchDelegate extends SearchDelegate {

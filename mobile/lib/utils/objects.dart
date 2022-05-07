@@ -2,7 +2,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/Screens/cart/invoiceView.dart';
+import 'package:mobile/Screens/general/ratepage.dart';
 import 'package:mobile/Services/database.dart';
+import 'package:mobile/models/orders/order.dart';
 import 'package:mobile/models/products/product.dart';
 import 'package:mobile/models/users/customer.dart';
 import 'package:mobile/models/users/seller.dart';
@@ -10,6 +12,7 @@ import 'package:mobile/utils/animations.dart';
 import 'package:mobile/utils/colors.dart';
 import 'package:mobile/utils/shapes_dimensions.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:intl/intl.dart';
 
 class QuickObjects {
   String getInitials(String text) {
@@ -285,6 +288,138 @@ class QuickObjects {
                       Expanded(child: Container()),
                     ],
                   )
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget orderProductTile_listView(BuildContext context, Order order, Product product, Customer customer, Seller seller, double h, double w) {
+    return Container(
+      height: h,
+      width: w,
+      child: Column(
+        children: [
+          Stack(children: [
+            Container(
+              width: w,
+              height: 3 * h / 5,
+              decoration: BoxDecoration(image: DecorationImage(fit: BoxFit.cover, image: NetworkImage(product.photos[0]))),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                SizedBox(
+                  width: 8,
+                ),
+                Container(
+                  height: 40,
+                  width: 40,
+                  child: Image.network(
+                    seller.logo,
+                  ),
+                ),
+                Expanded(
+                  child: Container(),
+                ),
+                SizedBox(
+                  width: 5,
+                ),
+              ],
+            ),
+            Positioned(
+                left: 8,
+                top: (3 * h / 5) - 20,
+                child: Container(
+                    height: 20,
+                    width: 75,
+                    child: Center(
+                      child: Text(
+                        "${getStatusMessage(order.status)}",
+                        style: TextStyle(color: AppColors.background, fontSize: 10),
+                      ),
+                    ),
+                    color: getColor(order.status))),
+          ]),
+          Container(
+            width: w,
+            height: 2 * h / 5,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        product.name + " ",
+                        style: TextStyle(color: AppColors.body_text, fontSize: 15),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Expanded(
+                        child: Text(
+                          product.model,
+                          style: TextStyle(color: AppColors.body_text, fontSize: 15),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 3,
+                  ),
+                  Expanded(
+                    child: Text(
+                      product.sex + "'s " + product.category + " shoe",
+                      style: TextStyle(color: AppColors.system_gray, fontSize: 12),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      "Purchased on ${DateFormat('dd-MM-yyyy').format(order.date)}",
+                      style: TextStyle(color: AppColors.system_gray, fontSize: 12),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text("${product.price.toStringAsFixed(2)} ₺", style: TextStyle(fontSize: 20, color: AppColors.title_text)),
+                      Expanded(child: Container()),
+                    ],
+                  ),
+                  !order.rated
+                      ? order.status == "delivered"
+                          ? Row(
+                              children: [
+                                Expanded(
+                                    child: OutlinedButton(
+                                        style:
+                                            ShapeRules(bg_color: getColor(order.status), side_color: getColor(order.status)).outlined_button_style(),
+                                        onPressed: () {
+                                          if (order.status == "delivered") {
+                                            pushNewScreen(context, screen: RatePage(order: order, seller: seller, product: product));
+                                          }
+                                        },
+                                        child: Text("Rate", style: TextStyle(color: AppColors.filled_button_text))))
+                              ],
+                            )
+                          : Container(height: 50)
+                      : Row(
+                          children: [
+                            Expanded(
+                                child: OutlinedButton(
+                                    style: ShapeRules(bg_color: AppColors.system_gray, side_color: AppColors.system_gray).outlined_button_style(),
+                                    onPressed: () {},
+                                    child: Text("Already Rated", style: TextStyle(color: AppColors.filled_button_text))))
+                          ],
+                        )
                 ],
               ),
             ),
@@ -996,4 +1131,24 @@ double getIndividualPriceForCartItem(Product product, Map<Product, dynamic> bask
 double getIndividualPriceForWishlistItem(Product product) {
   double price = product.price;
   return price;
+}
+
+String getStatusMessage(String status) {
+  if (status == "processing") {
+    return "In Process";
+  } else if (status == "delivery") {
+    return "In Delivery";
+  } else {
+    return "Delivered";
+  }
+}
+
+Color getColor(String status) {
+  if (status == "processing") {
+    return Colors.orange;
+  } else if (status == "delivery") {
+    return AppColors.secondary_text;
+  } else {
+    return AppColors.filled_button;
+  }
 }
