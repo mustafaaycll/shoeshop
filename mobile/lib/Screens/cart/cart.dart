@@ -63,7 +63,7 @@ class _CartState extends State<Cart> {
                                   if (seller != null) {
                                     return OutlinedButton(
                                       onPressed: () =>
-                                          {pushNewScreen(context, screen: ProductPage(seller: seller!, product: basket.keys.toList()[index]))},
+                                          {pushNewScreen(context, screen: ProductPage(seller: seller, product: basket.keys.toList()[index]))},
                                       style: ShapeRules(bg_color: AppColors.background, side_color: AppColors.background)
                                           .outlined_button_style_no_padding(),
                                       child: QuickObjects().cartItem(customer, basket, index, MediaQuery.of(context).size.width - 16),
@@ -88,7 +88,15 @@ class _CartState extends State<Cart> {
                           trailing: OutlinedButton.icon(
                             style: ShapeRules(bg_color: AppColors.filled_button, side_color: AppColors.filled_button).outlined_button_style(),
                             onPressed: () {
-                              pushNewScreen(context, screen: CheckoutScreen(basket: basket));
+                              if (customer.email != "No Email") {
+                                pushNewScreen(context, screen: CheckoutScreen(basket: basket));
+                              } else {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return QuickObjects().prevention(context);
+                                    });
+                              }
                             },
                             icon: Icon(
                               CupertinoIcons.creditcard,

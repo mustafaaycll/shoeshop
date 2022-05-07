@@ -11,13 +11,16 @@ export class FilterPipe implements PipeTransform{
             return value;
         }
         value.forEach((a:any)=>{
-            if(a[propName].trim().toLowerCase().includes(filterString.toLowerCase())){
+            if(a.name.trim().toLowerCase().includes(filterString.toLowerCase())){
                 result.push(a);
             }
             else if(a.category.trim().toLowerCase().includes(filterString.toLowerCase())){
                 result.push(a);
             }
             else if(a.description.trim().toLowerCase().includes(filterString.toLowerCase())){
+                result.push(a);
+            }
+            else if(a.model.trim().toLowerCase().includes(filterString.toLowerCase())){
                 result.push(a);
             };
 
