@@ -1,5 +1,5 @@
 export interface Customer {
-    address?:string[];
+    addresses?:string[];
     basketmap?:string[];
     creditcards?:string[];
     email?: string;

@@ -1,15 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/compat/firestore';
-import { Observable } from 'rxjs';
+import { observable, Observable } from 'rxjs';
 import { Customer } from '../models/customer';
 import { AuthService } from '../services/auth.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ItemService } from '../services/item.service';
 import { Router } from '@angular/router';
 import { user } from '@angular/fire/auth';
-import { arrayUnion, FieldValue } from '@angular/fire/firestore';
+import { arrayUnion, FieldValue, QuerySnapshot } from '@angular/fire/firestore';
 import { isAdmin } from '@firebase/util';
+
 
 @Component({
   selector: 'app-addresspage',
@@ -22,14 +23,15 @@ export class AddresspageComponent implements OnInit {
   itemDoc: AngularFirestoreDocument;
   addressForm: FormGroup;
   firebaseErrorMessage: string;
-  getAddress: [];
-  namee: string;
+  getAddress?: string[];
+  
+  abc: Customer;
+  flag: boolean;
 
   constructor(private afs: AngularFirestore, public afAuth: AngularFireAuth, private authService: AuthService, private itemService: ItemService, private router: Router ) {
-    this.customerRef = this.afs.collection('customers');
-    this.customer$ = this.customerRef.valueChanges();
+    //this.customerRef = this.afs.collection('customers');
+    //this.customer$ = this.customerRef.valueChanges();
     this.firebaseErrorMessage = '';
-    
     
    }
 
@@ -41,15 +43,32 @@ export class AddresspageComponent implements OnInit {
 
   updateItem(address: string){
     this.afAuth.onAuthStateChanged(user => {if(user){
-      this.afs.doc('/customers/' + user.uid).valueChanges().subscribe(items => {
-        console.log(items);
+      this.flag = false;
+      
+      this.afs.doc('/customers/' + user.uid).valueChanges().subscribe((items) => {
+        //console.log(items);
+        if(this.flag == false){
+          this.abc = items as Customer;
+          this.getAddress = this.abc.addresses;
+          this.getAddress?.push(address);
+          this.afs.doc('/customers/' + user.uid).update({
+            addresses: this.getAddress,
+          })
+          this.flag = true;
+        }
+
+        else{
+          
+        }
+
+        
         
       })
-      this.afs.doc('/customers/' + user.uid).update({
-        addresses: [address],
-      })
+      
+
     }})
   }
+  
 
   
 }
