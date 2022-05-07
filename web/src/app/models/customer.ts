@@ -1,11 +1,11 @@
 export interface Customer {
-    address?:string[];
-    basketmap?:string[];
-    creditcards?:string[];
-    email?: string;
-    fullname?: string;
-    ID?: string;
-    method?: string;
-    favproducts?:string[];
-    prevorders?:string[];
+    addresses:string[];
+    basketMap: {};
+    credit_cards:string[];
+    email: string;
+    fullname: string;
+    id: string;
+    method: string;
+    fav_products:string[];
+    prev_orders:string[];
   }

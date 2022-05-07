@@ -5,7 +5,7 @@ import { map, Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { product, customer } from 'src/products';
 import { AuthService } from '../services/auth.service';
-import { doc, setDoc } from '@angular/fire/firestore';
+import { doc, setDoc, updateDoc } from "firebase/firestore"; 
 
 
 
@@ -41,14 +41,21 @@ export class ApiService {
   
   getCustomerWithId(){
     let id = this.auth.userid;
-    console.log(id);
     return this.firestore.doc(`customers/${id}`).valueChanges();
-    console.log(this.firestore.doc(`customers/${id}`).valueChanges());
+   
   }
 
+  UpdateBasketofUser(bsketmap: any){
+    let id = this.auth.userid;
+    console.log(id);
+    this.firestore.collection("customers").doc(id).update(
+      {
+        "basketMap": bsketmap
+      
+     })
 
- 
 
- 
+  }
+
 
 }
