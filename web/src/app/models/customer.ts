@@ -1,6 +1,6 @@
 export interface Customer {
     address?:string[];
-    basketmap?:string[];
+    basketmap?:Map<string,number>;
     creditcards?:string[];
     email?: string;
     fullname?: string;

@@ -49,7 +49,7 @@ export class AuthService {
                     fullname: user.displayName,
                     email: user.email,
                     addresses: [],
-                    basketMap: [],
+                    basketMap: new Map(),
                     credit_cards: [],
                     fav_products: [],
                     id: result.user.uid,
