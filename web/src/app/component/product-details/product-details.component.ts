@@ -47,10 +47,10 @@ export class ProductDetailsComponent implements OnInit {
 }
 
     addtocart(item: any){
-      console.log(this.selectedsize);
+      console.log(this.apiService.getCustomerWithId());
       Object.assign(item,{quantity: this.quanti, size: this.selectedsize, total: this.quanti *item.price});
       this.cartService.addtoCart(item);
-      
+     
 
       
     }

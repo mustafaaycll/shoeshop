@@ -14,6 +14,16 @@ export interface product{
 }
 
 
+export interface customer {
+    adresses: string[];
+    id: string;
+    fullname: string;
+    basketMap: {};
+    credit_carts: string[];
+    email: string;
+    prev_orders: string[];
+}
+
 export const products = [
     {
         id: "1",
