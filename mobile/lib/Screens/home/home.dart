@@ -18,8 +18,7 @@ import '../../models/users/customer.dart';
 import '../../utils/shapes_dimensions.dart';
 
 class Home extends StatefulWidget {
-  const Home({Key? key, required this.analytics, required this.observer})
-      : super(key: key);
+  const Home({Key? key, required this.analytics, required this.observer}) : super(key: key);
   final FirebaseAnalytics analytics;
   final FirebaseAnalyticsObserver observer;
   @override
@@ -28,8 +27,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-  static FirebaseAnalyticsObserver observer =
-      FirebaseAnalyticsObserver(analytics: analytics);
+  static FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(analytics: analytics);
   @override
   Widget build(BuildContext context) {
     Customer? customer = Provider.of<Customer?>(context);
@@ -49,18 +47,17 @@ class _HomeState extends State<Home> {
                     appBar: AppBar(
                       backgroundColor: AppColors.background,
                       elevation: 0,
-                      title: Text(
+                      title: Container(width: 130, child: Image.asset('assets/mainlogo.png')),
+
+                      /*Text(
                         'HOME',
                         style: TextStyle(
                             color: AppColors.title_text, fontSize: 30),
-                      ),
+                      ),*/
                       actions: [
                         IconButton(
                             onPressed: () {
-                              showSearch(
-                                  context: context,
-                                  delegate: ShoeShopSearchDelegate(
-                                      allProducts: allProducts));
+                              showSearch(context: context, delegate: ShoeShopSearchDelegate(allProducts: allProducts));
                             },
                             icon: Icon(
                               CupertinoIcons.search,
@@ -80,8 +77,7 @@ class _HomeState extends State<Home> {
                               children: [
                                 Text(
                                   "Explore by brands",
-                                  style:
-                                      TextStyle(color: AppColors.system_gray),
+                                  style: TextStyle(color: AppColors.system_gray),
                                 ),
                                 TextButton(
                                   onPressed: () {},
@@ -89,12 +85,9 @@ class _HomeState extends State<Home> {
                                     children: [
                                       Text(
                                         "All",
-                                        style: TextStyle(
-                                            color: AppColors.secondary_text),
+                                        style: TextStyle(color: AppColors.secondary_text),
                                       ),
-                                      Icon(CupertinoIcons.right_chevron,
-                                          size: 13,
-                                          color: AppColors.secondary_text)
+                                      Icon(CupertinoIcons.right_chevron, size: 13, color: AppColors.secondary_text)
                                     ],
                                   ),
                                 )
@@ -110,25 +103,12 @@ class _HomeState extends State<Home> {
                                         return Row(
                                           children: [
                                             OutlinedButton(
-                                                style: ShapeRules(
-                                                        bg_color: AppColors
-                                                            .empty_button,
-                                                        side_color:
-                                                            Colors.transparent)
+                                                style: ShapeRules(bg_color: AppColors.empty_button, side_color: Colors.transparent)
                                                     .outlined_button_style(),
                                                 onPressed: () {
-                                                  pushNewScreen(context,
-                                                      screen: SellerPage(
-                                                          seller:
-                                                              allSellers[i]));
+                                                  pushNewScreen(context, screen: SellerPage(seller: allSellers[i]));
                                                 },
-                                                child: QuickObjects()
-                                                    .namedImageBox(
-                                                        allSellers[i].name,
-                                                        allSellers[i].logo,
-                                                        105,
-                                                        100,
-                                                        true)),
+                                                child: QuickObjects().namedImageBox(allSellers[i].name, allSellers[i].logo, 105, 100, true)),
                                             SizedBox(
                                               width: 10,
                                             )
@@ -143,8 +123,7 @@ class _HomeState extends State<Home> {
                               children: [
                                 Text(
                                   "Explore by categories",
-                                  style:
-                                      TextStyle(color: AppColors.system_gray),
+                                  style: TextStyle(color: AppColors.system_gray),
                                 ),
                                 TextButton(
                                   onPressed: () {},
@@ -152,12 +131,9 @@ class _HomeState extends State<Home> {
                                     children: [
                                       Text(
                                         "All",
-                                        style: TextStyle(
-                                            color: AppColors.secondary_text),
+                                        style: TextStyle(color: AppColors.secondary_text),
                                       ),
-                                      Icon(CupertinoIcons.right_chevron,
-                                          size: 13,
-                                          color: AppColors.secondary_text)
+                                      Icon(CupertinoIcons.right_chevron, size: 13, color: AppColors.secondary_text)
                                     ],
                                   ),
                                 )
@@ -168,29 +144,16 @@ class _HomeState extends State<Home> {
                               child: allProducts != null
                                   ? ListView.builder(
                                       scrollDirection: Axis.horizontal,
-                                      itemCount:
-                                          extractCategories(allProducts).length,
+                                      itemCount: extractCategories(allProducts).length,
                                       itemBuilder: (context, j) {
-                                        List<String> categories =
-                                            extractCategories(allProducts);
+                                        List<String> categories = extractCategories(allProducts);
                                         return Row(
                                           children: [
                                             OutlinedButton(
-                                                style: ShapeRules(
-                                                        bg_color: AppColors
-                                                            .empty_button,
-                                                        side_color: Colors
-                                                            .transparent)
+                                                style: ShapeRules(bg_color: AppColors.empty_button, side_color: Colors.transparent)
                                                     .outlined_button_style(),
                                                 onPressed: () {},
-                                                child: QuickObjects()
-                                                    .namedImageBox(
-                                                        categories[j],
-                                                        categories[j]
-                                                            .toLowerCase(),
-                                                        105,
-                                                        100,
-                                                        false)),
+                                                child: QuickObjects().namedImageBox(categories[j], categories[j].toLowerCase(), 105, 100, false)),
                                             SizedBox(
                                               width: 10,
                                             )
@@ -207,8 +170,7 @@ class _HomeState extends State<Home> {
                               children: [
                                 Text(
                                   "Explore by gender",
-                                  style:
-                                      TextStyle(color: AppColors.system_gray),
+                                  style: TextStyle(color: AppColors.system_gray),
                                 )
                               ],
                             ),
@@ -219,42 +181,27 @@ class _HomeState extends State<Home> {
                               children: [
                                 Expanded(
                                   child: OutlinedButton(
-                                      style: ShapeRules(
-                                              bg_color: AppColors.empty_button,
-                                              side_color: Colors.transparent)
-                                          .outlined_button_style(),
+                                      style: ShapeRules(bg_color: AppColors.empty_button, side_color: Colors.transparent).outlined_button_style(),
                                       onPressed: () {},
-                                      child: Text("Men's",
-                                          style: TextStyle(
-                                              color: AppColors.body_text))),
+                                      child: Text("Men's", style: TextStyle(color: AppColors.body_text))),
                                 ),
                                 SizedBox(
                                   width: 5,
                                 ),
                                 Expanded(
                                   child: OutlinedButton(
-                                      style: ShapeRules(
-                                              bg_color: AppColors.empty_button,
-                                              side_color: Colors.transparent)
-                                          .outlined_button_style(),
+                                      style: ShapeRules(bg_color: AppColors.empty_button, side_color: Colors.transparent).outlined_button_style(),
                                       onPressed: () {},
-                                      child: Text("Women's",
-                                          style: TextStyle(
-                                              color: AppColors.body_text))),
+                                      child: Text("Women's", style: TextStyle(color: AppColors.body_text))),
                                 ),
                                 SizedBox(
                                   width: 5,
                                 ),
                                 Expanded(
                                   child: OutlinedButton(
-                                      style: ShapeRules(
-                                              bg_color: AppColors.empty_button,
-                                              side_color: Colors.transparent)
-                                          .outlined_button_style(),
+                                      style: ShapeRules(bg_color: AppColors.empty_button, side_color: Colors.transparent).outlined_button_style(),
                                       onPressed: () {},
-                                      child: Text("Unisex",
-                                          style: TextStyle(
-                                              color: AppColors.body_text))),
+                                      child: Text("Unisex", style: TextStyle(color: AppColors.body_text))),
                                 ),
                               ],
                             ),
@@ -263,8 +210,7 @@ class _HomeState extends State<Home> {
                               children: [
                                 Text(
                                   "Products on discount",
-                                  style:
-                                      TextStyle(color: AppColors.system_gray),
+                                  style: TextStyle(color: AppColors.system_gray),
                                 ),
                                 TextButton(
                                   onPressed: () {},
@@ -272,20 +218,16 @@ class _HomeState extends State<Home> {
                                     children: [
                                       Text(
                                         "All",
-                                        style: TextStyle(
-                                            color: AppColors.secondary_text),
+                                        style: TextStyle(color: AppColors.secondary_text),
                                       ),
-                                      Icon(CupertinoIcons.right_chevron,
-                                          size: 13,
-                                          color: AppColors.secondary_text)
+                                      Icon(CupertinoIcons.right_chevron, size: 13, color: AppColors.secondary_text)
                                     ],
                                   ),
                                 )
                               ],
                             ),
                             StreamBuilder<List<Product>>(
-                                stream: DatabaseService(id: "", ids: [])
-                                    .discountedProducts,
+                                stream: DatabaseService(id: "", ids: []).discountedProducts,
                                 builder: (context, snapshot) {
                                   List<Product>? discounteds = snapshot.data;
                                   return SizedBox(
@@ -298,38 +240,17 @@ class _HomeState extends State<Home> {
                                               return Row(
                                                 children: [
                                                   OutlinedButton(
-                                                      style: ShapeRules(
-                                                              bg_color: AppColors
-                                                                  .empty_button,
-                                                              side_color: AppColors
-                                                                  .empty_button_border)
+                                                      style: ShapeRules(bg_color: AppColors.empty_button, side_color: AppColors.empty_button_border)
                                                           .outlined_button_style_no_padding(),
                                                       onPressed: () {
                                                         pushNewScreen(context,
                                                             screen: ProductPage(
-                                                                seller: allSellers!
-                                                                    .where((element) =>
-                                                                        element
-                                                                            .name ==
-                                                                        discounteds[l]
-                                                                            .name)
-                                                                    .toList()[0],
+                                                                seller:
+                                                                    allSellers!.where((element) => element.name == discounteds[l].name).toList()[0],
                                                                 product: discounteds[l]));
                                                       },
-                                                      child: QuickObjects()
-                                                          .discountedProductTile_listView(
-                                                              discounteds[l],
-                                                              customer,
-                                                              allSellers!
-                                                                  .where((element) =>
-                                                                      element
-                                                                          .name ==
-                                                                      discounteds[
-                                                                              l]
-                                                                          .name)
-                                                                  .toList()[0],
-                                                              250,
-                                                              190)),
+                                                      child: QuickObjects().discountedProductTile_listView(discounteds[l], customer,
+                                                          allSellers!.where((element) => element.name == discounteds[l].name).toList()[0], 250, 190)),
                                                   SizedBox(
                                                     width: 10,
                                                   )
@@ -396,8 +317,7 @@ class ShoeShopSearchDelegate extends SearchDelegate {
       final cat = product.category.toLowerCase();
       final input = query.toLowerCase();
 
-      final result =
-          name + " " + model + " " + description + " " + sex + " " + cat;
+      final result = name + " " + model + " " + description + " " + sex + " " + cat;
 
       return result.contains(input);
     }).toList();
@@ -406,9 +326,7 @@ class ShoeShopSearchDelegate extends SearchDelegate {
       itemCount: !query.isEmpty ? suggestions.length : 0,
       itemBuilder: (context, index) {
         return StreamBuilder<Seller>(
-            stream: DatabaseService(
-                id: suggestions[index].distributor_information,
-                ids: []).sellerData,
+            stream: DatabaseService(id: suggestions[index].distributor_information, ids: []).sellerData,
             builder: (context, snapshot) {
               Seller? seller = snapshot.data;
               if (seller != null) {
@@ -416,39 +334,26 @@ class ShoeShopSearchDelegate extends SearchDelegate {
                   padding: const EdgeInsets.all(8.0),
                   child: ListTile(
                     onTap: () {
-                      pushNewScreen(context,
-                          screen: ProductPage(
-                              seller: seller, product: suggestions[index]));
+                      pushNewScreen(context, screen: ProductPage(seller: seller, product: suggestions[index]));
                     },
                     leading: Container(
                         width: 75,
                         height: 50,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.all(Radius.circular(10)),
-                            image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: NetworkImage(
-                                    suggestions[index].photos[0])))),
+                            image: DecorationImage(fit: BoxFit.cover, image: NetworkImage(suggestions[index].photos[0])))),
                     title: Text(
                       suggestions[index].name + " " + suggestions[index].model,
-                      style:
-                          TextStyle(color: AppColors.title_text, fontSize: 13),
+                      style: TextStyle(color: AppColors.title_text, fontSize: 13),
                     ),
                     subtitle: Text(
-                      suggestions[index].sex +
-                          "'s " +
-                          suggestions[index].category +
-                          " shoe",
-                      style:
-                          TextStyle(color: AppColors.system_gray, fontSize: 10),
+                      suggestions[index].sex + "'s " + suggestions[index].category + " shoe",
+                      style: TextStyle(color: AppColors.system_gray, fontSize: 10),
                     ),
                     trailing: Container(
                       width: 25,
                       height: 25,
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                              fit: BoxFit.contain,
-                              image: NetworkImage(seller.logo))),
+                      decoration: BoxDecoration(image: DecorationImage(fit: BoxFit.contain, image: NetworkImage(seller.logo))),
                     ),
                   ),
                 );
