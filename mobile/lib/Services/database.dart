@@ -1,9 +1,7 @@
 import 'dart:math';
-import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/animation.dart';
 import 'package:mobile/Services/invoice.dart';
 import 'package:mobile/models/bankCards/bankCard.dart';
 import 'package:mobile/models/orders/order.dart';
@@ -483,6 +481,13 @@ class DatabaseService {
 
     final data = await PdfInvoiceService().createInvoice(customer, basket, address);
     PdfInvoiceService().savePdfFile(orderString, data);
+  }
+
+  Future<String> getPdfURL() async {
+    String url = "";
+    await firebaseStorageRef.child('invoices/$id').getDownloadURL().then((value) => {url = value});
+
+    return url;
   }
 
   /*--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER*/

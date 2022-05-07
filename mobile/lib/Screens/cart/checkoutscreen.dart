@@ -5,7 +5,6 @@ import 'package:flutter_credit_card/credit_card_widget.dart';
 import 'package:mobile/Screens/account/newaddress.dart';
 import 'package:mobile/Screens/account/newpayment.dart';
 import 'package:mobile/Services/database.dart';
-import 'package:mobile/Services/invoice.dart';
 import 'package:mobile/models/bankCards/bankCard.dart';
 import 'package:mobile/models/orders/order.dart';
 import 'package:mobile/models/products/product.dart';
@@ -254,7 +253,15 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         showDialog(
                             context: context,
                             builder: (BuildContext context) {
-                              return QuickObjects().orderReceived();
+                              String pdfName = "";
+                              for (var i = 0; i < orderArr.length; i++) {
+                                Order order = orderArr[i];
+                                pdfName = pdfName + order.id;
+                                if (i != orderArr.length - 1) {
+                                  pdfName = pdfName + "-";
+                                }
+                              }
+                              return QuickObjects().orderReceived(context, pdfName);
                             });
                       }
                     },

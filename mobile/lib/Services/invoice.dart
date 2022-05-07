@@ -37,7 +37,7 @@ class PdfInvoiceService {
           item.name + " " + item.model,
           item.price.toStringAsFixed(2) + " TL",
           basket[item][0].toString(),
-          (item.price * basket[item][0]).toStringAsFixed(2),
+          (item.price * basket[item][0]).toStringAsFixed(2) + " TL",
         ),
       CustomRow(
         "",
@@ -80,9 +80,9 @@ class PdfInvoiceService {
                   ],
                 ),
                 pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.end,
                   children: [
                     pw.Text("ShoeShop Company", style: pw.TextStyle(color: PdfColor.fromHex('98989c'))),
-                    pw.Text("Sisli", style: pw.TextStyle(color: PdfColor.fromHex('98989c'))),
                     pw.Text("Istanbul", style: pw.TextStyle(color: PdfColor.fromHex('98989c'))),
                   ],
                 )
