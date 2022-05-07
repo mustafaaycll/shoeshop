@@ -229,7 +229,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             bg_color: _selectedAddress != null && _selectedCard != null ? AppColors.filled_button : AppColors.system_gray,
                             side_color: _selectedAddress != null && _selectedCard != null ? AppColors.filled_button : AppColors.system_gray)
                         .outlined_button_style(),
-                    onPressed: () {
+                    onPressed: () async {
                       if (_selectedAddress != null && _selectedCard != null) {
                         List<Order> orderArr = [];
 
@@ -247,13 +247,21 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               date: DateTime.now());
                           orderArr.add(order);
                         }
-                        DatabaseService(id: customer.id, ids: []).createNewOrder(orderArr, customer.prev_orders);
+                        DatabaseService(id: customer.id, ids: []).createNewOrder(orderArr, customer, widget.basket, _selectedAddress);
                         DatabaseService(id: "", ids: []).decreaseAmountFromSpecifiedProducts(widget.basket);
                         Navigator.pop(context);
                         showDialog(
                             context: context,
                             builder: (BuildContext context) {
-                              return QuickObjects().orderReceived();
+                              String pdfName = "";
+                              for (var i = 0; i < orderArr.length; i++) {
+                                Order order = orderArr[i];
+                                pdfName = pdfName + order.id;
+                                if (i != orderArr.length - 1) {
+                                  pdfName = pdfName + "-";
+                                }
+                              }
+                              return QuickObjects().orderReceived(context, pdfName);
                             });
                       }
                     },

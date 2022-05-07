@@ -1,12 +1,15 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile/Screens/cart/invoiceView.dart';
 import 'package:mobile/Services/database.dart';
 import 'package:mobile/models/products/product.dart';
 import 'package:mobile/models/users/customer.dart';
 import 'package:mobile/models/users/seller.dart';
 import 'package:mobile/utils/animations.dart';
 import 'package:mobile/utils/colors.dart';
+import 'package:mobile/utils/shapes_dimensions.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 class QuickObjects {
   String getInitials(String text) {
@@ -916,7 +919,7 @@ class QuickObjects {
         ));
   }
 
-  Widget orderReceived() {
+  Widget orderReceived(BuildContext context, String pdfName) {
     return AlertDialog(
         backgroundColor: AppColors.background,
         scrollable: true,
@@ -953,6 +956,27 @@ class QuickObjects {
                 ),
               ],
             ),
+            SizedBox(
+              height: 20,
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    style: ShapeRules(bg_color: AppColors.filled_button, side_color: AppColors.filled_button).outlined_button_style(),
+                    onPressed: () async {
+                      String url = await DatabaseService(id: pdfName, ids: []).getPdfURL();
+                      Navigator.pop(context);
+                      pushNewScreen(context, screen: InvoiceView(pdfName: pdfName, url: url));
+                    },
+                    child: Text(
+                      "View Invoice",
+                      style: TextStyle(color: AppColors.filled_button_text),
+                    ),
+                  ),
+                )
+              ],
+            )
           ],
         ));
   }

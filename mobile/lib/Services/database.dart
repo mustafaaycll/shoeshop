@@ -1,7 +1,8 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/animation.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:mobile/Services/invoice.dart';
 import 'package:mobile/models/bankCards/bankCard.dart';
 import 'package:mobile/models/orders/order.dart';
 import 'package:mobile/models/users/customer.dart';
@@ -21,6 +22,8 @@ class DatabaseService {
   final CollectionReference sellerCollection = FirebaseFirestore.instance.collection('sellers');
   final CollectionReference cardCollection = FirebaseFirestore.instance.collection('cards');
   final CollectionReference orderCollection = FirebaseFirestore.instance.collection('orders');
+
+  final Reference firebaseStorageRef = FirebaseStorage.instance.ref();
 
   String randID() {
     const _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
@@ -451,7 +454,8 @@ class DatabaseService {
   /*--CARD--CARD--CARD--CARD--CARD--CARD--CARD--CARD--CARD--CARD--CARD*/
   /*--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER*/
 
-  Future createNewOrder(List<Order> orderArr, List<dynamic> oldPrevOrder) async {
+  Future createNewOrder(List<Order> orderArr, Customer customer, Map<Product, dynamic> basket, String? address) async {
+    List<dynamic> oldPrevOrder = customer.prev_orders;
     String orderString = "";
     for (var i = 0; i < orderArr.length; i++) {
       Order order = orderArr[i];
@@ -474,6 +478,16 @@ class DatabaseService {
     }
 
     addToPrevOrders(orderString, oldPrevOrder);
+
+    final data = await PdfInvoiceService().createInvoice(customer, basket, address);
+    PdfInvoiceService().savePdfFile(orderString, data);
+  }
+
+  Future<String> getPdfURL() async {
+    String url = "";
+    await firebaseStorageRef.child('invoices/$id').getDownloadURL().then((value) => {url = value});
+
+    return url;
   }
 
   /*--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER*/

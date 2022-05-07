@@ -61,6 +61,10 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   after_layout: ^1.1.0
+  pdf: ^3.7.4
+  path_provider: ^2.0.9
+  file_picker: ^4.5.1
+  pdf_viewer_plugin: ^2.0.1
 
 dev_dependencies:
   flutter_test:
@@ -89,6 +93,7 @@ flutter:
     - assets/google_logo.png
     - assets/bg_card.jpg
     - assets/mastercard.png
+    - assets/mainlogo.png
     - assets/category_pictures/basketball.png
     - assets/category_pictures/daily.png
     - assets/category_pictures/running.png
