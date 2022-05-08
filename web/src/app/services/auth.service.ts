@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { authState } from '@angular/fire/auth';
 
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged , signInAnonymously } from "firebase/auth";
 
 
 import { Router } from '@angular/router';
 
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-//import { resourceLimits } from 'worker_threads';
+import { Customer } from '../models/customer';
+
 
 @Injectable({
 
@@ -22,7 +23,6 @@ export class AuthService {
 
     constructor(private router: Router, private afAuth: AngularFireAuth, private afs: AngularFirestore) {
         this.userLoggedIn = false;
-
         this.afAuth.onAuthStateChanged((user: any) => {              // set up a subscription to always know the login status of the user
             if (user) {
                 this.userLoggedIn = true;
@@ -48,6 +48,31 @@ export class AuthService {
                     return { isValid: false, message: error.message };
             });
     }
+    signInAnon(): Promise<any>{
+        const auth = getAuth();
+          return signInAnonymously(auth).then((res: {user:any}) => {
+            
+                    
+                    this.afs.doc('/customers/' + res.user.uid).set({
+                        fullname: "Anonymous",
+                        email: "No Email",
+                        addresses: [],
+                        basketMap: {},
+                        credit_cards: [],
+                        fav_products: [],
+                        id: res.user.uid,
+                        method: "anonymous",
+                        prev_orders: [],
+                        tax_id: ""
+    
+                     });
+                })
+                .catch((error: { code: any; message: any; }) => {
+                    console.log('Auth Service: signin Anon error', error);
+                    if (error.code)
+                        return { isValid: false, message: error.message };
+                });
+      }
 
     signupUser(user: any): Promise<any> {
         return this.afAuth.createUserWithEmailAndPassword(user.email, user.password)
@@ -57,7 +82,7 @@ export class AuthService {
                     fullname: user.displayName,
                     email: user.email,
                     addresses: [],
-                    basketMap: [],
+                    basketMap: {},
                     credit_cards: [],
                     fav_products: [],
                     id: result.user.uid,
@@ -74,7 +99,30 @@ export class AuthService {
                     return { isValid: false, message: error.message };
             });
     }
-    
+    signupUserwithId(user:any,id:string): Promise<any> {
+        return this.afAuth.createUserWithEmailAndPassword(user.email, user.password)
+            .then((result: { user: any; }) => {
+                let emailLower = user.email.toLowerCase();
+                this.afs.doc('/customers/' + id).set({
+                    fullname: user.displayName,
+                    email: user.email,
+                    addresses: [],
+                    basketMap: {},
+                    credit_cards: [],
+                    fav_products: [],
+                    id: id,
+                    method: "emailandpassword",
+                    prev_orders: [],
+                    tax_id: ""
 
+                 });
+                result.user!.sendEmailVerification();                    // immediately send the user a verification email
+            })
+            .catch((error: { code: any; message: any; }) => {
+                console.log('Auth Service: signup error', error);
+                if (error.code)
+                    return { isValid: false, message: error.message };
+            });
+    }
 
 }

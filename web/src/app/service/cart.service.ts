@@ -25,8 +25,20 @@ export class CartService {
   public productList= new BehaviorSubject<any>([]);
   public search = new BehaviorSubject<string>("");
   
+<<<<<<< HEAD
+  constructor(private apiService: ApiService, private auth: AuthService) {
+    if(this.auth.userLoggedIn){
+      this.generateCartItemList();
+      this.productList.next(this.cartItemList);
+    }
+    else{
+      this.generateCartAnon();
+      this.productList.next(this.cartItemList);
+    }
+=======
   constructor(private apiService: ApiService, private auth: AuthService) { 
     
+>>>>>>> 34f77a6cc5cd97702d59285e39b1a49e291ff55f
     
 
   }
@@ -97,8 +109,28 @@ export class CartService {
     this.UpdateBasketMap(this.cartItemList);
   }
 
+  generateCartAnon(){
+    console.log("here");
+    this.auth.signInAnon();
+    
+    this.apiService.getCustomerWithId().subscribe((customer)=>{     
+      this.currentCustomer = customer as Customer;
+      let basketMap = this.currentCustomer.basketMap as basketMap;
+      console.log(basketMap);
+      Object.keys(basketMap).forEach((key) => {
+        console.log(key)
+        this.apiService.getProductWithId(key).subscribe((product )=>{
+          var product_ = product as product;
+          Object.assign(product_, {quantity: basketMap[key as keyof basketMap][0], size: basketMap[key as keyof basketMap][1], total:  basketMap[key as keyof basketMap][0] * product_.price} )
+          console.log(product_);
+          this.cartItemList.push(product_);
+        });
+              
+      })
+      
+    })
 
-  
+  }
   generateCartItemList(){
     
     console.log("here");
@@ -118,12 +150,16 @@ export class CartService {
               
       })
       
+<<<<<<< HEAD
+    })
+=======
       
     });
     
 
 
     
+>>>>>>> 34f77a6cc5cd97702d59285e39b1a49e291ff55f
   }
   
 }

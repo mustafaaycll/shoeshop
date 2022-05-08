@@ -44,6 +44,10 @@ export class ApiService {
     return this.firestore.doc(`customers/${id}`).valueChanges();
    
   }
+  getCustomerWithIdAnon(id:string){
+    return this.firestore.doc(`customers/${id}`).valueChanges();
+   
+  }
 
   UpdateBasketofUser(bsketmap: any){
     let id = this.auth.userid;
