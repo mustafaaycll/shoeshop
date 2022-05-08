@@ -51,12 +51,14 @@
     </a>
 </div>
 
-
-    <select id="change_chart" (change)="sortProductByPrice('aprice')">
-      <option value="none" selected>None</option>
-      <option value="aprice">Ascending Price</option>
-      <option value="dprice">Descending Price</option>
-  </select>
+<mat-form-field>
+  <mat-label>Sorting Option</mat-label>
+  <mat-select (selectionChange)="sortProductByPrice($event.value)">
+    <mat-option *ngFor="let option of dropDownData" [value]="option.seo_val">
+      {{option.text_val}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
 
   </div>
 </div>
