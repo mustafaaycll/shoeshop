@@ -237,7 +237,7 @@ class QuickObjects {
                             width: 2,
                           ),
                           Text(
-                            comments!.length == 0 ? "0" : "${getAveRating(comments)}",
+                            product.ratings.length == 0 ? "0" : "${product.averageRate.toStringAsFixed(1)}",
                             style: TextStyle(color: AppColors.title_text, fontSize: 17),
                           ),
                         ],
@@ -382,7 +382,7 @@ class QuickObjects {
                             width: 2,
                           ),
                           Text(
-                            comments!.length == 0 ? "0" : "${getAveRating(comments)}",
+                            product.ratings.length == 0 ? "0" : "${product.averageRate.toStringAsFixed(1)}",
                             style: TextStyle(color: AppColors.title_text, fontSize: 17),
                           ),
                         ],
@@ -618,7 +618,7 @@ class QuickObjects {
                               width: 2,
                             ),
                             Text(
-                              comments!.length == 0 ? "0" : "${product.averageRate}",
+                              product.ratings.length == 0 ? "0" : "${product.averageRate.toStringAsFixed(1)}",
                               style: TextStyle(color: AppColors.title_text, fontSize: 17),
                             ),
                           ],
