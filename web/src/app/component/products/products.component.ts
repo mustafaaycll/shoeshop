@@ -83,9 +83,10 @@ sortProductByPrice(event:any){
     this.productList.sort((a: { price: any; }, b: { price: any; }) => Number(b.price) - Number(a.price));
   }
   else if(event =='arating'){
-    this.productList.sort((a: { rating: any; }, b: { rating: any; }) => Number(a.rating) - Number(b.rating));
+    alert("böö")
+    this.filterCategory.sort((a: { rating: number; }, b: { rating: number; }) => Number(a.rating) - Number(b.rating));
   }else if(event =='drating'){
-    this.productList.sort((a: { rating: any; }, b: { rating: any; }) => Number(b.rating) - Number(a.rating));
+    this.filterCategory.sort((a: { rating: number; }, b: { rating: number; }) => Number(b.rating) - Number(a.rating));
   }
 }
 }

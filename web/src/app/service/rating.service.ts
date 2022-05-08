@@ -35,20 +35,28 @@ export class RatingService {
   
   getRating(productid: string){
     let sum: number = 0;
-    let rating: number = 0;
+    let rating: number;
     let num: number= 0;
+    let nocomment = true;
     this.allcomments.forEach(element => {
       console.log(element);
       if(element.productID === productid){
+          nocomment = false;
           sum = sum +element.rating;
           num= num+1;
          
  
     }});
     
-    rating = sum / num;
-    console.log(rating);
-    return rating;
+    if(nocomment){
+      return 0;
+    }
+    else{
+      rating = sum / num;
+      return rating;
+
+    }
+    
   }
    
     

@@ -37,6 +37,8 @@ import { ProductDetailsComponent } from './component/product-details/product-det
 
 import { ItemService } from './services/item.service';
 import { AddresspageComponent } from './addresspage/addresspage.component';
+import { ChechkoutComponent } from './component/chechkout/chechkout.component';
+import { PaymentComponent } from './component/payment/payment.component';
 
 
 
@@ -53,6 +55,8 @@ import { AddresspageComponent } from './addresspage/addresspage.component';
     DashboardComponent,
     ProductDetailsComponent,
     AddresspageComponent,
+    ChechkoutComponent,
+    PaymentComponent
     
   ],
   imports: [

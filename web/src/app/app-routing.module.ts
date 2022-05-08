@@ -11,6 +11,7 @@ import { PaymentComponent } from './component/payment/payment.component';
 import { AuthGuard } from './services/auth.guard';
 import { ProductDetailsComponent } from './component/product-details/product-details.component';
 import { AddresspageComponent } from './addresspage/addresspage.component';
+import { ChechkoutComponent } from './component/chechkout/chechkout.component';
 //import * as auth0 from "auth0-js";
 
 
@@ -24,6 +25,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
   { path: 'Payment', component: PaymentComponent},
+  { path: 'Checkout', component: ChechkoutComponent},
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
   { path: 'addresspage', component: AddresspageComponent },
   { path: '**', component: HomeComponent },  

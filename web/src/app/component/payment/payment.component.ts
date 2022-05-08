@@ -3,7 +3,7 @@ import { CartService } from 'src/app/service/cart.service';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 
 @Component({
-  selector: 'app-header',
+  selector: 'app-payment',
   templateUrl: './payment.component.html',
 })
 export class PaymentComponent implements OnInit {
