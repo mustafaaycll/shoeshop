@@ -4,6 +4,7 @@ import {product} from "src/products";
 import { ActivatedRoute } from '@angular/router';
 import { ApiService } from 'src/app/service/api.service';
 import { CartService } from 'src/app/service/cart.service';
+import { Customer } from 'src/app/models/customer';
 
 
 
@@ -20,6 +21,7 @@ export class ProductDetailsComponent implements OnInit {
   sizesMap:  Map<string,number> = new Map<string,number>();
   selectedsize:string;
   quanti: number = 1;
+  customer: Customer;
   
   constructor(private route: ActivatedRoute, private apiService: ApiService, private cartService: CartService) { 
       
@@ -47,10 +49,14 @@ export class ProductDetailsComponent implements OnInit {
 }
 
     addtocart(item: any){
-      console.log(this.selectedsize);
+      this.apiService.getCustomerWithId().subscribe((res )=>{
+        this.customer = res as Customer;
+        if(this.customer.fullname)
+            console.log(this.customer.fullname as string);
+      });
       Object.assign(item,{quantity: this.quanti, size: this.selectedsize, total: this.quanti *item.price});
       this.cartService.addtoCart(item);
-      
+     
 
       
     }

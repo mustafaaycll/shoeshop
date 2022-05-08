@@ -170,29 +170,9 @@ span.price {
         <label>
           <input type="checkbox" checked="checked" name="sameadr"> Shipping address same as billing
         </label>
-        <input type="submit" value="Continue to checkout" class="btn">
+        <button style="font-size: 30px; color: whitesmoke; background-color: blue;" routerLink="credit_card">Continue to Check-out</button>
       </form>
     </div>
-  </div>
-  <div class="col-25">
-        <table class="table table-responsive">
-          <tbody>
-            <tr>
-              <h4>Cart <span class="price" style="color:black"><i class="fa fa-shopping-cart"></i></span></h4>
-            </tr>
-              <tr *ngFor="let item of products; let i= index">
-                  <td>{{item.title}}</td>
-                  <td style="width: 12%">{{item.total}}</td>
-                  
-
-              </tr>
-
-              <tr>
-                  <td><strong>Grand Total: ${{grandTotal}}</strong></td>
-              </tr>
-          </tbody>
-        </table>
-   
   </div>
 </div>
 </body>

@@ -35,6 +35,9 @@ import { provideAuth,getAuth } from '@angular/fire/auth';
 import { provideFirestore,getFirestore } from '@angular/fire/firestore';
 import { ProductDetailsComponent } from './component/product-details/product-details.component';
 
+import { ItemService } from './services/item.service';
+import { AddresspageComponent } from './addresspage/addresspage.component';
+
 
 @NgModule({
   declarations: [
@@ -47,7 +50,8 @@ import { ProductDetailsComponent } from './component/product-details/product-det
     SignupComponent,
     LoginComponent,
     DashboardComponent,
-    ProductDetailsComponent
+    ProductDetailsComponent,
+    AddresspageComponent
   ],
   imports: [
     BrowserModule,
@@ -69,7 +73,7 @@ import { ProductDetailsComponent } from './component/product-details/product-det
     MatSelectModule,
     MatButtonToggleModule,
   ],
-  providers: [],
+  providers: [ItemService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
