@@ -35,14 +35,31 @@
           </i>
         </a>
     </div>
-    <mat-form-field appearance="fill">
-      <mat-label>Sort</mat-label>
-      <mat-select>
-        <mat-option *ngFor="let option of options" [value]="option.value">
-          {{option.viewValue}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+
+    <div style="height: 100px; margin-top: 10px;" class="item">
+      <a (click)="sortProductByPrice('aprice')">
+        <i  style="display:inline-table; align-items: center; width: 30px; margin-top: 5px; margin-right: 5px;  margin-left:5px; " class="fa-solid fa-basketball fa-3x">
+          <h3>aprice</h3>
+        </i>
+      </a>
+  </div>
+  <div style="height: 100px; margin-top: 10px;" class="item">
+    <a (click)="sortProductByPrice('dprice')">
+      <i  style="display:inline-table; align-items: center; width: 30px; margin-top: 5px; margin-right: 5px;  margin-left:5px; " class="fa-solid fa-basketball fa-3x">
+        <h3>dprice</h3>
+      </i>
+    </a>
+</div>
+
+<mat-form-field>
+  <mat-label>Sorting Option</mat-label>
+  <mat-select (selectionChange)="sortProductByPrice($event.value)">
+    <mat-option *ngFor="let option of dropDownData" [value]="option.seo_val">
+      {{option.text_val}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
   </div>
 </div>
 
@@ -54,7 +71,7 @@
         <img src="{{item.photos[0]}}" alt="">
         <h5 style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 100ch;">{{item.name}}</h5>
         <p style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 100ch;">{{item.description}}</p>
-        
+
         <ng-template #t let-fill="fill">
           <span class="star" [class.full]="fill === 100">
             <span class="half" [style.width.%]="fill">&starf;</span>&starf;
@@ -62,11 +79,11 @@
         </ng-template>
 
         <ngb-rating style="margin: 10px auto;"  [rate]="item.rating" [starTemplate]="t" [readonly]="true" [max]="5"></ngb-rating>
-        
+
         <p><span class="price">{{ item.price | currency }} </span></p>
         <button class="btn btn-primary btn1"  (click)=goToDetails(item.id)>See Details</button>
         <button class="black_button" (click)=addtocart(item)>Add to cart</button>
-        
+
 
       </div>
 
