@@ -16,6 +16,8 @@ class Product {
   final List<dynamic> comments;
   final Map<dynamic, dynamic> sizesMap;
   final List<dynamic> photos;
+  final List<dynamic> ratings;
+  final double averageRate;
 
   Product({
     required this.id,
@@ -33,5 +35,7 @@ class Product {
     required this.comments,
     required this.sizesMap,
     required this.photos,
+    required this.ratings,
+    required this.averageRate,
   });
 }

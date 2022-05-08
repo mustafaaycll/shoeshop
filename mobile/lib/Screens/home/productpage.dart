@@ -1,16 +1,21 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:mobile/Screens/home/sellerpage.dart';
+import 'package:mobile/models/comments/comment.dart';
 import 'package:mobile/models/products/product.dart';
 import 'package:mobile/models/users/customer.dart';
 import 'package:mobile/models/users/seller.dart';
+import 'package:mobile/utils/animations.dart';
 import 'package:mobile/utils/colors.dart';
 import 'package:mobile/utils/objects.dart';
 import 'package:mobile/utils/shapes_dimensions.dart';
+import 'package:mobile/utils/styles.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 import '../../Services/database.dart';
 
@@ -24,11 +29,14 @@ class ProductPage extends StatefulWidget {
 }
 
 class _ProductPageState extends State<ProductPage> {
+  String mode = "description";
+
   @override
   Widget build(BuildContext context) {
     Seller seller = widget.seller;
     Product product = widget.product;
     Customer customer = Provider.of<Customer>(context);
+
     return Scaffold(
         backgroundColor: AppColors.background,
         body: SafeArea(
@@ -148,9 +156,19 @@ class _ProductPageState extends State<ProductPage> {
                               child: OutlinedButton(
                                 style:
                                     ShapeRules(bg_color: AppColors.background, side_color: AppColors.background).outlined_button_style_no_padding(),
-                                onPressed: () {},
+                                onPressed: () {
+                                  if (mode == "description") {
+                                    setState(() {
+                                      mode = "comment";
+                                    });
+                                  } else if (mode == "comment") {
+                                    setState(() {
+                                      mode = "description";
+                                    });
+                                  }
+                                },
                                 child: Text(
-                                  "Comments",
+                                  mode == "comment" ? "View Description" : "View Comments",
                                   style: TextStyle(decoration: TextDecoration.underline, color: AppColors.body_text),
                                 ),
                               ),
@@ -171,40 +189,130 @@ class _ProductPageState extends State<ProductPage> {
                             ],
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  "${product.description}",
-                                  style: TextStyle(fontSize: 15, color: AppColors.body_text),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Warranty: ${product.warranty ? 'Yes' : 'No'}",
-                                style: TextStyle(color: AppColors.system_gray),
-                              ),
-                              Text(
-                                "Amount in Stock: ${product.quantity}",
-                                style: TextStyle(color: AppColors.system_gray),
-                              ),
-                              Text(
-                                "Available Sizes: ${getAvailableSizes(product.sizesMap).join(", ")}",
-                                style: TextStyle(color: AppColors.system_gray),
-                              ),
-                            ],
-                          ),
-                        )
+                        mode == "description"
+                            ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            "${product.description}",
+                                            style: TextStyle(fontSize: 15, color: AppColors.body_text),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Warranty: ${product.warranty ? 'Yes' : 'No'}",
+                                          style: TextStyle(color: AppColors.system_gray),
+                                        ),
+                                        Text(
+                                          "Amount in Stock: ${product.quantity}",
+                                          style: TextStyle(color: AppColors.system_gray),
+                                        ),
+                                        Text(
+                                          "Available Sizes: ${getAvailableSizes(product.sizesMap).join(", ")}",
+                                          style: TextStyle(color: AppColors.system_gray),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : StreamBuilder<List<Comment>>(
+                                stream: DatabaseService(id: "", ids: product.comments).specifiedComments,
+                                builder: (context, snapshot) {
+                                  List<Comment>? comments = snapshot.data;
+                                  if (comments == null) {
+                                    return Center(
+                                      child: Animations().loading(),
+                                    );
+                                  } else {
+                                    comments = eliminateNotAllowedOnes(comments);
+                                    if (comments.isEmpty) {
+                                      return Column(
+                                        children: [
+                                          SizedBox(
+                                            height: 30,
+                                          ),
+                                          Center(child: Text("There is no comment, yet.")),
+                                        ],
+                                      );
+                                    } else {
+                                      return ListView.builder(
+                                        shrinkWrap: true,
+                                        physics: NeverScrollableScrollPhysics(),
+                                        itemCount: comments.length,
+                                        itemBuilder: (context, j) {
+                                          return StreamBuilder<Customer>(
+                                              stream: DatabaseService(id: comments![j].customerID, ids: []).customerData,
+                                              builder: (context, snapshot) {
+                                                Customer? commenter = snapshot.data;
+                                                if (commenter != null) {
+                                                  return Card(
+                                                    child: ListTile(
+                                                      leading: CircleAvatar(
+                                                        backgroundImage: AssetImage('assets/pp.png'),
+                                                      ),
+                                                      title: Text(comments![j].comment),
+                                                      subtitle: Column(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          Text("${commenter.fullname} on ${DateFormat('dd-MM-yyyy').format(comments[j].date)}",
+                                                              style: TextStyle(fontSize: 12, color: AppColors.system_gray)),
+                                                          SizedBox(
+                                                            height: 4,
+                                                          ),
+                                                          Row(
+                                                            mainAxisAlignment: MainAxisAlignment.start,
+                                                            children: [
+                                                              RatingBarIndicator(
+                                                                itemSize: 20,
+                                                                rating: comments[j].rating.toDouble(),
+                                                                direction: Axis.horizontal,
+                                                                itemCount: 5,
+                                                                itemPadding: EdgeInsets.symmetric(horizontal: 0),
+                                                                itemBuilder: (context, _) => Icon(
+                                                                  Icons.star,
+                                                                  color: Colors.amber,
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                width: 5,
+                                                              ),
+                                                              Text("${comments[j].rating}",
+                                                                  style: TextStyle(fontSize: 17, color: AppColors.system_gray))
+                                                            ],
+                                                          )
+                                                        ],
+                                                      ),
+                                                      isThreeLine: true,
+                                                    ),
+                                                  );
+                                                } else {
+                                                  return Card(
+                                                    child: Center(
+                                                      child: Animations().loading(),
+                                                    ),
+                                                  );
+                                                }
+                                              });
+                                        },
+                                      );
+                                    }
+                                  }
+                                },
+                              )
                       ],
                     ),
                   ),
@@ -391,4 +499,15 @@ Map<dynamic, dynamic> getAvailableSizesAsMap(Map<dynamic, dynamic> map) {
   }
 
   return sizes;
+}
+
+List<Comment> eliminateNotAllowedOnes(List<Comment> comments) {
+  List<Comment> eliminated = [];
+  for (var i = 0; i < comments.length; i++) {
+    if (comments[i].approved) {
+      eliminated.add(comments[i]);
+    }
+  }
+
+  return eliminated;
 }

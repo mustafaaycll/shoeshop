@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
+import { authState } from '@angular/fire/auth';
 
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+
 
 import { Router } from '@angular/router';
 
@@ -8,12 +11,14 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 //import { resourceLimits } from 'worker_threads';
 
 @Injectable({
+
     providedIn: 'root'
 })
 export class AuthService {
 
-    userLoggedIn: boolean;      // other components can check on this variable for the login status of the user
-    userid: string;
+    
+    userLoggedIn: boolean; 
+    userid: string;     // other components can check on this variable for the login status of the user
 
     constructor(private router: Router, private afAuth: AngularFireAuth, private afs: AngularFirestore) {
         this.userLoggedIn = false;
@@ -23,6 +28,7 @@ export class AuthService {
             if (user) {
                 this.userLoggedIn = true;
                 this.userid = user.uid;
+                
             } else {
                 this.userLoggedIn = false;
             }

@@ -1,12 +1,19 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile/Screens/cart/invoiceView.dart';
+import 'package:mobile/Screens/general/ratepage.dart';
 import 'package:mobile/Services/database.dart';
+import 'package:mobile/models/comments/comment.dart';
+import 'package:mobile/models/orders/order.dart';
 import 'package:mobile/models/products/product.dart';
 import 'package:mobile/models/users/customer.dart';
 import 'package:mobile/models/users/seller.dart';
 import 'package:mobile/utils/animations.dart';
 import 'package:mobile/utils/colors.dart';
+import 'package:mobile/utils/shapes_dimensions.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:intl/intl.dart';
 
 class QuickObjects {
   String getInitials(String text) {
@@ -149,7 +156,7 @@ class QuickObjects {
     );
   }
 
-  Widget discountedProductTile_listView(Product product, Customer customer, Seller seller, double h, double w) {
+  Widget discountedProductTile_listView(Product product, Customer customer, List<Comment>? comments, Seller seller, double h, double w) {
     return Container(
       height: h,
       width: w,
@@ -215,6 +222,28 @@ class QuickObjects {
                   ),
                   color: AppColors.negative_button,
                 )),
+            Positioned(
+                right: 8,
+                top: (3 * h / 5) - 20,
+                child: Container(
+                    height: 20,
+                    width: 54,
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Icon(CupertinoIcons.star_fill, color: Colors.orange, size: 20),
+                          SizedBox(
+                            width: 2,
+                          ),
+                          Text(
+                            product.ratings.length == 0 ? "0" : "${product.averageRate.toStringAsFixed(1)}",
+                            style: TextStyle(color: AppColors.title_text, fontSize: 17),
+                          ),
+                        ],
+                      ),
+                    ),
+                    color: Colors.transparent)),
             product.quantity <= 5
                 ? Positioned(
                     left: 50,
@@ -291,7 +320,162 @@ class QuickObjects {
     );
   }
 
-  Widget productTile_gridView(Product product, Customer customer, Seller seller, double height, double width) {
+  Widget orderProductTile_listView(
+      BuildContext context, Order order, Product product, Customer customer, List<Comment>? comments, Seller seller, double h, double w) {
+    return Container(
+      height: h,
+      width: w,
+      child: Column(
+        children: [
+          Stack(children: [
+            Container(
+              width: w,
+              height: 3 * h / 5,
+              decoration: BoxDecoration(image: DecorationImage(fit: BoxFit.cover, image: NetworkImage(product.photos[0]))),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                SizedBox(
+                  width: 8,
+                ),
+                Container(
+                  height: 40,
+                  width: 40,
+                  child: Image.network(
+                    seller.logo,
+                  ),
+                ),
+                Expanded(
+                  child: Container(),
+                ),
+                SizedBox(
+                  width: 5,
+                ),
+              ],
+            ),
+            Positioned(
+                left: 8,
+                top: (3 * h / 5) - 20,
+                child: Container(
+                    height: 20,
+                    width: 75,
+                    child: Center(
+                      child: Text(
+                        "${getStatusMessage(order.status)}",
+                        style: TextStyle(color: AppColors.background, fontSize: 10),
+                      ),
+                    ),
+                    color: getColor(order.status))),
+            Positioned(
+                right: 8,
+                top: (3 * h / 5) - 20,
+                child: Container(
+                    height: 20,
+                    width: 54,
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Icon(CupertinoIcons.star_fill, color: Colors.orange, size: 20),
+                          SizedBox(
+                            width: 2,
+                          ),
+                          Text(
+                            product.ratings.length == 0 ? "0" : "${product.averageRate.toStringAsFixed(1)}",
+                            style: TextStyle(color: AppColors.title_text, fontSize: 17),
+                          ),
+                        ],
+                      ),
+                    ),
+                    color: Colors.transparent)),
+          ]),
+          Container(
+            width: w,
+            height: 2 * h / 5,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        product.name + " ",
+                        style: TextStyle(color: AppColors.body_text, fontSize: 15),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Expanded(
+                        child: Text(
+                          product.model,
+                          style: TextStyle(color: AppColors.body_text, fontSize: 15),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 3,
+                  ),
+                  Expanded(
+                    child: Text(
+                      product.sex + "'s " + product.category + " shoe",
+                      style: TextStyle(color: AppColors.system_gray, fontSize: 12),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      "Purchased on ${DateFormat('dd-MM-yyyy').format(order.date)}",
+                      style: TextStyle(color: AppColors.system_gray, fontSize: 12),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text("${product.price.toStringAsFixed(2)} ₺", style: TextStyle(fontSize: 20, color: AppColors.title_text)),
+                      Expanded(child: Container()),
+                    ],
+                  ),
+                  !order.rated
+                      ? order.status == "delivered"
+                          ? Row(
+                              children: [
+                                Expanded(
+                                    child: OutlinedButton(
+                                        style:
+                                            ShapeRules(bg_color: getColor(order.status), side_color: getColor(order.status)).outlined_button_style(),
+                                        onPressed: () {
+                                          if (order.status == "delivered") {
+                                            pushNewScreen(context, screen: RatePage(order: order, seller: seller, product: product));
+                                          }
+                                        },
+                                        child: Text("Rate", style: TextStyle(color: AppColors.filled_button_text))))
+                              ],
+                            )
+                          : Container(height: 50)
+                      : Row(
+                          children: [
+                            Expanded(
+                                child: OutlinedButton(
+                                    style: ShapeRules(bg_color: AppColors.system_gray, side_color: AppColors.system_gray).outlined_button_style(),
+                                    onPressed: () {},
+                                    child: Text("Already Rated", style: TextStyle(color: AppColors.filled_button_text))))
+                          ],
+                        )
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget productTile_gridView(Product product, Customer customer, List<Comment>? comments, Seller seller, double height, double width) {
     double h = height / 2;
     double w = width / 2;
     return Container(
@@ -419,6 +603,28 @@ class QuickObjects {
                               )
                             : Container(),
               ),
+              Positioned(
+                  right: 8,
+                  top: (6 * h / 12) - 20,
+                  child: Container(
+                      height: 20,
+                      width: 54,
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Icon(CupertinoIcons.star_fill, color: Colors.orange, size: 20),
+                            SizedBox(
+                              width: 2,
+                            ),
+                            Text(
+                              product.ratings.length == 0 ? "0" : "${product.averageRate.toStringAsFixed(1)}",
+                              style: TextStyle(color: AppColors.title_text, fontSize: 17),
+                            ),
+                          ],
+                        ),
+                      ),
+                      color: Colors.transparent)),
             ],
           ),
           Container(
@@ -916,7 +1122,7 @@ class QuickObjects {
         ));
   }
 
-  Widget orderReceived() {
+  Widget orderReceived(BuildContext context, String pdfName) {
     return AlertDialog(
         backgroundColor: AppColors.background,
         scrollable: true,
@@ -953,9 +1159,81 @@ class QuickObjects {
                 ),
               ],
             ),
+            SizedBox(
+              height: 20,
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    style: ShapeRules(bg_color: AppColors.filled_button, side_color: AppColors.filled_button).outlined_button_style(),
+                    onPressed: () async {
+                      String url = await DatabaseService(id: pdfName, ids: []).getPdfURL();
+                      Navigator.pop(context);
+                      pushNewScreen(context, screen: InvoiceView(pdfName: pdfName, url: url));
+                    },
+                    child: Text(
+                      "View Invoice",
+                      style: TextStyle(color: AppColors.filled_button_text),
+                    ),
+                  ),
+                )
+              ],
+            )
           ],
         ));
   }
+
+  Widget prevention(BuildContext context) {
+    return AlertDialog(
+        backgroundColor: AppColors.background,
+        scrollable: true,
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  CupertinoIcons.person,
+                  color: AppColors.title_text,
+                  size: 20,
+                ),
+                SizedBox(
+                  width: 5,
+                ),
+                Text(
+                  "You need to log in",
+                  style: TextStyle(color: AppColors.title_text, fontSize: 20),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            Row(
+              children: [
+                SizedBox(
+                  width: 25,
+                ),
+                Text(
+                  "Thank you for your understanding",
+                  style: TextStyle(color: AppColors.title_text, fontSize: 15),
+                ),
+              ],
+            ),
+          ],
+        ));
+  }
+}
+
+double getAveRating(List<Comment>? comments) {
+  double sum = 0;
+  double count = comments!.length.toDouble();
+  for (var i = 0; i < comments.length; i++) {
+    sum += comments[i].rating;
+  }
+
+  return sum / count;
 }
 
 double getIndividualPriceForCartItem(Product product, Map<Product, dynamic> basket) {
@@ -972,4 +1250,24 @@ double getIndividualPriceForCartItem(Product product, Map<Product, dynamic> bask
 double getIndividualPriceForWishlistItem(Product product) {
   double price = product.price;
   return price;
+}
+
+String getStatusMessage(String status) {
+  if (status == "processing") {
+    return "In Process";
+  } else if (status == "delivery") {
+    return "In Delivery";
+  } else {
+    return "Delivered";
+  }
+}
+
+Color getColor(String status) {
+  if (status == "processing") {
+    return Colors.orange;
+  } else if (status == "delivery") {
+    return AppColors.secondary_text;
+  } else {
+    return AppColors.filled_button;
+  }
 }

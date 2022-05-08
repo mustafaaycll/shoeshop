@@ -10,6 +10,7 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.css']
 })
+
 export class LoginComponent implements OnInit {
     
 
