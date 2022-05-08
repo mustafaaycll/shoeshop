@@ -66,5 +66,14 @@ export class ApiService {
     return this.firestore.collection("comments").valueChanges();
   }
 
+
+  addCart(value: any){
+    var Ref = this.firestore.collection("cards").doc().ref;
+    console.log(Ref.id);
+    value["id"]= Ref.id;
+    Ref.set(value);
   
+  }
+  
+
 }

@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Customer } from 'src/app/models/customer';
 import { ApiService } from 'src/app/service/api.service';
 import { CartService } from 'src/app/service/cart.service';
+import { AuthService } from 'src/app/services/auth.service';
 import { product} from "src/products";
 
 interface basketMap{
@@ -22,17 +23,19 @@ export class ChechkoutComponent implements OnInit {
   totalPrice: number= 0;
   totalQuantity: number=0;
   basketMap: basketMap;
-  constructor(private cartService: CartService, private apiService: ApiService, private fb: FormBuilder) { }
+  cardId: string;
+  constructor(private cartService: CartService, private apiService: ApiService, private fb: FormBuilder, private auth: AuthService) { }
 
   ngOnInit(): void {
 
+
     this.checkoutFormGroup= this.fb.group({
       creditCard: this.fb.group({
-        cartType: [''],
-        nameOnCard: [''],
+      
+        cardHolderName: [''],
         cardNumber: [''],
-        securityCode: [''],
-        expirationDate: [''],
+        cvvCode: [''],
+        expiryDate: [''],
         
       })
       
@@ -64,8 +67,12 @@ export class ChechkoutComponent implements OnInit {
   }
 
 
-  onSubmit(){
+  onSubmit(data: any){
+    console.log(data);
+    let obj = data.creditCard;
     
+    obj["holderID"] = this.auth.userid;
+    this.apiService.addCart(obj);
     
   }
 }
