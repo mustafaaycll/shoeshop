@@ -12,10 +12,10 @@
     </div>
     <button style="font-size: 30px; color: white; background-color: transparent;" routerLink="login">Login</button>
     <strong style="font-size: 30px; color:white">
-      <div *ngIf="!(afAuth.user | async)">
+      <div *ngIf="(check===false)">
         Hello, visitor
       </div>
-      <div *ngIf="(afAuth.user | async)">
+      <div *ngIf="(check===true)">
         Hello, user 
       </div>
     </strong>

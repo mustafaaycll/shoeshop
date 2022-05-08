@@ -2,6 +2,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CartService } from 'src/app/service/cart.service';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AuthService } from 'src/app/services/auth.service';
+import { product } from 'src/products';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { map } from 'rxjs';
+import { user } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-cart',
@@ -13,17 +17,29 @@ export class CartComponent implements OnInit{
 
   public products: any = [];
   public grandTotal !: number;
-  constructor(private cartService: CartService, public afAuth: AngularFireAuth, private auth: AuthService) { }
+  public check: boolean;
+  constructor(private cartService: CartService, public afAuth: AngularFireAuth, private auth: AuthService,public afs: AngularFirestore) {   
+     
+   }
 
 
   ngOnInit(): void {
    
     if(this.auth.userLoggedIn){
-      
+      this.cartService.getProducts().subscribe(res=>
+        {
+          this.products = res;
+          this.grandTotal = this.cartService.getTotalPrice();
+          this.check=true;
+            
+        })
 
     }
 
     else{
+      
+      this.check=false;
+      this.auth.signInAnon();
       this.cartService.getProducts().subscribe(res=>
         {
           this.products = res;
@@ -49,3 +65,5 @@ export class CartComponent implements OnInit{
 
 
 }
+
+
