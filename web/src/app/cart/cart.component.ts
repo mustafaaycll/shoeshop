@@ -17,14 +17,22 @@ export class CartComponent implements OnInit{
 
   public products: any = [];
   public grandTotal !: number;
+<<<<<<< HEAD:web/src/app/cart/cart.component.ts
   public check: boolean;
   constructor(private cartService: CartService, public afAuth: AngularFireAuth, private auth: AuthService,public afs: AngularFirestore) {   
      
    }
+=======
+  constructor(private cartService: CartService, public afAuth: AngularFireAuth, private auth: AuthService) {
+    this.cartService.generateCartItemList();
+     
+  }
+>>>>>>> 34f77a6cc5cd97702d59285e39b1a49e291ff55f:web/src/app/component/cart/cart.component.ts
 
 
   ngOnInit(): void {
    
+<<<<<<< HEAD:web/src/app/cart/cart.component.ts
     if(this.auth.userLoggedIn){
       this.cartService.getProducts().subscribe(res=>
         {
@@ -41,6 +49,10 @@ export class CartComponent implements OnInit{
       this.check=false;
       this.auth.signInAnon();
       this.cartService.getProducts().subscribe(res=>
+=======
+   
+      this.cartService.getProducts().subscribe((res: any)=>
+>>>>>>> 34f77a6cc5cd97702d59285e39b1a49e291ff55f:web/src/app/component/cart/cart.component.ts
         {
           this.products = res;
           this.grandTotal = this.cartService.getTotalPrice();
@@ -48,7 +60,7 @@ export class CartComponent implements OnInit{
             
         })
 
-    }
+    
    
   }
 

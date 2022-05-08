@@ -155,14 +155,14 @@ class _SellerPageState extends State<SellerPage> {
             itemPadding: EdgeInsets.symmetric(horizontal: 0),
             itemBuilder: (context, _) => Icon(
               Icons.star,
-              color: Colors.amber,
+              color: Colors.orange,
             ),
           ),
           SizedBox(
             width: 5,
           ),
           Text(
-            "${getBrandRate(seller.ratings)}",
+            "${getBrandRate(seller.ratings).toStringAsFixed(1)}",
             style: TextStyle(color: AppColors.system_gray),
           )
         ],

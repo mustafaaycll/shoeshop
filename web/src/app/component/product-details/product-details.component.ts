@@ -4,7 +4,8 @@ import {product} from "src/products";
 import { ActivatedRoute } from '@angular/router';
 import { ApiService } from 'src/app/service/api.service';
 import { CartService } from 'src/app/service/cart.service';
-import { Customer } from 'src/app/models/customer';
+import { comment, Customer } from 'src/app/models/customer';
+import { RatingService } from 'src/app/service/rating.service';
 
 
 
@@ -22,8 +23,11 @@ export class ProductDetailsComponent implements OnInit {
   selectedsize:string;
   quanti: number = 1;
   customer: Customer;
+  comments: comment[];;
+  rating: number = 0;
   
-  constructor(private route: ActivatedRoute, private apiService: ApiService, private cartService: CartService) { 
+  constructor(private route: ActivatedRoute, private apiService: ApiService, private cartService: CartService
+    ,private ratingService: RatingService) { 
       
   }
 
@@ -36,9 +40,12 @@ export class ProductDetailsComponent implements OnInit {
     {
       this.product = product_ as product;
       this.discountedPrice= this.product.price - (this.product.price * (this.product.discount_rate / 100));
+      
       Object.keys(this.product.sizesMap).forEach((key) => {
         this.sizesMap.set(key, this.product.sizesMap[key]);
       })
+      this.comments= this.ratingService.getComments(this.product.id);
+      this.rating = this.ratingService.getRating(this.product.id);
       
     }
       
@@ -94,5 +101,7 @@ export class ProductDetailsComponent implements OnInit {
       if(this.quanti !== 1)
         this.quanti--;
     }
+
+    
     
 }

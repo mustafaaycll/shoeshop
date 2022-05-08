@@ -62,4 +62,7 @@ export class ApiService {
   }
 
 
+  getComments(){
+    return this.firestore.collection("comments").valueChanges();
+  }
 }

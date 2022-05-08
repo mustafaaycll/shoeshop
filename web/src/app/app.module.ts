@@ -39,6 +39,7 @@ import { ItemService } from './services/item.service';
 import { AddresspageComponent } from './addresspage/addresspage.component';
 
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -51,7 +52,8 @@ import { AddresspageComponent } from './addresspage/addresspage.component';
     LoginComponent,
     DashboardComponent,
     ProductDetailsComponent,
-    AddresspageComponent
+    AddresspageComponent,
+    
   ],
   imports: [
     BrowserModule,

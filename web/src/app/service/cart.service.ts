@@ -20,10 +20,12 @@ export class CartService {
   currentCustomer: Customer;
   
  
-  public cartItemList: any = [] 
-  public productList = new BehaviorSubject<any>([]);
+  public cartItemList: any =[];
+  public usercart: any= []
+  public productList= new BehaviorSubject<any>([]);
   public search = new BehaviorSubject<string>("");
   
+<<<<<<< HEAD
   constructor(private apiService: ApiService, private auth: AuthService) {
     if(this.auth.userLoggedIn){
       this.generateCartItemList();
@@ -33,13 +35,18 @@ export class CartService {
       this.generateCartAnon();
       this.productList.next(this.cartItemList);
     }
+=======
+  constructor(private apiService: ApiService, private auth: AuthService) { 
+    
+>>>>>>> 34f77a6cc5cd97702d59285e39b1a49e291ff55f
     
 
   }
 
 
+  
   getProducts(){
-    
+    console.log("selam");
     return this.productList.asObservable();
     
   }
@@ -54,6 +61,7 @@ export class CartService {
 
   addtoCart(product: any){
     this.cartItemList.push(product);
+ 
     this.productList.next(this.cartItemList);
     this.getTotalPrice();
     this.UpdateBasketMap(this.cartItemList);
@@ -136,12 +144,22 @@ export class CartService {
           var product_ = product as product;
           Object.assign(product_, {quantity: basketMap[key as keyof basketMap][0], size: basketMap[key as keyof basketMap][1], total:  basketMap[key as keyof basketMap][0] * product_.price} )
           console.log(product_);
-          this.cartItemList.push(product_);
+          this.usercart.push(product_);
+          
         });
               
       })
       
+<<<<<<< HEAD
     })
+=======
+      
+    });
+    
+
+
+    
+>>>>>>> 34f77a6cc5cd97702d59285e39b1a49e291ff55f
   }
   
 }
