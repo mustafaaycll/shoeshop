@@ -3,6 +3,7 @@ import { ApiService } from 'src/app/service/api.service';
 import { CartService } from 'src/app/service/cart.service';
 import { Router } from '@angular/router';
 import {MatSelectModule} from '@angular/material/select';
+import { RatingService } from 'src/app/service/rating.service';
 
 interface Option {
   value: string;
@@ -18,12 +19,13 @@ interface Option {
 export class ProductsComponent implements OnInit {
   public productList : any;
   public filterCategory : any;
+  
   searchKey:string="";
   options: Option[] = [
     {value: 'price-1', viewValue: 'Sort by Price'},
     {value: 'popularity-2', viewValue: 'Sort by Popularity'},
   ];
-  constructor(private api : ApiService, private cartService: CartService, private router: Router) { }
+  constructor(private api : ApiService, private cartService: CartService, private router: Router, private ratingService: RatingService) { }
 
 
   ngOnInit(): void {
@@ -34,6 +36,10 @@ export class ProductsComponent implements OnInit {
       this.productList.forEach((a: any) => {
         Object.assign(a,{quantity:1, total: a.price});
 
+      });
+
+      this.filterCategory.forEach((a:any)=>{
+        Object.assign(a,{ rating: this.ratingService.getRating(a.id)});
       });
     })
     this.cartService.search.subscribe((val:any)=>{

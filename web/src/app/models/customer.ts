@@ -9,3 +9,15 @@ export interface Customer {
     fav_products:string[];
     prev_orders:string[];
   }
+
+
+
+  export interface comment{
+    approved: string;
+    customerID: string;
+    productID: string;
+    comment: string;
+    date: string;
+    sellerID:string;
+    rating: number;
+  }

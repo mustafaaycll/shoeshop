@@ -33,15 +33,18 @@
                               <div class="rating-main">
 
                                 <ng-template #a let-fill="fill">
+                                    
                                     <span class="star" [class.full]="fill === 100">
                                       <span class="half" [style.width.%]="fill">&starf;</span>&starf;
                                     </span>
                                 </ng-template>
                           
-                                <ngb-rating style="margin: 10px auto;"  [rate]="3.4" [starTemplate]="a" [readonly]="true" [max]="5"></ngb-rating>
+                                
+                                <ngb-rating style="margin: 10px auto;"  [rate]="rating" [starTemplate]="a" [readonly]="true" [max]="5"></ngb-rating>
                                   
                             
-                                <a href="#" class="total-review">(12) Review</a> 
+                                
+                                <a href="#" class="total-review">{{comments.length}} Review</a> 
                                 <div ><h2 *ngIf="!isinStock()">NOT IN STOCK</h2></div>
                               </div>
 
@@ -142,54 +145,40 @@
                                           <div class="col-12">
                                               <div class="ratting-main">
                                                   <div class="avg-ratting">
-                                                      <h4>4.5 <span>(Overall)</span></h4>
-                                                      <span>Based on 1 Comments</span>
+                                                      <h4>{{rating | number:'.1'}} <span> (Overall)</span></h4>
+                                                      <span>Based on {{comments.length}} Comments</span>
                                                   </div>
                                                   <!-- Single Rating -->
-                                                  <div class="single-rating">
-                                                      <div class="rating-author">
-                                                          <img src="assets/images/comments1.jpg" alt="#">
-                                                      </div>
-                                                      <div class="rating-des">
-                                                          <h6>Jaasa</h6>
-                                                          <div class="ratings">
-                                                              <ul class="rating">
-                                                                  <li><i class="fa fa-star"></i></li>
-                                                                  <li><i class="fa fa-star"></i></li>
-                                                                  <li><i class="fa fa-star"></i></li>
-                                                                  <li><i class="fa fa-star-half-o"></i></li>
-                                                                  <li><i class="fa fa-star-o"></i></li>
-                                                              </ul>
-                                                              <div class="rate-count">(<span>3.5</span>)</div>
-                                                          </div>
-                                                          <p>Duis tincidunt mauris ac aliquet congue. Donec vestibulum consequat cursus. Aliquam pellentesque nulla dolor, in imperdiet.</p>
-                                                      </div>
-                                                  </div>
+                                                
                                                   <!--/ End Single Rating -->
                                                   <!-- Single Rating -->
-                                                  <div class="single-rating">
+                                                  <div *ngFor="let comment of comments" class="single-rating">
                                                       <div class="rating-author">
-                                                          <img src="assets/images/comments2.jpg" alt="#">
+                                                          <img src="assets/images/user-profile-default-image-.png" alt="#">
                                                       </div>
                                                       <div class="rating-des">
-                                                          <h6>Jassa</h6>
+                                                          <h6>{{comment.customerID}}</h6>
                                                           <div class="ratings">
                                                               <ul class="rating">
-                                                                  <li><i class="fa fa-star"></i></li>
-                                                                  <li><i class="fa fa-star"></i></li>
-                                                                  <li><i class="fa fa-star"></i></li>
-                                                                  <li><i class="fa fa-star"></i></li>
-                                                                  <li><i class="fa fa-star"></i></li>
+                                                                <ng-template #a let-fill="fill">
+                                    
+                                                                    <span class="star" [class.full]="fill === 100">
+                                                                      <span class="half" [style.width.%]="fill">&starf;</span>&starf;
+                                                                    </span>
+                                                                </ng-template>
+                                                          
+                                                                
+                                                                <ngb-rating style="margin: 10px auto;"  [rate]="comment.rating" [starTemplate]="a" [readonly]="true" [max]="5"></ngb-rating>
                                                               </ul>
-                                                              <div class="rate-count">(<span>5.0</span>)</div>
+                                                              <div class="rate-count">(<span>{{comment.rating}}</span>)</div>
                                                           </div>
-                                                          <p>Duis tincidunt mauris ac aliquet congue. Donec vestibulum consequat cursus. Aliquam pellentesque nulla dolor, in imperdiet.</p>
+                                                          <p>{{comment.comment}}</p>
                                                       </div>
                                                   </div>
                                                   <!--/ End Single Rating -->
                                               </div>
                                               <!-- Review -->
-                                              <div class="comment-review">
+                                              <div  class="comment-review">
                                                   <div class="add-review">
                                                       <h5>Add A Review</h5>
                                                       <p>Your email address will not be published. Required fields are marked</p>
@@ -197,46 +186,21 @@
                                                   <h4>Your Rating</h4>
                                                   <div class="review-inner">
                                                       <div class="ratings">
-                                                          <ul class="rating">
-                                                              <li><i class="fa fa-star"></i></li>
-                                                              <li><i class="fa fa-star"></i></li>
-                                                              <li><i class="fa fa-star"></i></li>
-                                                              <li><i class="fa fa-star"></i></li>
-                                                              <li><i class="fa fa-star"></i></li>
-                                                          </ul>
+                                                        <ng-template #a let-fill="fill">
+                                    
+                                                            <span class="star" [class.full]="fill === 100">
+                                                              <span class="half" [style.width.%]="fill">&starf;</span>&starf;
+                                                            </span>
+                                                        </ng-template>
+                                                  
+                                                        
+                                                        <ngb-rating style="margin: 10px auto;"  [rate]="5" [starTemplate]="a" [max]="5"></ngb-rating>
                                                       </div>
                                                   </div>
                                               </div>
                                               <!--/ End Review -->
                                               <!-- Form -->
-                                              <form class="form" method="post" action="mail/mail.php">
-                                                  <div class="row">
-                                                      <div class="col-lg-6 col-12">
-                                                          <div class="form-group">
-                                                              <label>Your Name<span>*</span></label>
-                                                              <input type="text" name="name" required="required" placeholder="">
-                                                          </div>
-                                                      </div>
-                                                      <div class="col-lg-6 col-12">
-                                                          <div class="form-group">
-                                                              <label>Your Email<span>*</span></label>
-                                                              <input type="email" name="email" required="required" placeholder="">
-                                                          </div>
-                                                      </div>
-                                                      <div class="col-lg-12 col-12">
-                                                          <div class="form-group">
-                                                              <label>Write a review<span>*</span></label>
-                                                              <textarea name="message" rows="6" placeholder="" ></textarea>
-                                                          </div>
-                                                      </div>
-                                                      <div class="col-lg-12 col-12">
-                                                          <div class="form-group button5">  
-                                                              <button type="submit" class="btn">Submit</button>
-                                                          </div>
-                                                      </div>
-                                                  </div>
-                                              </form>
-                                              <!--/ End Form -->
+                                              
                                           </div>
                                       </div>
                                   </div>

@@ -64,8 +64,8 @@
         <ngb-rating style="margin: 10px auto;"  [rate]="item.rating" [starTemplate]="t" [readonly]="true" [max]="5"></ngb-rating>
         
         <p><span class="price">{{ item.price | currency }} </span></p>
-        <button class="btn btn-primary btn1"  (click)=goToDetails(item.id)>See Details</button>
-        <button class="black_button" (click)=addtocart(item)>Add to cart</button>
+        
+        <button class="black_button" (click)=goToDetails(item.id)>Buy now</button>
         
 
       </div>

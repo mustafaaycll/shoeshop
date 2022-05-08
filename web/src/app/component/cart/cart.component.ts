@@ -13,18 +13,16 @@ export class CartComponent implements OnInit{
 
   public products: any = [];
   public grandTotal !: number;
-  constructor(private cartService: CartService, public afAuth: AngularFireAuth, private auth: AuthService) { }
+  constructor(private cartService: CartService, public afAuth: AngularFireAuth, private auth: AuthService) {
+    this.cartService.generateCartItemList();
+     
+  }
 
 
   ngOnInit(): void {
    
-    if(this.auth.userLoggedIn){
-      
-
-    }
-
-    else{
-      this.cartService.getProducts().subscribe(res=>
+   
+      this.cartService.getProducts().subscribe((res: any)=>
         {
           this.products = res;
           this.grandTotal = this.cartService.getTotalPrice();
@@ -32,7 +30,7 @@ export class CartComponent implements OnInit{
             
         })
 
-    }
+    
    
   }
 
