@@ -25,20 +25,8 @@ export class CartService {
   public productList= new BehaviorSubject<any>([]);
   public search = new BehaviorSubject<string>("");
   
-<<<<<<< HEAD
-  constructor(private apiService: ApiService, private auth: AuthService) {
-    if(this.auth.userLoggedIn){
-      this.generateCartItemList();
-      this.productList.next(this.cartItemList);
-    }
-    else{
-      this.generateCartAnon();
-      this.productList.next(this.cartItemList);
-    }
-=======
   constructor(private apiService: ApiService, private auth: AuthService) { 
     
->>>>>>> 34f77a6cc5cd97702d59285e39b1a49e291ff55f
     
 
   }
@@ -150,16 +138,12 @@ export class CartService {
               
       })
       
-<<<<<<< HEAD
-    })
-=======
       
     });
     
 
 
     
->>>>>>> 34f77a6cc5cd97702d59285e39b1a49e291ff55f
   }
   
 }
