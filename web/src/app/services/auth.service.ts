@@ -13,13 +13,16 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 export class AuthService {
 
     userLoggedIn: boolean;      // other components can check on this variable for the login status of the user
+    userid: string;
 
     constructor(private router: Router, private afAuth: AngularFireAuth, private afs: AngularFirestore) {
         this.userLoggedIn = false;
+        this.userid = "";
 
         this.afAuth.onAuthStateChanged((user: any) => {              // set up a subscription to always know the login status of the user
             if (user) {
                 this.userLoggedIn = true;
+                this.userid = user.uid;
             } else {
                 this.userLoggedIn = false;
             }
@@ -30,6 +33,7 @@ export class AuthService {
         return this.afAuth.signInWithEmailAndPassword(email, password)
             .then(() => {
                 console.log('Auth Service: loginUser: success');
+
                 // this.router.navigate(['/dashboard']);
             })
             .catch((error: { code: any; message: any; }) => {
@@ -49,7 +53,7 @@ export class AuthService {
                     fullname: user.displayName,
                     email: user.email,
                     addresses: [],
-                    basketMap: [],
+                    basketMap: {},
                     credit_cards: [],
                     fav_products: [],
                     id: result.user.uid,

@@ -27,18 +27,31 @@ export class AddresspageComponent implements OnInit {
   
   abc: Customer;
   flag: boolean;
+  flag2: boolean;
+  custInfo: Customer;
+  adres: string[];
 
   constructor(private afs: AngularFirestore, public afAuth: AngularFireAuth, private authService: AuthService, private itemService: ItemService, private router: Router ) {
-    //this.customerRef = this.afs.collection('customers');
-    //this.customer$ = this.customerRef.valueChanges();
+    this.customerRef = this.afs.collection('customers');
+    this.customer$ = this.customerRef.valueChanges();
     this.firebaseErrorMessage = '';
-    
    }
 
   ngOnInit(): void {
     this.addressForm = new FormGroup({
       'address': new FormControl('', Validators.required),
   });
+
+    this.afAuth.onAuthStateChanged(user => {if(user){
+
+      this.afs.doc('/customers/' + user.uid).valueChanges().subscribe((items) => {
+        this.custInfo = items as Customer;
+        this.adres = this.custInfo.addresses as string[];
+      })
+
+    }})
+
+  
   }
 
   updateItem(address: string){
@@ -47,7 +60,7 @@ export class AddresspageComponent implements OnInit {
       
       this.afs.doc('/customers/' + user.uid).valueChanges().subscribe((items) => {
         //console.log(items);
-        if(this.flag == false){
+        if(this.flag == false && address != ""){
           this.abc = items as Customer;
           this.getAddress = this.abc.addresses;
           this.getAddress?.push(address);
@@ -68,6 +81,7 @@ export class AddresspageComponent implements OnInit {
 
     }})
   }
+  
   
 
   
