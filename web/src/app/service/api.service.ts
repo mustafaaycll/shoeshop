@@ -88,11 +88,17 @@ export class ApiService {
   
 
 
-  createOrder(order: any){
+  createOrder(order: any, newstock:any){
+    let productid = order.productID;
+     
     var ref= this.firestore.collection("/orders").doc().ref;
     Object.assign(order, {id: ref.id })
     console.log(order);
     ref.set(order);
+    this.firestore.doc(`products/${productid}`).update({
+       "sizesMap": newstock
+    })
+
     
 
   }

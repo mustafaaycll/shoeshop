@@ -10,6 +10,8 @@ interface basketMap{
   id: Array<any>;
 };
 
+
+
 @Component({
   selector: 'app-chechkout',
   templateUrl: './chechkout.component.html',
@@ -62,7 +64,7 @@ export class ChechkoutComponent implements OnInit {
         this.apiService.getProductWithId(key).subscribe((product )=>{
           var product_ = product as product;
           Object.assign(product_, {quantity: this.basketMap[key as keyof basketMap][0], size: this.basketMap[key as keyof basketMap][1], total:  this.basketMap[key as keyof basketMap][0] * product_.price} )
-          console.log(product_);
+
           this.products.push(product);
           
      
@@ -88,10 +90,13 @@ export class ChechkoutComponent implements OnInit {
     this.createOrder();
     
     
+    
   }
 
   createOrder(){
+    console.log("here");
     this.products.forEach((product: any)=>{
+      console.log(product);
       let order = {
         address: "",
         customerID: this.auth.userid,
@@ -105,9 +110,21 @@ export class ChechkoutComponent implements OnInit {
         status: "proccessing"
       }
       
-      this.apiService.createOrder(order);
+      let selectedsize = product.size;
+      console.log(selectedsize);
+      Object.keys(product.sizesMap).map(size=>{
+        if( size === selectedsize as string){
+          product.sizesMap[size] = product.sizesMap[size] - 1;
+        }
+      })
+      
+
+      console.log(product.sizesMap);
+      this.apiService.createOrder(order, product.sizesMap);
+      
     
     })
+
 
   }
 }
