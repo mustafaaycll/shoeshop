@@ -21,14 +21,10 @@ class AuthService {
     try {
       UserCredential result = await _auth.signInAnonymously();
       User user = result.user!;
-      final snapshot = await FirebaseFirestore.instance
-          .collection('customers')
-          .doc(user.uid)
-          .get();
+      final snapshot = await FirebaseFirestore.instance.collection('customers').doc(user.uid).get();
 
       if (snapshot == null || !snapshot.exists) {
-        await DatabaseService(id: user.uid, ids: [])
-            .addCustomer('Anonymous', 'No Email', 'anonymous');
+        await DatabaseService(id: user.uid, ids: []).addCustomer('Anonymous', 'No Email', 'anonymous');
       }
       return _userFromFirebase(user);
     } catch (e) {
@@ -38,8 +34,7 @@ class AuthService {
 
   Future loginWithMailandPass(String mail, String pass) async {
     try {
-      UserCredential result =
-          await _auth.signInWithEmailAndPassword(email: mail, password: pass);
+      UserCredential result = await _auth.signInWithEmailAndPassword(email: mail, password: pass);
       User user = result.user!;
       return _userFromFirebase(user);
     } on FirebaseAuthException catch (e) {
@@ -65,17 +60,12 @@ class AuthService {
 
   Future signUp(String fullname, String email, String password) async {
     try {
-      UserCredential result = await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
+      UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
       User user = result.user!;
-      final snapshot = await FirebaseFirestore.instance
-          .collection('customers')
-          .doc(user.uid)
-          .get();
+      final snapshot = await FirebaseFirestore.instance.collection('customers').doc(user.uid).get();
 
       if (snapshot == null || !snapshot.exists) {
-        await DatabaseService(id: user.uid, ids: [])
-            .addCustomer(fullname, email, 'manual');
+        await DatabaseService(id: user.uid, ids: []).addCustomer(fullname, email, 'manual');
       }
       return 'Signed Up';
     } catch (e) {
@@ -87,26 +77,20 @@ class AuthService {
   Future googleSignIn() async {
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-    final GoogleSignInAuthentication? googleAuth =
-        await googleUser?.authentication;
+    final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
 
     final credential = GoogleAuthProvider.credential(
       accessToken: googleAuth?.accessToken,
       idToken: googleAuth?.idToken,
     );
 
-    UserCredential result =
-        await FirebaseAuth.instance.signInWithCredential(credential);
+    UserCredential result = await FirebaseAuth.instance.signInWithCredential(credential);
     User? user = result.user;
 
-    final snapshot = await FirebaseFirestore.instance
-        .collection('customers')
-        .doc(user!.uid)
-        .get();
+    final snapshot = await FirebaseFirestore.instance.collection('customers').doc(user!.uid).get();
 
     if (snapshot == null || !snapshot.exists) {
-      await DatabaseService(id: user.uid, ids: [])
-          .addCustomer(user.displayName, user.email, 'google');
+      await DatabaseService(id: user.uid, ids: []).addCustomer(user.displayName, user.email, 'google');
     }
 
     return _userFromFirebase(user);

@@ -16,6 +16,7 @@ import 'package:mobile/utils/objects.dart';
 import 'package:mobile/utils/shapes_dimensions.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 class CheckoutScreen extends StatefulWidget {
   final Map<Product, dynamic> basket;
@@ -232,7 +233,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     onPressed: () async {
                       if (_selectedAddress != null && _selectedCard != null) {
                         List<Order> orderArr = [];
-
+                        String pdfName = "";
                         for (var i = 0; i < widget.basket.keys.toList().length; i++) {
                           Order order = Order(
                               id: DatabaseService(id: "", ids: []).randID(),
@@ -247,23 +248,39 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               date: DateTime.now(),
                               rated: false);
                           orderArr.add(order);
+
+                          pdfName = pdfName + order.id;
+                          if (i != widget.basket.keys.toList().length - 1) {
+                            pdfName = pdfName + "-";
+                          }
                         }
+
+                        print(pdfName);
+
                         DatabaseService(id: customer.id, ids: []).createNewOrder(orderArr, customer, widget.basket, _selectedAddress);
                         DatabaseService(id: "", ids: []).decreaseAmountFromSpecifiedProducts(widget.basket);
+
                         Navigator.pop(context);
                         showDialog(
                             context: context,
                             builder: (BuildContext context) {
-                              String pdfName = "";
-                              for (var i = 0; i < orderArr.length; i++) {
-                                Order order = orderArr[i];
-                                pdfName = pdfName + order.id;
-                                if (i != orderArr.length - 1) {
-                                  pdfName = pdfName + "-";
-                                }
-                              }
                               return QuickObjects().orderReceived(context, pdfName);
                             });
+
+                        String? url;
+
+                        while (url == null) {
+                          try {
+                            url = await DatabaseService(id: pdfName, ids: []).getPdfURL();
+                          } catch (e) {
+                            print(e.toString());
+                          }
+                        }
+                        DatabaseService(id: "", ids: []).sendInvoiceMail(
+                            customer.email,
+                            "Invoice for order on ${DateFormat('dd-MM-yyyy').format(DateTime.now())}",
+                            "Dear ${customer.fullname}, thank you for your purchase.",
+                            "$url");
                       }
                     },
                     icon: Icon(
