@@ -117,6 +117,7 @@ export class ChechkoutComponent implements OnInit {
     this.apiService.updateAddress(adres);
 
     this.createOrder();
+    this.cartService.removeAllCart();
     
     
   }
@@ -142,7 +143,7 @@ export class ChechkoutComponent implements OnInit {
       console.log(selectedsize);
       Object.keys(product.sizesMap).map(size=>{
         if( size === selectedsize as string){
-          product.sizesMap[size] = product.sizesMap[size] - 1;
+          product.sizesMap[size] = product.sizesMap[size] - product.quantity;
         }
       })
       

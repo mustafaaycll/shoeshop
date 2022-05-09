@@ -4,13 +4,7 @@
   <div class="section-content section-content-p30 e-spc">
     <div class="container-fluid">
       <form [formGroup]="checkoutFormGroup" (ngSubmit)="onSubmit(checkoutFormGroup.value)">
-        <div class="form-area">
-
-          <h3>Review Your Order</h3>
-          
-          <p>Total Price: {{totalPrice | currency: 'USD'}}</p>
-          <p>Shipping: FREE</p>
-        </div>
+        
 
         <div formGroupName="Address" class="form-area">
           <h3>Address</h3>
@@ -105,30 +99,4 @@
 
 
 
- <mat-card  class="review-card" >
-    <mat-card-title>
-       Order Review
-    </mat-card-title>
-    
-    
-    <mat-card-content>
-      <div *ngFor="let product of products">
-        <div >
-          <div style="float: left;">
-            <img style="position: relative; right: 5px;"mat-card-sm-image src="{{product.photos[0]}}" >
-          </div>
-            
-          <div style=" left: 5px;">
-            <mat-card-subtitle >{{product.name}} - {{product.model}}</mat-card-subtitle>
-          </div>
-          <p>Size: {{product.size}}<span style="float:right;">Price: {{product.price}}</span>  </p>
-        </div>
-         
-    </div>
-  </mat-card-content>
-
-  <mat-card-actions align="end" >
-   <button mat-button >Finish Checkout</button>
-  </mat-card-actions>
- </mat-card>
  
