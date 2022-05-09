@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Customer } from 'src/app/models/customer';
 import { ApiService } from 'src/app/service/api.service';
@@ -27,7 +29,13 @@ export class ChechkoutComponent implements OnInit {
   totalQuantity: number=0;
   basketMap: basketMap;
   cardId: string;
-  constructor(private cartService: CartService, private apiService: ApiService, private fb: FormBuilder, private auth: AuthService) { }
+  custInfo: Customer;
+  adres: string[];
+  radioSelected: any;
+  abc: Customer;
+  flag: boolean;
+  getAddress?: string[];
+  constructor(private cartService: CartService, private apiService: ApiService, private fb: FormBuilder, private auth: AuthService, public afAuth: AngularFireAuth, private afs: AngularFirestore) { }
 
   ngOnInit(): void {
 
@@ -45,6 +53,11 @@ export class ChechkoutComponent implements OnInit {
         cardNumber: ['', Validators.required],
         cvvCode: ['', Validators.required],
         expiryDate: ['', Validators.required],
+        
+      }),
+      Address: this.fb.group({
+      
+        Address: ['', Validators.required],
         
       })
       
@@ -73,27 +86,43 @@ export class ChechkoutComponent implements OnInit {
       
     });
 
+    this.afAuth.onAuthStateChanged(user => {if(user){
+
+      this.afs.doc('/customers/' + user.uid).valueChanges().subscribe((items) => {
+        this.custInfo = items as Customer;
+        this.adres = this.custInfo.addresses as string[];
+      })
+  
+    }})
+
   }
 
 
   onSubmit(data: any){
     console.log(data);
     let obj = data.creditCard; 
+    let obj2 = data.Address;
+    this.checkoutFormGroup.value.Address
+    var adres = this.checkoutFormGroup.value.Address.Address;
     obj["holderID"] = this.auth.userid;
     console.log(this.currentCustomer);
+    console.log(obj);
+    console.log(obj2);
     if(this.currentCustomer.credit_cards)
        console.log(this.currentCustomer.credit_cards as string[]);
     this.apiService.addCart(obj, this.currentCustomer.credit_cards);
-  
-    this.createOrder();
     
+    this.apiService.updateAddress(adres);
+
+    this.createOrder();
     
   }
 
   createOrder(){
+    var adres = this.checkoutFormGroup.value.Address.Address;
     this.products.forEach((product: any)=>{
       let order = {
-        address: "",
+        address: adres,
         customerID: this.auth.userid,
         date : "05-09-2022",
         price: product.price,
@@ -110,4 +139,8 @@ export class ChechkoutComponent implements OnInit {
     })
 
   }
+  
+
+  
+  
 }

@@ -6,6 +6,7 @@ import { Injectable } from '@angular/core';
 import { product } from 'src/products';
 import { AuthService } from '../services/auth.service';
 import { doc, setDoc, updateDoc } from "firebase/firestore"; 
+import { Customer } from '../models/customer';
 
 
 
@@ -15,6 +16,9 @@ import { doc, setDoc, updateDoc } from "firebase/firestore";
 })
 export class ApiService {
 
+  abc: Customer;
+  getAddress: string[];
+  flag: boolean;
   constructor(private firestore: AngularFirestore, private db: AngularFireDatabase, private auth: AuthService) { }
 
   getProduct(){
@@ -82,11 +86,29 @@ export class ApiService {
       
      })
 
-    
-  
   }
-  
 
+  updateAddress(address: string){
+
+    this.flag = false;
+    this.firestore.doc('/customers/' + this.auth.userid).valueChanges().subscribe((items) => {
+      //console.log(items);
+      if(this.flag == false && address != ""){
+        this.abc = items as Customer;
+        this.getAddress = this.abc.addresses;
+        this.getAddress?.push(address);
+        this.firestore.doc('/customers/' + this.auth.userid).update({
+          addresses: this.getAddress,
+        })
+        this.flag = true;
+      }
+
+      else{
+        
+      }
+  })
+}
+  
 
   createOrder(order: any){
     var ref= this.firestore.collection("/orders").doc().ref;
