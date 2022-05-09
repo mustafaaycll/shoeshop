@@ -122,7 +122,7 @@ class _SellerPageState extends State<SellerPage> {
                                           style: ShapeRules(bg_color: AppColors.empty_button, side_color: AppColors.empty_button)
                                               .outlined_button_style_no_padding(),
                                           onPressed: () {
-                                            pushNewScreen(context, screen: ProductPage(seller: seller, product: products![index]));
+                                            pushNewScreen(context, screen: ProductPage(seller: seller, productID: products![index].id));
                                           },
                                           child: QuickObjects().productTile_gridView(products![index], customer, comments, seller,
                                               constraints.heightConstraints().maxHeight, constraints.widthConstraints().maxWidth),

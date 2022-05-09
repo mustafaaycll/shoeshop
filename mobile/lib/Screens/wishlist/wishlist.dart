@@ -60,7 +60,8 @@ class _WishlistState extends State<Wishlist> {
                                   Seller? seller = snapshot.data;
                                   if (seller != null) {
                                     return OutlinedButton(
-                                      onPressed: () => {pushNewScreen(context, screen: ProductPage(seller: seller, product: wishlistItems[index]))},
+                                      onPressed: () =>
+                                          {pushNewScreen(context, screen: ProductPage(seller: seller, productID: wishlistItems[index].id))},
                                       style: ShapeRules(bg_color: AppColors.background, side_color: AppColors.background)
                                           .outlined_button_style_no_padding(),
                                       child: QuickObjects().wishlistItem(customer, wishlistItems, index, MediaQuery.of(context).size.width - 16),
