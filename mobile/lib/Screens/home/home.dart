@@ -250,7 +250,7 @@ class _HomeState extends State<Home> {
                                                                         seller: allSellers!
                                                                             .where((element) => element.name == discounteds[l].name)
                                                                             .toList()[0],
-                                                                        product: discounteds[l]));
+                                                                        productID: discounteds[l].id));
                                                               },
                                                               child: QuickObjects().discountedProductTile_listView(
                                                                   discounteds[l],
@@ -338,7 +338,7 @@ class _HomeState extends State<Home> {
                                                                             seller: allSellers!
                                                                                 .where((element) => element.name == productToBeShown.name)
                                                                                 .toList()[0],
-                                                                            product: productToBeShown));
+                                                                            productID: productToBeShown.id));
                                                                   },
                                                                   child: QuickObjects().orderProductTile_listView(
                                                                       context,
@@ -478,7 +478,7 @@ class ShoeShopSearchDelegate extends SearchDelegate {
                   padding: const EdgeInsets.all(8.0),
                   child: ListTile(
                     onTap: () {
-                      pushNewScreen(context, screen: ProductPage(seller: seller, product: suggestions[index]));
+                      pushNewScreen(context, screen: ProductPage(seller: seller, productID: suggestions[index].id));
                     },
                     leading: Container(
                         width: 75,

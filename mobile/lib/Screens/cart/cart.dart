@@ -63,7 +63,7 @@ class _CartState extends State<Cart> {
                                   if (seller != null) {
                                     return OutlinedButton(
                                       onPressed: () =>
-                                          {pushNewScreen(context, screen: ProductPage(seller: seller, product: basket.keys.toList()[index]))},
+                                          {pushNewScreen(context, screen: ProductPage(seller: seller, productID: basket.keys.toList()[index].id))},
                                       style: ShapeRules(bg_color: AppColors.background, side_color: AppColors.background)
                                           .outlined_button_style_no_padding(),
                                       child: QuickObjects().cartItem(customer, basket, index, MediaQuery.of(context).size.width - 16),

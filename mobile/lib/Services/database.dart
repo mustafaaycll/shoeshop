@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,9 +9,11 @@ import 'package:mobile/models/comments/comment.dart';
 import 'package:mobile/models/orders/order.dart';
 import 'package:mobile/models/users/customer.dart';
 import 'package:mobile/models/users/seller.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../models/products/product.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
 
 class DatabaseService {
   final String id;
@@ -33,6 +36,7 @@ class DatabaseService {
   final CollectionReference cardCollection = FirebaseFirestore.instance.collection('cards');
   final CollectionReference orderCollection = FirebaseFirestore.instance.collection('orders');
   final CollectionReference commentCollection = FirebaseFirestore.instance.collection('comments');
+  final CollectionReference mailCollection = FirebaseFirestore.instance.collection('mail');
 
   final Reference firebaseStorageRef = FirebaseStorage.instance.ref();
 
@@ -571,6 +575,29 @@ class DatabaseService {
 
   Future updateRateInfoOfOrder(bool val) async {
     await orderCollection.doc(id).update({'rated': val});
+  }
+
+  Future<String> downloadAndSavePdf(String pdfName, String url) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final file = File('${directory.path}/${pdfName}.pdf');
+    /*if (await file.exists()) {
+      return file.path;
+    }*/
+    final response = await http.get(Uri.parse(url));
+    await file.writeAsBytes(response.bodyBytes);
+    return file.path;
+  }
+
+  Future sendInvoiceMail(String emailTo, String subject, String emailBody, String url) async {
+    Map<String, String> messageMap = {
+      'subject': "$subject",
+      'text': "$emailBody",
+      'html': "Get your invoice as a pdf from the following link <link>$url</link>"
+    };
+    await mailCollection.doc().set({
+      'to': "$emailTo",
+      'message': messageMap,
+    });
   }
 
   /*--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER*/
