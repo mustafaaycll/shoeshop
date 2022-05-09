@@ -88,7 +88,7 @@ export class ChechkoutComponent implements OnInit {
     this.apiService.addCart(obj, this.currentCustomer.credit_cards);
   
     this.createOrder();
-    
+    this.cartService.removeAllCart();
     
     
   }
