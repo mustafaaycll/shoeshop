@@ -83,7 +83,6 @@ sortProductByPrice(event:any){
     this.productList.sort((a: { price: any; }, b: { price: any; }) => Number(b.price) - Number(a.price));
   }
   else if(event =='arating'){
-    alert("böö")
     this.filterCategory.sort((a: { rating: number; }, b: { rating: number; }) => Number(a.rating) - Number(b.rating));
   }else if(event =='drating'){
     this.filterCategory.sort((a: { rating: number; }, b: { rating: number; }) => Number(b.rating) - Number(a.rating));
