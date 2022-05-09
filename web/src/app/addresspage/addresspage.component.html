@@ -2,14 +2,30 @@
 
 <ul *ngFor="let a of adres">
   <div class="form-check">
-    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-    <label class="form-check-label" for="flexRadioDefault1">
+    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" #value>
+    <label class="form-check-label" for="flexRadioDefault1" >
       {{a}}
     </label>
   </div>
 </ul>
 
 
+
+<div class="form-group">
+  <label for="Address">
+    Adress
+  </label>
+
+  <select #cricket (change)="update($event)">
+    <option value="default">----</option>
+    <option *ngFor="let player of adres" [value]="player">
+        {{player}}
+    </option>
+</select>
+  
+<p>You selected {{selected}}</p>
+
+</div>
 
 
 
@@ -21,3 +37,5 @@
   <button mat-raised-button color="primary" (click)="updateItem(address.value)">
     Continue
   </button>
+
+  

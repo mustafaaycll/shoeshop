@@ -37,6 +37,7 @@ import { ProductDetailsComponent } from './component/product-details/product-det
 
 import { ItemService } from './services/item.service';
 import { AddresspageComponent } from './addresspage/addresspage.component';
+import { DenemeComponent } from './deneme/deneme.component';
 
 
 
@@ -53,6 +54,7 @@ import { AddresspageComponent } from './addresspage/addresspage.component';
     DashboardComponent,
     ProductDetailsComponent,
     AddresspageComponent,
+    DenemeComponent,
     
   ],
   imports: [

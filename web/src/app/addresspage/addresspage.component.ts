@@ -30,6 +30,9 @@ export class AddresspageComponent implements OnInit {
   flag2: boolean;
   custInfo: Customer;
   adres: string[];
+  selected = "----";
+  
+  
 
   constructor(private afs: AngularFirestore, public afAuth: AngularFireAuth, private authService: AuthService, private itemService: ItemService, private router: Router ) {
     this.customerRef = this.afs.collection('customers');
@@ -41,7 +44,6 @@ export class AddresspageComponent implements OnInit {
     this.addressForm = new FormGroup({
       'address': new FormControl('', Validators.required),
   });
-
     this.afAuth.onAuthStateChanged(user => {if(user){
 
       this.afs.doc('/customers/' + user.uid).valueChanges().subscribe((items) => {
@@ -50,10 +52,12 @@ export class AddresspageComponent implements OnInit {
       })
 
     }})
-
-  
+    
   }
-
+  update(e:any){
+    this.selected = e.target.value
+  }
+  
   updateItem(address: string){
     this.afAuth.onAuthStateChanged(user => {if(user){
       this.flag = false;
