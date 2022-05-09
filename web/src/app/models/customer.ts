@@ -1,7 +1,7 @@
 export interface Customer {
     addresses:string[];
     basketMap: {};
-    credit_cards:string[];
+    credit_cards: string[];
     email: string;
     fullname: string;
     id: string;

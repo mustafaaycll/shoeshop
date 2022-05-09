@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { AngularFirestore, AngularFirestoreCollection} from '@angular/fire/compat/firestore';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
-import { map, Observable } from 'rxjs';
+import { map, Observable, subscribeOn } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { product, customer } from 'src/products';
+import { product } from 'src/products';
 import { AuthService } from '../services/auth.service';
 import { doc, setDoc, updateDoc } from "firebase/firestore"; 
 
@@ -67,13 +67,35 @@ export class ApiService {
   }
 
 
-  addCart(value: any){
-    var Ref = this.firestore.collection("cards").doc().ref;
+  addCart(value: any, creditcards: any){
+    var Ref = this.firestore.collection("/cards").doc().ref;
     console.log(Ref.id);
-    value["id"]= Ref.id;
+    value["id"]= Ref.id;  
+    console.log(value);
     Ref.set(value);
+    let id = this.auth.userid;
+
+    creditcards.push(Ref.id);
+    this.firestore.collection("/customers").doc(id).update(
+      {
+        "credit_cards" : creditcards
+      
+     })
+
+    
   
   }
   
+
+
+  createOrder(order: any){
+    var ref= this.firestore.collection("/orders").doc().ref;
+    Object.assign(order, {id: ref.id })
+    console.log(order);
+    ref.set(order);
+    
+
+  }
+
 
 }

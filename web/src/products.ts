@@ -19,7 +19,7 @@ export interface customer {
     id: string;
     fullname: string;
     basketMap: {};
-    credit_carts: string[];
+    credit_cards: string[];
     email: string;
     prev_orders: string[];
 }

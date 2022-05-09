@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Customer } from 'src/app/models/customer';
 import { ApiService } from 'src/app/service/api.service';
 import { CartService } from 'src/app/service/cart.service';
@@ -17,6 +17,9 @@ interface basketMap{
 })
 export class ChechkoutComponent implements OnInit {
 
+  firstFormGroup: FormGroup
+
+  secondFormGroup: FormGroup;
   checkoutFormGroup: FormGroup;
   products: any = [];
   currentCustomer: Customer;
@@ -28,14 +31,20 @@ export class ChechkoutComponent implements OnInit {
 
   ngOnInit(): void {
 
+    this.firstFormGroup = this.fb.group({
+      firstCtrl: ['', Validators.required],
+    });
+    this.secondFormGroup = this.fb.group({
+      secondCtrl: ['', Validators.required],
+    });
 
     this.checkoutFormGroup= this.fb.group({
       creditCard: this.fb.group({
       
-        cardHolderName: [''],
-        cardNumber: [''],
-        cvvCode: [''],
-        expiryDate: [''],
+        cardHolderName: ['', Validators.required],
+        cardNumber: ['', Validators.required],
+        cvvCode: ['', Validators.required],
+        expiryDate: ['', Validators.required],
         
       })
       
@@ -69,10 +78,36 @@ export class ChechkoutComponent implements OnInit {
 
   onSubmit(data: any){
     console.log(data);
-    let obj = data.creditCard;
-    
+    let obj = data.creditCard; 
     obj["holderID"] = this.auth.userid;
-    this.apiService.addCart(obj);
+    console.log(this.currentCustomer);
+    if(this.currentCustomer.credit_cards)
+       console.log(this.currentCustomer.credit_cards as string[]);
+    this.apiService.addCart(obj, this.currentCustomer.credit_cards);
+  
+    this.createOrder();
     
+    
+  }
+
+  createOrder(){
+    this.products.forEach((product: any)=>{
+      let order = {
+        address: "",
+        customerID: this.auth.userid,
+        date : "05-09-2022",
+        price: product.price,
+        productID: product.id,
+        quantity: product.quantity,
+        rated: false,
+        sellerId: "",
+        size: product.size,
+        status: "proccessing"
+      }
+      
+      this.apiService.createOrder(order);
+    
+    })
+
   }
 }

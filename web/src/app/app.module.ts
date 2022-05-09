@@ -22,6 +22,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import {MatStepperModule} from '@angular/material/stepper';
 
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 
@@ -78,6 +79,7 @@ import { PaymentComponent } from './component/payment/payment.component';
     provideFirestore(() => getFirestore()),
     MatSelectModule,
     MatButtonToggleModule,
+    MatStepperModule,
   ],
   providers: [ItemService],
   bootstrap: [AppComponent]
