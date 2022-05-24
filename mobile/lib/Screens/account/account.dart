@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/Screens/account/addressoptions.dart';
 import 'package:mobile/Screens/account/paymentoptions.dart';
+import 'package:mobile/Screens/account/prevorders.dart';
 import 'package:mobile/Services/authentication.dart';
 import 'package:mobile/models/users/customer.dart';
 import 'package:mobile/utils/animations.dart';
@@ -176,7 +177,17 @@ class _AccountState extends State<Account> {
                     style: TextStyle(color: AppColors.system_gray),
                   ),
                   ListTile(
-                    onTap: () {},
+                    onTap: () {
+                      if (customer.method != "anonymous") {
+                        pushNewScreen(context, screen: PrevOrdersPage());
+                      } else {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return QuickObjects().prevention(context);
+                            });
+                      }
+                    },
                     title: Text("Previous Orders"),
                     trailing: Icon(CupertinoIcons.chevron_right),
                     leading: Icon(CupertinoIcons.square_stack_3d_up),
