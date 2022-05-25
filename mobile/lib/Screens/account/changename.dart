@@ -1,15 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:mobile/Screens/Authentication/login.dart';
 import 'package:mobile/Services/database.dart';
-import 'package:mobile/utils/styles.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/utils/colors.dart';
 import 'package:mobile/utils/shapes_dimensions.dart';
-import 'package:email_validator/email_validator.dart';
-import 'package:mobile/utils/styles.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'dart:io' show Platform;
@@ -100,9 +93,7 @@ class _ChangeNameState extends State<ChangeName> {
                       children: [
                         Text(
                           "Change Your name",
-                          style: TextStyle(
-                              color: AppColors.opposite_case_title_text,
-                              fontSize: 30),
+                          style: TextStyle(color: AppColors.opposite_case_title_text, fontSize: 30),
                         ),
                       ],
                     ),
@@ -114,10 +105,7 @@ class _ChangeNameState extends State<ChangeName> {
                       children: [
                         Expanded(
                           flex: 1,
-                          child: Text(
-                              "Please type your name in the text field below",
-                              style: TextStyle(
-                                  color: AppColors.opposite_case_title_text)),
+                          child: Text("Please type your name in the text field below", style: TextStyle(color: AppColors.opposite_case_title_text)),
                         ),
                       ],
                     ),
@@ -166,17 +154,13 @@ class _ChangeNameState extends State<ChangeName> {
                         Expanded(
                           flex: 1,
                           child: OutlinedButton(
-                            style: ShapeRules(
-                                    bg_color:
-                                        AppColors.opposite_case_filled_button,
-                                    side_color: AppColors
-                                        .opposite_case_filled_button_border)
-                                .outlined_button_style(),
+                            style:
+                                ShapeRules(bg_color: AppColors.opposite_case_filled_button, side_color: AppColors.opposite_case_filled_button_border)
+                                    .outlined_button_style(),
                             onPressed: () async {
                               if (_formKey.currentState!.validate()) {
                                 _formKey.currentState!.save();
-                                DatabaseService(id: customer!.id, ids: [])
-                                    .changeName(mail);
+                                DatabaseService(id: customer!.id, ids: []).changeName(mail);
                                 //FocusManager.instance.primaryFocus?.unfocus();
                                 Navigator.pop(context);
                               }
@@ -185,8 +169,7 @@ class _ChangeNameState extends State<ChangeName> {
                                 padding: Dimen.regularPadding,
                                 child: Text(
                                   'Change',
-                                  style: TextStyle(
-                                      color: AppColors.filled_button_text),
+                                  style: TextStyle(color: AppColors.filled_button_text),
                                 )),
                           ),
                         )
@@ -217,8 +200,7 @@ class _ChangeNameState extends State<ChangeName> {
                             ),
                             Text(
                               "Turn back to account screen",
-                              style: TextStyle(
-                                  color: AppColors.opposite_case_body_text),
+                              style: TextStyle(color: AppColors.opposite_case_body_text),
                             ),
                           ],
                         )),

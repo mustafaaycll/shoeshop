@@ -44,6 +44,22 @@ class QuickObjects {
     );
   }
 
+  Widget balanceIndicator(String balance, double h, double w) {
+    return SizedBox(
+      height: h,
+      width: w,
+      child: Card(
+        color: AppColors.opposite_case_filled_button,
+        elevation: 0,
+        child: Center(
+            child: Text(
+          balance,
+          style: TextStyle(color: AppColors.opposite_case_title_text, fontSize: h / 3),
+        )),
+      ),
+    );
+  }
+
   Widget namedImageBox(String name, String src, double h, double w, bool network) {
     return SizedBox(
       height: h,
