@@ -48,7 +48,6 @@ class _AccountState extends State<Account> {
                         customer.email,
                         style: TextStyle(fontSize: 11),
                       ),
-                      leading: QuickObjects().profilePicture(customer.fullname, 100, 100),
                       trailing: IconButton(
                         onPressed: () {
                           AuthService().signOut();
@@ -59,6 +58,15 @@ class _AccountState extends State<Account> {
                           size: 30,
                         ),
                       ),
+                    ),
+                  )
+                ],
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: ListTile(
+                      title: QuickObjects().balanceIndicator("Wallet Balance: " + customer.wallet.toStringAsFixed(2) + "₺", 50, 100),
                     ),
                   )
                 ],

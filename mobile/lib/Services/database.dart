@@ -50,17 +50,17 @@ class DatabaseService {
   /*--CUSTOMER--CUSTOMER--CUSTOMER--CUSTOMER--CUSTOMER--CUSTOMER--*/
   Customer _customerDataFromSnapshot(DocumentSnapshot snapshot) {
     return Customer(
-      id: id,
-      fullname: snapshot.get('fullname'),
-      email: snapshot.get('email'),
-      method: snapshot.get('method'),
-      fav_products: snapshot.get('fav_products'),
-      addresses: snapshot.get('addresses'),
-      basketMap: snapshot.get('basketMap'),
-      prev_orders: snapshot.get('prev_orders'),
-      tax_id: snapshot.get('tax_id'),
-      credit_cards: snapshot.get('credit_cards'),
-    );
+        id: id,
+        fullname: snapshot.get('fullname'),
+        email: snapshot.get('email'),
+        method: snapshot.get('method'),
+        fav_products: snapshot.get('fav_products'),
+        addresses: snapshot.get('addresses'),
+        basketMap: snapshot.get('basketMap'),
+        prev_orders: snapshot.get('prev_orders'),
+        tax_id: snapshot.get('tax_id'),
+        credit_cards: snapshot.get('credit_cards'),
+        wallet: double.parse(snapshot.get("wallet")));
   }
 
   Stream<Customer> get customerData {
@@ -84,6 +84,7 @@ class DatabaseService {
           'prev_orders': emptyList,
           'tax_id': "",
           'credit_cards': emptyList,
+          'wallet': "0.0"
         })
         .then((value) => print('Customer Added'))
         .catchError((error) => print('Adding customer failed ${error.toString()}'));
@@ -212,6 +213,10 @@ class DatabaseService {
     newOrders.add(orderString);
 
     await customerCollection.doc(id).update({'prev_orders': newOrders, 'basketMap': newCart});
+  }
+
+  Future changeWalletBalance(double currBalance, double amount) async {
+    await customerCollection.doc(id).update({'wallet': (currBalance + amount).toStringAsFixed(2)});
   }
   /*--CUSTOMER--CUSTOMER--CUSTOMER--CUSTOMER--CUSTOMER--CUSTOMER--*/
 
