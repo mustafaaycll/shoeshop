@@ -32,10 +32,8 @@ class _PrevOrdersPageState extends State<PrevOrdersPage> {
           List<Order>? separatedOrders = snapshot.data;
           if (separatedOrders != null) {
             Map<dynamic, List<Order>> orderMap = uniteIDs(orderIDs, separatedOrders);
-            print(orderMap);
-            var sortedKeys = orderMap.keys.toList(growable: false)..sort((k1, k2) => orderMap[k1]![0].date.compareTo(orderMap[k2]![0].date));
+            var sortedKeys = orderMap.keys.toList(growable: false)..sort((k1, k2) => orderMap[k2]![0].date.compareTo(orderMap[k1]![0].date));
             Map<dynamic, List<Order>?> orderMapSorted = Map<dynamic, List<Order>?>.fromIterable(sortedKeys, key: (k) => k, value: (k) => orderMap[k]);
-            print(orderMapSorted);
 
             return Scaffold(
                 backgroundColor: AppColors.background,

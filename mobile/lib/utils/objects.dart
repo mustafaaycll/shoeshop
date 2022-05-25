@@ -1181,8 +1181,22 @@ class QuickObjects {
                                               )
                                             : orders[i].status == "delivered"
                                                 ? Row(
-                                                    mainAxisAlignment: MainAxisAlignment.end,
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                     children: [
+                                                      !orders[i].rated
+                                                          ? TextButton.icon(
+                                                              onPressed: () {
+                                                                pushNewScreen(context,
+                                                                    screen: RatePage(seller: seller, product: product, order: orders[i]));
+                                                              },
+                                                              style: ShapeRules(bg_color: Colors.transparent, side_color: Colors.transparent)
+                                                                  .text_button_style_no_padding(),
+                                                              icon: Icon(CupertinoIcons.star, size: 17, color: AppColors.title_text),
+                                                              label: Text("Rate",
+                                                                  style: TextStyle(
+                                                                    color: AppColors.title_text,
+                                                                  )))
+                                                          : Text("Already Rated", style: TextStyle(color: AppColors.system_gray, fontSize: 12)),
                                                       TextButton.icon(
                                                           onPressed: () {},
                                                           icon: Icon(CupertinoIcons.arrow_uturn_left_square, size: 17, color: AppColors.title_text),
