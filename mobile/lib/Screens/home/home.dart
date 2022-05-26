@@ -160,7 +160,7 @@ class _HomeState extends State<Home> {
                                     )
                                   : Animations().loading(),
                             ),
-                            SizedBox(
+                            /*SizedBox(
                               height: 10,
                             ),
                             Row(
@@ -201,7 +201,7 @@ class _HomeState extends State<Home> {
                                       child: Text("Unisex", style: TextStyle(color: AppColors.body_text))),
                                 ),
                               ],
-                            ),
+                            ),*/
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -303,7 +303,7 @@ class _HomeState extends State<Home> {
                                 List<Seller>? allSellers = snapshot.data;
 
                                 return StreamBuilder<List<Order>>(
-                                  stream: DatabaseService(id: "", ids: getAllOrderIDsIntoList(customer.prev_orders)).specifiedOrders,
+                                  stream: DatabaseService(id: "", ids: getAllOrderIDsIntoList(customer.prev_orders)).specifiedOrders_nonCancelled,
                                   builder: (context, snapshot) {
                                     List<Order>? orders = snapshot.data;
 
