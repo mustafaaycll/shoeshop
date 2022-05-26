@@ -56,7 +56,7 @@ class _PrevOrdersPageState extends State<PrevOrdersPage> {
                             onPressed: () {},
                             style: ShapeRules(bg_color: AppColors.empty_button, side_color: AppColors.empty_button_border)
                                 .outlined_button_style_no_padding(),
-                            child: QuickObjects().prevOrderItem(context, orderMapSorted[key], MediaQuery.of(context).size.width - 12)),
+                            child: QuickObjects().prevOrderItem(context, orderMapSorted[key], MediaQuery.of(context).size.width - 12, customer)),
                       );
                     },
                   ),

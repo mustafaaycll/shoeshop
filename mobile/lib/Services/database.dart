@@ -381,6 +381,12 @@ class DatabaseService {
 
     await productCollection.doc(id).update({'ratings': newRatings});
   }
+
+  Future increaseStock(Map<dynamic, dynamic> oldSizesMap, dynamic key, int increaseby) async {
+    Map<dynamic, dynamic> newSizesMap = oldSizesMap;
+    newSizesMap[key] += increaseby;
+    await productCollection.doc(id).update({'sizesMap': newSizesMap});
+  }
   /*--PRODUCT--PRODUCT--PRODUCT--PRODUCT--PRODUCT--PRODUCT--PRODUCT--PRODUCT--*/
 
   /*--SELLER--SELLER--SELLER--SELLER--SELLER--SELLER--SELLER--SELLER--*/
@@ -537,8 +543,34 @@ class DatabaseService {
         .where((element) => element != null));
   }
 
+  List<Order> _orderListFromSnapshot_specified_nonCancelled(QuerySnapshot snapshot) {
+    return List<Order>.from(snapshot.docs
+        .map((doc) {
+          if (ids.contains(doc.id) && doc.get('status') != "cancelled") {
+            return Order(
+                id: doc.id,
+                customerID: doc.get('customerID'),
+                sellerID: doc.get('sellerID'),
+                productID: doc.get('productID'),
+                address: doc.get('address'),
+                status: doc.get('status'),
+                size: doc.get('size'),
+                price: double.parse(doc.get('price')),
+                quantity: doc.get('quantity'),
+                date: DateFormat("dd-MM-yyyy").parse(doc.get('date')),
+                rated: doc.get('rated'));
+          }
+        })
+        .toList()
+        .where((element) => element != null));
+  }
+
   Stream<List<Order>> get specifiedOrders {
     return orderCollection.snapshots().map(_orderListFromSnapshot_specified);
+  }
+
+  Stream<List<Order>> get specifiedOrders_nonCancelled {
+    return orderCollection.snapshots().map(_orderListFromSnapshot_specified_nonCancelled);
   }
 
   Future createNewOrder(List<Order> orderArr, Customer customer, Map<Product, dynamic> basket, String? address) async {
@@ -603,6 +635,12 @@ class DatabaseService {
       'to': "$emailTo",
       'message': messageMap,
     });
+  }
+
+  Future cancelOrder(Customer customer, Product product, String key, int increaseby, double price) async {
+    DatabaseService(id: product.id, ids: []).increaseStock(product.sizesMap, key, increaseby);
+    DatabaseService(id: customer.id, ids: []).changeWalletBalance(customer.wallet, price);
+    await orderCollection.doc(id).update({'status': 'cancelled'});
   }
 
   /*--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER*/

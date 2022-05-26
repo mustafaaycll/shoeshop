@@ -1071,7 +1071,7 @@ class QuickObjects {
     );
   }
 
-  Widget prevOrderItem(BuildContext parentcontext, List<Order>? orders, double w) {
+  Widget prevOrderItem(BuildContext parentcontext, List<Order>? orders, double w, customer) {
     int multiplier = orders!.length;
     double width = w;
     double height = 190.0 * multiplier + 50;
@@ -1187,7 +1187,10 @@ class QuickObjects {
                                                 mainAxisAlignment: MainAxisAlignment.end,
                                                 children: [
                                                   TextButton.icon(
-                                                      onPressed: () {},
+                                                      onPressed: () {
+                                                        DatabaseService(id: orders[i].id, ids: [])
+                                                            .cancelOrder(customer, product, orders[i].size, orders[i].quantity, orders[i].price);
+                                                      },
                                                       icon: Icon(CupertinoIcons.xmark_circle, size: 17, color: AppColors.negative_button),
                                                       label: Text(
                                                         "Cancel Order",
@@ -1478,8 +1481,10 @@ String getStatusMessage(String status) {
     return "In Process";
   } else if (status == "delivery") {
     return "In Delivery";
-  } else {
+  } else if (status == "delivered") {
     return "Delivered";
+  } else {
+    return "Cancelled";
   }
 }
 
@@ -1488,8 +1493,10 @@ Color getColor(String status) {
     return Colors.orange;
   } else if (status == "delivery") {
     return AppColors.secondary_text;
-  } else {
+  } else if (status == "delivered") {
     return AppColors.filled_button;
+  } else {
+    return AppColors.negative_button;
   }
 }
 
