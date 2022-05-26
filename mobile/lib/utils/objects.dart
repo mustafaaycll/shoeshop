@@ -460,15 +460,15 @@ class QuickObjects {
                     ],
                   ),
                   !order.rated
-                      ? order.status == "delivered"
+                      ? order.status == "delivered" || order.status.substring(0, 6) == "return"
                           ? Row(
                               children: [
                                 Expanded(
                                     child: OutlinedButton(
-                                        style:
-                                            ShapeRules(bg_color: getColor(order.status), side_color: getColor(order.status)).outlined_button_style(),
+                                        style: ShapeRules(bg_color: getButtonColor(order.status), side_color: getButtonColor(order.status))
+                                            .outlined_button_style(),
                                         onPressed: () {
-                                          if (order.status == "delivered") {
+                                          if (order.status == "delivered" || order.status.substring(0, 6) == "return") {
                                             pushNewScreen(context, screen: RatePage(order: order, seller: seller, product: product));
                                           }
                                         },
@@ -1525,6 +1525,16 @@ String getStatusMessage(String status) {
     return "Return Rejected";
   } else {
     return "Cancelled";
+  }
+}
+
+Color getButtonColor(String status) {
+  if (status == "processing") {
+    return Colors.orange;
+  } else if (status == "delivery") {
+    return AppColors.secondary_text;
+  } else {
+    return AppColors.filled_button;
   }
 }
 
