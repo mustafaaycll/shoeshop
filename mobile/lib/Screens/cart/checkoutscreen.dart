@@ -279,7 +279,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               price: widget.basket.keys.toList()[i].price * widget.basket[widget.basket.keys.toList()[i]][0],
                               quantity: widget.basket[widget.basket.keys.toList()[i]][0],
                               date: DateTime.now(),
-                              rated: false);
+                              rated: false,
+                              returnID: "");
                           orderArr.add(order);
 
                           pdfName = pdfName + order.id;
@@ -328,7 +329,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               price: widget.basket.keys.toList()[i].price * widget.basket[widget.basket.keys.toList()[i]][0],
                               quantity: widget.basket[widget.basket.keys.toList()[i]][0],
                               date: DateTime.now(),
-                              rated: false);
+                              rated: false,
+                              returnID: "");
                           orderArr.add(order);
 
                           pdfName = pdfName + order.id;

@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile/Screens/account/returnRequestPage.dart';
 import 'package:mobile/Screens/cart/invoiceView.dart';
 import 'package:mobile/Screens/general/ratepage.dart';
 import 'package:mobile/Screens/home/productpage.dart';
@@ -8,6 +9,7 @@ import 'package:mobile/Services/database.dart';
 import 'package:mobile/models/comments/comment.dart';
 import 'package:mobile/models/orders/order.dart';
 import 'package:mobile/models/products/product.dart';
+import 'package:mobile/models/returnRequests/returnRequest.dart';
 import 'package:mobile/models/users/customer.dart';
 import 'package:mobile/models/users/seller.dart';
 import 'package:mobile/utils/animations.dart';
@@ -376,7 +378,7 @@ class QuickObjects {
                 top: (3 * h / 5) - 20,
                 child: Container(
                     height: 20,
-                    width: 75,
+                    width: 100,
                     child: Center(
                       child: Text(
                         "${getStatusMessage(order.status)}",
@@ -1121,7 +1123,7 @@ class QuickObjects {
                                         children: [
                                           Container(
                                             height: 20,
-                                            width: 80,
+                                            width: 100,
                                             child: Center(
                                               child: Text(
                                                 getStatusMessage(orders[i].status),
@@ -1162,20 +1164,41 @@ class QuickObjects {
                                           height: 1,
                                         ),
                                         Text(
-                                          product.sex + "'s " + product.category + " shoe",
-                                          style: TextStyle(color: AppColors.system_gray, fontSize: 12),
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        Text(
                                           "Purchased on " + DateFormat("dd-MM-yyyy").format(orders[i].date),
                                           style: TextStyle(color: AppColors.system_gray, fontSize: 12),
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                         SizedBox(
-                                          height: 10,
+                                          height: 1,
+                                        ),
+                                        orders[i].status.substring(0, 6) == "return"
+                                            ? StreamBuilder<ReturnRequest>(
+                                                stream: DatabaseService(id: orders[i].returnID, ids: []).returnRequestData,
+                                                builder: (context, snapshot) {
+                                                  ReturnRequest? requestedReturn = snapshot.data;
+                                                  if (requestedReturn == null) {
+                                                    return Text(
+                                                      "Return Requested on ",
+                                                      style: TextStyle(color: AppColors.system_gray, fontSize: 12),
+                                                      overflow: TextOverflow.ellipsis,
+                                                    );
+                                                  } else {
+                                                    return Text(
+                                                      "Return Requested on ${DateFormat('dd-MM-yyyy').format(requestedReturn.date)}",
+                                                      style: TextStyle(color: AppColors.system_gray, fontSize: 12),
+                                                      overflow: TextOverflow.ellipsis,
+                                                    );
+                                                  }
+                                                },
+                                              )
+                                            : Container(),
+                                        Text(
+                                          "Quantity: ${orders[i].quantity}",
+                                          style: TextStyle(color: AppColors.system_gray, fontSize: 12),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        SizedBox(
+                                          height: 5,
                                         ),
                                         Text("${getIndividualPriceForWishlistItem(product).toStringAsFixed(2)} ₺",
                                             style: TextStyle(color: AppColors.title_text, fontSize: 20)),
@@ -1198,7 +1221,7 @@ class QuickObjects {
                                                       ))
                                                 ],
                                               )
-                                            : orders[i].status == "delivered"
+                                            : orders[i].status == "delivered" || orders[i].status.substring(0, 6) == "return"
                                                 ? Row(
                                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                     children: [
@@ -1216,13 +1239,24 @@ class QuickObjects {
                                                                     color: AppColors.title_text,
                                                                   )))
                                                           : Text("Already Rated", style: TextStyle(color: AppColors.system_gray, fontSize: 12)),
-                                                      TextButton.icon(
-                                                          onPressed: () {},
-                                                          icon: Icon(CupertinoIcons.arrow_uturn_left_square, size: 17, color: AppColors.title_text),
-                                                          label: Text("Return Order",
-                                                              style: TextStyle(
-                                                                color: AppColors.title_text,
-                                                              )))
+                                                      DateTime.now().difference(orders[i].date).inDays <= 30 &&
+                                                              orders[i].status.substring(0, 6) != "return"
+                                                          ? TextButton.icon(
+                                                              onPressed: () {
+                                                                pushNewScreen(context,
+                                                                    screen: ReturnPage(
+                                                                      seller: seller,
+                                                                      productID: product.id,
+                                                                      order: orders[i],
+                                                                    ));
+                                                              },
+                                                              icon:
+                                                                  Icon(CupertinoIcons.arrow_uturn_left_square, size: 17, color: AppColors.title_text),
+                                                              label: Text("Return Order",
+                                                                  style: TextStyle(
+                                                                    color: AppColors.title_text,
+                                                                  )))
+                                                          : Text("", style: TextStyle(color: AppColors.system_gray, fontSize: 12)),
                                                     ],
                                                   )
                                                 : Container(),
@@ -1483,6 +1517,12 @@ String getStatusMessage(String status) {
     return "In Delivery";
   } else if (status == "delivered") {
     return "Delivered";
+  } else if (status == "returnrequested") {
+    return "Return Requested";
+  } else if (status == "returnapproved") {
+    return "Return Approved";
+  } else if (status == "returnrejected") {
+    return "Return Rejected";
   } else {
     return "Cancelled";
   }
@@ -1495,6 +1535,12 @@ Color getColor(String status) {
     return AppColors.secondary_text;
   } else if (status == "delivered") {
     return AppColors.filled_button;
+  } else if (status == "returnrequested") {
+    return Colors.teal;
+  } else if (status == "returnapproved") {
+    return AppColors.positive_button;
+  } else if (status == "returnrejected") {
+    return AppColors.negative_button;
   } else {
     return AppColors.negative_button;
   }

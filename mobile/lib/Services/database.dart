@@ -7,6 +7,7 @@ import 'package:mobile/Services/invoice.dart';
 import 'package:mobile/models/bankCards/bankCard.dart';
 import 'package:mobile/models/comments/comment.dart';
 import 'package:mobile/models/orders/order.dart';
+import 'package:mobile/models/returnRequests/returnRequest.dart';
 import 'package:mobile/models/users/customer.dart';
 import 'package:mobile/models/users/seller.dart';
 import 'package:path_provider/path_provider.dart';
@@ -37,6 +38,7 @@ class DatabaseService {
   final CollectionReference orderCollection = FirebaseFirestore.instance.collection('orders');
   final CollectionReference commentCollection = FirebaseFirestore.instance.collection('comments');
   final CollectionReference mailCollection = FirebaseFirestore.instance.collection('mail');
+  final CollectionReference returnRequestsCollection = FirebaseFirestore.instance.collection('returnRequests');
 
   final Reference firebaseStorageRef = FirebaseStorage.instance.ref();
 
@@ -60,7 +62,8 @@ class DatabaseService {
         prev_orders: snapshot.get('prev_orders'),
         tax_id: snapshot.get('tax_id'),
         credit_cards: snapshot.get('credit_cards'),
-        wallet: double.parse(snapshot.get("wallet")));
+        wallet: double.parse(snapshot.get("wallet")),
+        returnRequests: snapshot.get('returnRequests'));
   }
 
   Stream<Customer> get customerData {
@@ -392,7 +395,12 @@ class DatabaseService {
   /*--SELLER--SELLER--SELLER--SELLER--SELLER--SELLER--SELLER--SELLER--*/
   Seller _sellerDataFromSnapshot(DocumentSnapshot snapshot) {
     return Seller(
-        id: id, logo: snapshot.get("logo"), name: snapshot.get("name"), products: snapshot.get("products"), ratings: snapshot.get("ratings"));
+        id: id,
+        logo: snapshot.get("logo"),
+        name: snapshot.get("name"),
+        products: snapshot.get("products"),
+        ratings: snapshot.get("ratings"),
+        returnRequests: snapshot.get("returnRequests"));
   }
 
   List<Seller> _sellerListFromSnapshot_specified(QuerySnapshot snapshot) {
@@ -400,7 +408,12 @@ class DatabaseService {
         .map((doc) {
           if (ids.contains(doc.id)) {
             return Seller(
-                id: doc.get("id"), logo: doc.get("logo"), name: doc.get("name"), products: doc.get("products"), ratings: doc.get("ratings"));
+                id: doc.get("id"),
+                logo: doc.get("logo"),
+                name: doc.get("name"),
+                products: doc.get("products"),
+                ratings: doc.get("ratings"),
+                returnRequests: doc.get("returnRequests"));
           }
         })
         .toList()
@@ -409,7 +422,13 @@ class DatabaseService {
 
   List<Seller> _sellerListFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {
-      return Seller(id: doc.get("id"), logo: doc.get("logo"), name: doc.get("name"), products: doc.get("products"), ratings: doc.get("ratings"));
+      return Seller(
+          id: doc.get("id"),
+          logo: doc.get("logo"),
+          name: doc.get("name"),
+          products: doc.get("products"),
+          ratings: doc.get("ratings"),
+          returnRequests: doc.get("returnRequests"));
     }).toList();
   }
 
@@ -536,7 +555,8 @@ class DatabaseService {
                 price: double.parse(doc.get('price')),
                 quantity: doc.get('quantity'),
                 date: DateFormat("dd-MM-yyyy").parse(doc.get('date')),
-                rated: doc.get('rated'));
+                rated: doc.get('rated'),
+                returnID: doc.get('returnID'));
           }
         })
         .toList()
@@ -558,7 +578,8 @@ class DatabaseService {
                 price: double.parse(doc.get('price')),
                 quantity: doc.get('quantity'),
                 date: DateFormat("dd-MM-yyyy").parse(doc.get('date')),
-                rated: doc.get('rated'));
+                rated: doc.get('rated'),
+                returnID: doc.get('returnID'));
           }
         })
         .toList()
@@ -681,6 +702,43 @@ class DatabaseService {
       'approved': commentObject.approved
     });
   }
-  /*--COMMENT--COMMENT--COMMENT--COMMENT--COMMENT--COMMENT--COMMENT--COMMENT*/
 
+  /*--COMMENT--COMMENT--COMMENT--COMMENT--COMMENT--COMMENT--COMMENT--COMMENT*/
+  /*--RETURN--RETURN--RETURN--RETURN--RETURN--RETURN--RETURN--RETURN--RETURN*/
+  ReturnRequest _returnDataFromSnapshot(DocumentSnapshot snapshot) {
+    return ReturnRequest(
+        id: id,
+        productID: snapshot.get('productID'),
+        sellerID: snapshot.get('sellerID'),
+        customerID: snapshot.get('customerID'),
+        orderID: snapshot.get('orderID'),
+        date: DateFormat('dd-MM-yyyy').parse(snapshot.get('date')),
+        approved: snapshot.get('approved'),
+        cause: snapshot.get('cause'),
+        price: double.parse(snapshot.get('price')));
+  }
+
+  Stream<ReturnRequest> get returnRequestData {
+    return returnRequestsCollection.doc(id).snapshots().map(_returnDataFromSnapshot);
+  }
+
+  Future createReturnRequest(ReturnRequest request, Customer customer, Seller seller) async {
+    await returnRequestsCollection.doc(request.id).set({
+      'id': request.id,
+      'productID': request.productID,
+      'sellerID': request.sellerID,
+      'orderID': request.orderID,
+      'customerID': request.customerID,
+      'date': DateFormat('dd-MM-yyyy').format(request.date),
+      'approved': request.approved,
+      'cause': request.cause,
+      'price': request.price.toStringAsFixed(2),
+    });
+    await orderCollection.doc(request.orderID).update({'returnID': request.id, 'status': 'returnrequested'});
+    customer.returnRequests.add(request.id);
+    await customerCollection.doc(request.customerID).update({'returnRequests': customer.returnRequests});
+    seller.returnRequests.add(request.id);
+    await sellerCollection.doc(request.sellerID).update({'returnRequests': seller.returnRequests});
+  }
+  /*--RETURN--RETURN--RETURN--RETURN--RETURN--RETURN--RETURN--RETURN--RETURN*/
 }
