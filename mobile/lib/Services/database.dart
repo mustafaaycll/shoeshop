@@ -610,7 +610,8 @@ class DatabaseService {
         'price': order.price.toStringAsFixed(2),
         'quantity': order.quantity,
         'date': DateFormat("dd-MM-yyyy").format(order.date),
-        'rated': false
+        'rated': false,
+        'returnID': "",
       });
       orderString = orderString + order.id;
       if (i != orderArr.length - 1) {
