@@ -280,6 +280,7 @@ class _ProductPageState extends State<ReturnPage> {
                                   orderID: widget.order.id,
                                   date: DateTime.now(),
                                   approved: false,
+                                  rejected: false,
                                   cause: selectedReason!,
                                   price: widget.order.price,
                                 );

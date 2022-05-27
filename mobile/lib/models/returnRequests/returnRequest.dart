@@ -6,6 +6,7 @@ class ReturnRequest {
   final String orderID;
   final DateTime date;
   final bool approved;
+  final bool rejected;
   final String cause;
   final double price;
 
@@ -17,6 +18,7 @@ class ReturnRequest {
       required this.orderID,
       required this.date,
       required this.approved,
+      required this.rejected,
       required this.cause,
       required this.price});
 }

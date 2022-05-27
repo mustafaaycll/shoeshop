@@ -715,6 +715,7 @@ class DatabaseService {
         orderID: snapshot.get('orderID'),
         date: DateFormat('dd-MM-yyyy').parse(snapshot.get('date')),
         approved: snapshot.get('approved'),
+        rejected: snapshot.get('rejected'),
         cause: snapshot.get('cause'),
         price: double.parse(snapshot.get('price')));
   }
