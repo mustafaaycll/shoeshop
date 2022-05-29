@@ -4,6 +4,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/Screens/account/prevorders.dart';
+import 'package:mobile/Screens/home/discountproducts.dart';
 import 'package:mobile/Screens/home/productpage.dart';
 import 'package:mobile/Screens/home/sellerpage.dart';
 import 'package:mobile/Services/database.dart';
@@ -210,7 +211,9 @@ class _HomeState extends State<Home> {
                                   style: TextStyle(color: AppColors.system_gray),
                                 ),
                                 TextButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    pushNewScreen(context, screen: discountproducts());
+                                  },
                                   child: Row(
                                     children: [
                                       Text(
