@@ -7,6 +7,7 @@ import 'package:mobile/Services/invoice.dart';
 import 'package:mobile/models/bankCards/bankCard.dart';
 import 'package:mobile/models/comments/comment.dart';
 import 'package:mobile/models/orders/order.dart';
+import 'package:mobile/models/returnRequests/returnRequest.dart';
 import 'package:mobile/models/users/customer.dart';
 import 'package:mobile/models/users/seller.dart';
 import 'package:path_provider/path_provider.dart';
@@ -37,6 +38,7 @@ class DatabaseService {
   final CollectionReference orderCollection = FirebaseFirestore.instance.collection('orders');
   final CollectionReference commentCollection = FirebaseFirestore.instance.collection('comments');
   final CollectionReference mailCollection = FirebaseFirestore.instance.collection('mail');
+  final CollectionReference returnRequestsCollection = FirebaseFirestore.instance.collection('returnRequests');
 
   final Reference firebaseStorageRef = FirebaseStorage.instance.ref();
 
@@ -50,17 +52,18 @@ class DatabaseService {
   /*--CUSTOMER--CUSTOMER--CUSTOMER--CUSTOMER--CUSTOMER--CUSTOMER--*/
   Customer _customerDataFromSnapshot(DocumentSnapshot snapshot) {
     return Customer(
-      id: id,
-      fullname: snapshot.get('fullname'),
-      email: snapshot.get('email'),
-      method: snapshot.get('method'),
-      fav_products: snapshot.get('fav_products'),
-      addresses: snapshot.get('addresses'),
-      basketMap: snapshot.get('basketMap'),
-      prev_orders: snapshot.get('prev_orders'),
-      tax_id: snapshot.get('tax_id'),
-      credit_cards: snapshot.get('credit_cards'),
-    );
+        id: id,
+        fullname: snapshot.get('fullname'),
+        email: snapshot.get('email'),
+        method: snapshot.get('method'),
+        fav_products: snapshot.get('fav_products'),
+        addresses: snapshot.get('addresses'),
+        basketMap: snapshot.get('basketMap'),
+        prev_orders: snapshot.get('prev_orders'),
+        tax_id: snapshot.get('tax_id'),
+        credit_cards: snapshot.get('credit_cards'),
+        wallet: double.parse(snapshot.get("wallet")),
+        returnRequests: snapshot.get('returnRequests'));
   }
 
   Stream<Customer> get customerData {
@@ -84,6 +87,7 @@ class DatabaseService {
           'prev_orders': emptyList,
           'tax_id': "",
           'credit_cards': emptyList,
+          'wallet': "0.0"
         })
         .then((value) => print('Customer Added'))
         .catchError((error) => print('Adding customer failed ${error.toString()}'));
@@ -212,6 +216,10 @@ class DatabaseService {
     newOrders.add(orderString);
 
     await customerCollection.doc(id).update({'prev_orders': newOrders, 'basketMap': newCart});
+  }
+
+  Future changeWalletBalance(double currBalance, double amount) async {
+    await customerCollection.doc(id).update({'wallet': (currBalance + amount).toStringAsFixed(2)});
   }
   /*--CUSTOMER--CUSTOMER--CUSTOMER--CUSTOMER--CUSTOMER--CUSTOMER--*/
 
@@ -376,12 +384,23 @@ class DatabaseService {
 
     await productCollection.doc(id).update({'ratings': newRatings});
   }
+
+  Future increaseStock(Map<dynamic, dynamic> oldSizesMap, dynamic key, int increaseby) async {
+    Map<dynamic, dynamic> newSizesMap = oldSizesMap;
+    newSizesMap[key] += increaseby;
+    await productCollection.doc(id).update({'sizesMap': newSizesMap});
+  }
   /*--PRODUCT--PRODUCT--PRODUCT--PRODUCT--PRODUCT--PRODUCT--PRODUCT--PRODUCT--*/
 
   /*--SELLER--SELLER--SELLER--SELLER--SELLER--SELLER--SELLER--SELLER--*/
   Seller _sellerDataFromSnapshot(DocumentSnapshot snapshot) {
     return Seller(
-        id: id, logo: snapshot.get("logo"), name: snapshot.get("name"), products: snapshot.get("products"), ratings: snapshot.get("ratings"));
+        id: id,
+        logo: snapshot.get("logo"),
+        name: snapshot.get("name"),
+        products: snapshot.get("products"),
+        ratings: snapshot.get("ratings"),
+        returnRequests: snapshot.get("returnRequests"));
   }
 
   List<Seller> _sellerListFromSnapshot_specified(QuerySnapshot snapshot) {
@@ -389,7 +408,12 @@ class DatabaseService {
         .map((doc) {
           if (ids.contains(doc.id)) {
             return Seller(
-                id: doc.get("id"), logo: doc.get("logo"), name: doc.get("name"), products: doc.get("products"), ratings: doc.get("ratings"));
+                id: doc.get("id"),
+                logo: doc.get("logo"),
+                name: doc.get("name"),
+                products: doc.get("products"),
+                ratings: doc.get("ratings"),
+                returnRequests: doc.get("returnRequests"));
           }
         })
         .toList()
@@ -398,7 +422,13 @@ class DatabaseService {
 
   List<Seller> _sellerListFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {
-      return Seller(id: doc.get("id"), logo: doc.get("logo"), name: doc.get("name"), products: doc.get("products"), ratings: doc.get("ratings"));
+      return Seller(
+          id: doc.get("id"),
+          logo: doc.get("logo"),
+          name: doc.get("name"),
+          products: doc.get("products"),
+          ratings: doc.get("ratings"),
+          returnRequests: doc.get("returnRequests"));
     }).toList();
   }
 
@@ -525,7 +555,31 @@ class DatabaseService {
                 price: double.parse(doc.get('price')),
                 quantity: doc.get('quantity'),
                 date: DateFormat("dd-MM-yyyy").parse(doc.get('date')),
-                rated: doc.get('rated'));
+                rated: doc.get('rated'),
+                returnID: doc.get('returnID'));
+          }
+        })
+        .toList()
+        .where((element) => element != null));
+  }
+
+  List<Order> _orderListFromSnapshot_specified_nonCancelled(QuerySnapshot snapshot) {
+    return List<Order>.from(snapshot.docs
+        .map((doc) {
+          if (ids.contains(doc.id) && doc.get('status') != "cancelled") {
+            return Order(
+                id: doc.id,
+                customerID: doc.get('customerID'),
+                sellerID: doc.get('sellerID'),
+                productID: doc.get('productID'),
+                address: doc.get('address'),
+                status: doc.get('status'),
+                size: doc.get('size'),
+                price: double.parse(doc.get('price')),
+                quantity: doc.get('quantity'),
+                date: DateFormat("dd-MM-yyyy").parse(doc.get('date')),
+                rated: doc.get('rated'),
+                returnID: doc.get('returnID'));
           }
         })
         .toList()
@@ -534,6 +588,10 @@ class DatabaseService {
 
   Stream<List<Order>> get specifiedOrders {
     return orderCollection.snapshots().map(_orderListFromSnapshot_specified);
+  }
+
+  Stream<List<Order>> get specifiedOrders_nonCancelled {
+    return orderCollection.snapshots().map(_orderListFromSnapshot_specified_nonCancelled);
   }
 
   Future createNewOrder(List<Order> orderArr, Customer customer, Map<Product, dynamic> basket, String? address) async {
@@ -552,7 +610,8 @@ class DatabaseService {
         'price': order.price.toStringAsFixed(2),
         'quantity': order.quantity,
         'date': DateFormat("dd-MM-yyyy").format(order.date),
-        'rated': false
+        'rated': false,
+        'returnID': "",
       });
       orderString = orderString + order.id;
       if (i != orderArr.length - 1) {
@@ -600,6 +659,12 @@ class DatabaseService {
     });
   }
 
+  Future cancelOrder(Customer customer, Product product, String key, int increaseby, double price) async {
+    DatabaseService(id: product.id, ids: []).increaseStock(product.sizesMap, key, increaseby);
+    DatabaseService(id: customer.id, ids: []).changeWalletBalance(customer.wallet, price);
+    await orderCollection.doc(id).update({'status': 'cancelled'});
+  }
+
   /*--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER*/
   /*--COMMENT--COMMENT--COMMENT--COMMENT--COMMENT--COMMENT--COMMENT--COMMENT*/
 
@@ -638,6 +703,44 @@ class DatabaseService {
       'approved': commentObject.approved
     });
   }
-  /*--COMMENT--COMMENT--COMMENT--COMMENT--COMMENT--COMMENT--COMMENT--COMMENT*/
 
+  /*--COMMENT--COMMENT--COMMENT--COMMENT--COMMENT--COMMENT--COMMENT--COMMENT*/
+  /*--RETURN--RETURN--RETURN--RETURN--RETURN--RETURN--RETURN--RETURN--RETURN*/
+  ReturnRequest _returnDataFromSnapshot(DocumentSnapshot snapshot) {
+    return ReturnRequest(
+        id: id,
+        productID: snapshot.get('productID'),
+        sellerID: snapshot.get('sellerID'),
+        customerID: snapshot.get('customerID'),
+        orderID: snapshot.get('orderID'),
+        date: DateFormat('dd-MM-yyyy').parse(snapshot.get('date')),
+        approved: snapshot.get('approved'),
+        rejected: snapshot.get('rejected'),
+        cause: snapshot.get('cause'),
+        price: double.parse(snapshot.get('price')));
+  }
+
+  Stream<ReturnRequest> get returnRequestData {
+    return returnRequestsCollection.doc(id).snapshots().map(_returnDataFromSnapshot);
+  }
+
+  Future createReturnRequest(ReturnRequest request, Customer customer, Seller seller) async {
+    await returnRequestsCollection.doc(request.id).set({
+      'id': request.id,
+      'productID': request.productID,
+      'sellerID': request.sellerID,
+      'orderID': request.orderID,
+      'customerID': request.customerID,
+      'date': DateFormat('dd-MM-yyyy').format(request.date),
+      'approved': request.approved,
+      'cause': request.cause,
+      'price': request.price.toStringAsFixed(2),
+    });
+    await orderCollection.doc(request.orderID).update({'returnID': request.id, 'status': 'returnrequested'});
+    customer.returnRequests.add(request.id);
+    await customerCollection.doc(request.customerID).update({'returnRequests': customer.returnRequests});
+    seller.returnRequests.add(request.id);
+    await sellerCollection.doc(request.sellerID).update({'returnRequests': seller.returnRequests});
+  }
+  /*--RETURN--RETURN--RETURN--RETURN--RETURN--RETURN--RETURN--RETURN--RETURN*/
 }

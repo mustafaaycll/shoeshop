@@ -10,13 +10,13 @@ export class RatingService {
   allcomments: comment[]= [];
   rating: number;
   constructor(private apiService: ApiService) {
-      
+
     this.apiService.getComments().subscribe(comments=>{
       console.log("here");
       this.allcomments = comments as comment[];
-      
+
       });
-      
+
  }
 
    getComments(productid: string){
@@ -26,13 +26,13 @@ export class RatingService {
          if(element.productID === productid){
             comments.push(element);
             console.log(comments);
-            
-    
+
+
        }});
       return comments;
-    
+
   }
-  
+
   getRating(productid: string){
     let sum: number = 0;
     let rating: number;
@@ -44,10 +44,10 @@ export class RatingService {
           nocomment = false;
           sum = sum +element.rating;
           num= num+1;
-         
- 
+
+
     }});
-    
+
     if(nocomment){
       return 0;
     }
@@ -56,9 +56,9 @@ export class RatingService {
       return rating;
 
     }
-    
+
   }
-   
-    
+
+
 }
 

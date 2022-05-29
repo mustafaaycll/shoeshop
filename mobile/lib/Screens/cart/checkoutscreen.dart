@@ -29,11 +29,15 @@ class CheckoutScreen extends StatefulWidget {
 class _CheckoutScreenState extends State<CheckoutScreen> {
   BankCard? _selectedCard;
   String? _selectedAddress;
+  bool wallet_will_be_used = false;
+  Color buttonColor = AppColors.system_gray;
 
   @override
   Widget build(BuildContext context) {
     Customer? customer = Provider.of<Customer?>(context);
     if (customer != null) {
+      buttonColor = getButtonColor(wallet_will_be_used, _selectedAddress, _selectedCard, customer.wallet, totalAmount(widget.basket));
+
       return Scaffold(
         backgroundColor: AppColors.background,
         appBar: AppBar(
@@ -52,85 +56,117 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   child: Column(
                     children: [
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
                             "Swipe and select payment option",
                             style: TextStyle(color: AppColors.system_gray),
                           ),
+                          TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  if (wallet_will_be_used) {
+                                    wallet_will_be_used = false;
+                                  } else {
+                                    wallet_will_be_used = true;
+                                    _selectedCard = null;
+                                  }
+                                });
+                              },
+                              style: ShapeRules(bg_color: Colors.transparent, side_color: Colors.transparent).text_button_style_no_padding(),
+                              child: Text(wallet_will_be_used ? "Use Card Instead" : "Use Wallet Instead",
+                                  style: TextStyle(color: AppColors.title_text, decoration: TextDecoration.underline)))
                         ],
                       ),
-                      StreamBuilder<List<BankCard>>(
-                          stream: DatabaseService(id: "", ids: customer.credit_cards).specifiedCards,
-                          builder: (context, snapshot) {
-                            List<BankCard>? cards = snapshot.data;
+                      wallet_will_be_used
+                          ? Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: ListTile(
+                                        title:
+                                            QuickObjects().balanceIndicator("Wallet Balance: " + customer.wallet.toStringAsFixed(2) + "₺", 50, 100),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 30,
+                                )
+                              ],
+                            )
+                          : StreamBuilder<List<BankCard>>(
+                              stream: DatabaseService(id: "", ids: customer.credit_cards).specifiedCards,
+                              builder: (context, snapshot) {
+                                List<BankCard>? cards = snapshot.data;
 
-                            return SizedBox(
-                                height: 250,
-                                child: cards != null
-                                    ? PageView.builder(
-                                        itemCount: cards.length + 1,
-                                        scrollDirection: Axis.horizontal,
-                                        itemBuilder: (context, index) {
-                                          if (index == cards.length) {
-                                            return IconButton(
+                                return SizedBox(
+                                    height: 250,
+                                    child: cards != null
+                                        ? PageView.builder(
+                                            itemCount: cards.length + 1,
+                                            scrollDirection: Axis.horizontal,
+                                            itemBuilder: (context, index) {
+                                              if (index == cards.length) {
+                                                return IconButton(
+                                                  onPressed: () {
+                                                    pushNewScreen(context, screen: NewPaymentOption(customer: customer));
+                                                  },
+                                                  icon: Icon(CupertinoIcons.add),
+                                                );
+                                              } else {
+                                                return Padding(
+                                                  padding: EdgeInsets.all(8.0),
+                                                  child: SizedBox(
+                                                    width: MediaQuery.of(context).size.width - 32,
+                                                    child: Badge(
+                                                      animationType: BadgeAnimationType.scale,
+                                                      elevation: 0,
+                                                      position: BadgePosition.topStart(),
+                                                      badgeColor: AppColors.background,
+                                                      badgeContent: IconButton(
+                                                        onPressed: () {
+                                                          _selectedCard = cards[index];
+                                                          setState(() {});
+                                                        },
+                                                        icon: Icon(
+                                                          _selectedCard == null || _selectedCard!.id != cards[index].id
+                                                              ? CupertinoIcons.square
+                                                              : CupertinoIcons.checkmark_square,
+                                                          color: AppColors.filled_button,
+                                                        ),
+                                                        padding: EdgeInsets.all(0),
+                                                        visualDensity: VisualDensity.compact,
+                                                      ),
+                                                      child: CreditCardWidget(
+                                                        backgroundImage: 'assets/bg_card.jpg',
+                                                        isChipVisible: false,
+                                                        isHolderNameVisible: true,
+                                                        onCreditCardWidgetChange: (p0) => {},
+                                                        cardNumber: cards[index].cardNumber,
+                                                        expiryDate: cards[index].expiryDate,
+                                                        cardHolderName: cards[index].cardHolderName,
+                                                        cvvCode: cards[index].cvvCode,
+                                                        showBackView: false,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                              }
+                                            },
+                                          )
+                                        : SizedBox(
+                                            width: MediaQuery.of(context).size.width - 16,
+                                            height: 100,
+                                            child: IconButton(
                                               onPressed: () {
                                                 pushNewScreen(context, screen: NewPaymentOption(customer: customer));
                                               },
                                               icon: Icon(CupertinoIcons.add),
-                                            );
-                                          } else {
-                                            return Padding(
-                                              padding: EdgeInsets.all(8.0),
-                                              child: SizedBox(
-                                                width: MediaQuery.of(context).size.width - 32,
-                                                child: Badge(
-                                                  animationType: BadgeAnimationType.scale,
-                                                  elevation: 0,
-                                                  position: BadgePosition.topStart(),
-                                                  badgeColor: AppColors.background,
-                                                  badgeContent: IconButton(
-                                                    onPressed: () {
-                                                      _selectedCard = cards[index];
-                                                      setState(() {});
-                                                    },
-                                                    icon: Icon(
-                                                      _selectedCard == null || _selectedCard!.id != cards[index].id
-                                                          ? CupertinoIcons.square
-                                                          : CupertinoIcons.checkmark_square,
-                                                      color: AppColors.filled_button,
-                                                    ),
-                                                    padding: EdgeInsets.all(0),
-                                                    visualDensity: VisualDensity.compact,
-                                                  ),
-                                                  child: CreditCardWidget(
-                                                    backgroundImage: 'assets/bg_card.jpg',
-                                                    isChipVisible: false,
-                                                    isHolderNameVisible: true,
-                                                    onCreditCardWidgetChange: (p0) => {},
-                                                    cardNumber: cards[index].cardNumber,
-                                                    expiryDate: cards[index].expiryDate,
-                                                    cardHolderName: cards[index].cardHolderName,
-                                                    cvvCode: cards[index].cvvCode,
-                                                    showBackView: false,
-                                                  ),
-                                                ),
-                                              ),
-                                            );
-                                          }
-                                        },
-                                      )
-                                    : SizedBox(
-                                        width: MediaQuery.of(context).size.width - 16,
-                                        height: 100,
-                                        child: IconButton(
-                                          onPressed: () {
-                                            pushNewScreen(context, screen: NewPaymentOption(customer: customer));
-                                          },
-                                          icon: Icon(CupertinoIcons.add),
-                                        ),
-                                      ));
-                          }),
+                                            ),
+                                          ));
+                              }),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -226,12 +262,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     style: TextStyle(fontSize: 25, color: AppColors.title_text),
                   ),
                   trailing: OutlinedButton.icon(
-                    style: ShapeRules(
-                            bg_color: _selectedAddress != null && _selectedCard != null ? AppColors.filled_button : AppColors.system_gray,
-                            side_color: _selectedAddress != null && _selectedCard != null ? AppColors.filled_button : AppColors.system_gray)
-                        .outlined_button_style(),
+                    style: ShapeRules(bg_color: buttonColor, side_color: buttonColor).outlined_button_style(),
                     onPressed: () async {
-                      if (_selectedAddress != null && _selectedCard != null) {
+                      if (_selectedAddress != null && wallet_will_be_used && customer.wallet >= totalAmount(widget.basket)) {
                         List<Order> orderArr = [];
                         String pdfName = "";
                         for (var i = 0; i < widget.basket.keys.toList().length; i++) {
@@ -246,7 +279,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               price: widget.basket.keys.toList()[i].price * widget.basket[widget.basket.keys.toList()[i]][0],
                               quantity: widget.basket[widget.basket.keys.toList()[i]][0],
                               date: DateTime.now(),
-                              rated: false);
+                              rated: false,
+                              returnID: "");
                           orderArr.add(order);
 
                           pdfName = pdfName + order.id;
@@ -255,7 +289,55 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           }
                         }
 
-                        print(pdfName);
+                        DatabaseService(id: customer.id, ids: []).createNewOrder(orderArr, customer, widget.basket, _selectedAddress);
+                        DatabaseService(id: "", ids: []).decreaseAmountFromSpecifiedProducts(widget.basket);
+                        DatabaseService(id: customer.id, ids: []).changeWalletBalance(customer.wallet, totalAmount(widget.basket) * -1);
+
+                        Navigator.pop(context);
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return QuickObjects().orderReceived(context, pdfName);
+                            });
+
+                        String? url;
+
+                        while (url == null) {
+                          try {
+                            url = await DatabaseService(id: pdfName, ids: []).getPdfURL();
+                          } catch (e) {
+                            print(e.toString());
+                          }
+                        }
+                        DatabaseService(id: "", ids: []).sendInvoiceMail(
+                            customer.email,
+                            "Invoice for order on ${DateFormat('dd-MM-yyyy').format(DateTime.now())}",
+                            "Dear ${customer.fullname}, thank you for your purchase.",
+                            "$url");
+                      } else if (_selectedAddress != null && _selectedCard != null) {
+                        List<Order> orderArr = [];
+                        String pdfName = "";
+                        for (var i = 0; i < widget.basket.keys.toList().length; i++) {
+                          Order order = Order(
+                              id: DatabaseService(id: "", ids: []).randID(),
+                              customerID: customer.id,
+                              sellerID: widget.basket.keys.toList()[i].distributor_information,
+                              productID: widget.basket.keys.toList()[i].id,
+                              address: _selectedAddress!,
+                              status: "processing",
+                              size: widget.basket[widget.basket.keys.toList()[i]][1],
+                              price: widget.basket.keys.toList()[i].price * widget.basket[widget.basket.keys.toList()[i]][0],
+                              quantity: widget.basket[widget.basket.keys.toList()[i]][0],
+                              date: DateTime.now(),
+                              rated: false,
+                              returnID: "");
+                          orderArr.add(order);
+
+                          pdfName = pdfName + order.id;
+                          if (i != widget.basket.keys.toList().length - 1) {
+                            pdfName = pdfName + "-";
+                          }
+                        }
 
                         DatabaseService(id: customer.id, ids: []).createNewOrder(orderArr, customer, widget.basket, _selectedAddress);
                         DatabaseService(id: "", ids: []).decreaseAmountFromSpecifiedProducts(widget.basket);
@@ -305,4 +387,20 @@ double totalAmount(Map<Product, dynamic> basketMap) {
     sum += key.price * value[0];
   });
   return sum;
+}
+
+Color getButtonColor(bool wallet_will_be_used, String? selectedAddress, BankCard? selectedCard, double balance, double totalAmount) {
+  if (wallet_will_be_used && balance >= totalAmount) {
+    if (selectedAddress != null) {
+      return AppColors.filled_button;
+    } else {
+      return AppColors.system_gray;
+    }
+  } else {
+    if (selectedAddress != null && selectedCard != null) {
+      return AppColors.filled_button;
+    } else {
+      return AppColors.system_gray;
+    }
+  }
 }

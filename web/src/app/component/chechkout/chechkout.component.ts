@@ -37,6 +37,7 @@ export class ChechkoutComponent implements OnInit {
   abc: Customer;
   flag: boolean;
   getAddress?: string[];
+  public grandTotal !: number;
   constructor(private cartService: CartService, private apiService: ApiService, private fb: FormBuilder, private auth: AuthService, public afAuth: AngularFireAuth, private afs: AngularFirestore) { }
 
   ngOnInit(): void {
@@ -50,27 +51,28 @@ export class ChechkoutComponent implements OnInit {
 
     this.checkoutFormGroup= this.fb.group({
       creditCard: this.fb.group({
-      
+
         cardHolderName: ['', Validators.required],
         cardNumber: ['', Validators.required],
         cvvCode: ['', Validators.required],
         expiryDate: ['', Validators.required],
-        
+
       }),
       Address: this.fb.group({
-      
+
         Address: ['', Validators.required],
-        
+
       })
-      
-      
-      
+
+
+
     })
 
-    
-    this.apiService.getCustomerWithId().subscribe((customer)=>{     
+
+    this.apiService.getCustomerWithId().subscribe((customer)=>{
       this.currentCustomer = customer as Customer;
       this.basketMap = this.currentCustomer.basketMap as basketMap;
+      this.grandTotal = this.cartService.getTotalPrice();
       console.log(this.basketMap);
       Object.keys(this.basketMap).forEach((key) => {
         console.log(key)
@@ -79,13 +81,13 @@ export class ChechkoutComponent implements OnInit {
           Object.assign(product_, {quantity: this.basketMap[key as keyof basketMap][0], size: this.basketMap[key as keyof basketMap][1], total:  this.basketMap[key as keyof basketMap][0] * product_.price} )
 
           this.products.push(product);
-          
-     
+
+
         });
-              
+
       })
-      
-      
+
+
     });
 
     this.afAuth.onAuthStateChanged(user => {if(user){
@@ -94,7 +96,7 @@ export class ChechkoutComponent implements OnInit {
         this.custInfo = items as Customer;
         this.adres = this.custInfo.addresses as string[];
       })
-  
+
     }})
 
   }
@@ -102,7 +104,7 @@ export class ChechkoutComponent implements OnInit {
 
   onSubmit(data: any){
     console.log(data);
-    let obj = data.creditCard; 
+    let obj = data.creditCard;
     let obj2 = data.Address;
     this.checkoutFormGroup.value.Address
     var adres = this.checkoutFormGroup.value.Address.Address;
@@ -113,13 +115,11 @@ export class ChechkoutComponent implements OnInit {
     if(this.currentCustomer.credit_cards)
        console.log(this.currentCustomer.credit_cards as string[]);
     this.apiService.addCart(obj, this.currentCustomer.credit_cards);
-    
-    this.apiService.updateAddress(adres);
 
     this.createOrder();
     this.cartService.removeAllCart();
-    
-    
+
+
   }
 
   createOrder(){
@@ -138,7 +138,7 @@ export class ChechkoutComponent implements OnInit {
         size: product.size,
         status: "proccessing"
       }
-      
+
       let selectedsize = product.size;
       console.log(selectedsize);
       Object.keys(product.sizesMap).map(size=>{
@@ -146,18 +146,18 @@ export class ChechkoutComponent implements OnInit {
           product.sizesMap[size] = product.sizesMap[size] - product.quantity;
         }
       })
-      
+
 
       console.log(product.sizesMap);
       this.apiService.createOrder(order, product.sizesMap);
-      
-    
+
+
     })
 
 
   }
-  
 
-  
-  
+
+
+
 }

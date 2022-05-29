@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/Screens/account/addressoptions.dart';
 import 'package:mobile/Screens/account/paymentoptions.dart';
+import 'package:mobile/Screens/account/prevorders.dart';
 import 'package:mobile/Services/authentication.dart';
 import 'package:mobile/models/users/customer.dart';
 import 'package:mobile/utils/animations.dart';
@@ -47,7 +48,6 @@ class _AccountState extends State<Account> {
                         customer.email,
                         style: TextStyle(fontSize: 11),
                       ),
-                      leading: QuickObjects().profilePicture(customer.fullname, 100, 100),
                       trailing: IconButton(
                         onPressed: () {
                           AuthService().signOut();
@@ -58,6 +58,15 @@ class _AccountState extends State<Account> {
                           size: 30,
                         ),
                       ),
+                    ),
+                  )
+                ],
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: ListTile(
+                      title: QuickObjects().balanceIndicator("Wallet Balance: " + customer.wallet.toStringAsFixed(2) + "₺", 50, 100),
                     ),
                   )
                 ],
@@ -176,7 +185,17 @@ class _AccountState extends State<Account> {
                     style: TextStyle(color: AppColors.system_gray),
                   ),
                   ListTile(
-                    onTap: () {},
+                    onTap: () {
+                      if (customer.method != "anonymous") {
+                        pushNewScreen(context, screen: PrevOrdersPage());
+                      } else {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return QuickObjects().prevention(context);
+                            });
+                      }
+                    },
                     title: Text("Previous Orders"),
                     trailing: Icon(CupertinoIcons.chevron_right),
                     leading: Icon(CupertinoIcons.square_stack_3d_up),

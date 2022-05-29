@@ -1,12 +1,15 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile/Screens/account/returnRequestPage.dart';
 import 'package:mobile/Screens/cart/invoiceView.dart';
 import 'package:mobile/Screens/general/ratepage.dart';
+import 'package:mobile/Screens/home/productpage.dart';
 import 'package:mobile/Services/database.dart';
 import 'package:mobile/models/comments/comment.dart';
 import 'package:mobile/models/orders/order.dart';
 import 'package:mobile/models/products/product.dart';
+import 'package:mobile/models/returnRequests/returnRequest.dart';
 import 'package:mobile/models/users/customer.dart';
 import 'package:mobile/models/users/seller.dart';
 import 'package:mobile/utils/animations.dart';
@@ -37,6 +40,22 @@ class QuickObjects {
         child: Center(
             child: Text(
           getInitials(fullname),
+          style: TextStyle(color: AppColors.opposite_case_title_text, fontSize: h / 3),
+        )),
+      ),
+    );
+  }
+
+  Widget balanceIndicator(String balance, double h, double w) {
+    return SizedBox(
+      height: h,
+      width: w,
+      child: Card(
+        color: AppColors.opposite_case_filled_button,
+        elevation: 0,
+        child: Center(
+            child: Text(
+          balance,
           style: TextStyle(color: AppColors.opposite_case_title_text, fontSize: h / 3),
         )),
       ),
@@ -359,7 +378,7 @@ class QuickObjects {
                 top: (3 * h / 5) - 20,
                 child: Container(
                     height: 20,
-                    width: 75,
+                    width: 100,
                     child: Center(
                       child: Text(
                         "${getStatusMessage(order.status)}",
@@ -441,15 +460,15 @@ class QuickObjects {
                     ],
                   ),
                   !order.rated
-                      ? order.status == "delivered"
+                      ? order.status == "delivered" || order.status.substring(0, 6) == "return"
                           ? Row(
                               children: [
                                 Expanded(
                                     child: OutlinedButton(
-                                        style:
-                                            ShapeRules(bg_color: getColor(order.status), side_color: getColor(order.status)).outlined_button_style(),
+                                        style: ShapeRules(bg_color: getButtonColor(order.status), side_color: getButtonColor(order.status))
+                                            .outlined_button_style(),
                                         onPressed: () {
-                                          if (order.status == "delivered") {
+                                          if (order.status == "delivered" || order.status.substring(0, 6) == "return") {
                                             pushNewScreen(context, screen: RatePage(order: order, seller: seller, product: product));
                                           }
                                         },
@@ -1054,6 +1073,245 @@ class QuickObjects {
     );
   }
 
+  Widget prevOrderItem(BuildContext parentcontext, List<Order>? orders, double w, customer) {
+    int multiplier = orders!.length;
+    double width = w;
+    double height = 190.0 * multiplier + 50;
+    return Container(
+      width: width,
+      height: height,
+      child: Column(
+        children: [
+          SizedBox(
+            height: height - 50,
+            child: ListView.builder(
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: orders.length,
+              itemBuilder: (context, i) {
+                return StreamBuilder<Product>(
+                  stream: DatabaseService(id: orders[i].productID, ids: []).productData,
+                  builder: (streamcontext1, snapshot) {
+                    Product? product = snapshot.data;
+                    if (product != null) {
+                      return StreamBuilder<Seller>(
+                        stream: DatabaseService(id: orders[i].sellerID, ids: []).sellerData,
+                        builder: (streamcontext2, snapshot) {
+                          Seller? seller = snapshot.data;
+                          if (seller != null) {
+                            return Column(
+                              children: [
+                                Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                                  Stack(children: [
+                                    OutlinedButton(
+                                      style:
+                                          ShapeRules(bg_color: Colors.transparent, side_color: Colors.transparent).outlined_button_style_no_padding(),
+                                      onPressed: () {
+                                        pushNewScreen(context, screen: ProductPage(seller: seller, productID: orders[i].productID));
+                                      },
+                                      child: Container(
+                                        height: 190,
+                                        width: 150,
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.all(Radius.circular(15)),
+                                            image: DecorationImage(fit: BoxFit.cover, image: NetworkImage(product.photos[0]))),
+                                      ),
+                                    ),
+                                    Positioned(
+                                      top: 170,
+                                      left: 0,
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            height: 20,
+                                            width: 100,
+                                            child: Center(
+                                              child: Text(
+                                                getStatusMessage(orders[i].status),
+                                                style: TextStyle(color: AppColors.background, fontSize: 11),
+                                              ),
+                                            ),
+                                            color: getColor(orders[i].status),
+                                          )
+                                        ],
+                                      ),
+                                    )
+                                  ]),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Expanded(
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(
+                                          height: 15,
+                                        ),
+                                        Text(
+                                          product.name,
+                                          style: TextStyle(color: AppColors.title_text, fontSize: 20),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        SizedBox(
+                                          height: 1,
+                                        ),
+                                        Text(
+                                          product.model,
+                                          style: TextStyle(color: AppColors.title_text, fontSize: 15),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        SizedBox(
+                                          height: 1,
+                                        ),
+                                        Text(
+                                          "Purchased on " + DateFormat("dd-MM-yyyy").format(orders[i].date),
+                                          style: TextStyle(color: AppColors.system_gray, fontSize: 12),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        SizedBox(
+                                          height: 1,
+                                        ),
+                                        orders[i].status.substring(0, 6) == "return"
+                                            ? StreamBuilder<ReturnRequest>(
+                                                stream: DatabaseService(id: orders[i].returnID, ids: []).returnRequestData,
+                                                builder: (context, snapshot) {
+                                                  ReturnRequest? requestedReturn = snapshot.data;
+                                                  if (requestedReturn == null) {
+                                                    return Text(
+                                                      "Return Requested on ",
+                                                      style: TextStyle(color: AppColors.system_gray, fontSize: 12),
+                                                      overflow: TextOverflow.ellipsis,
+                                                    );
+                                                  } else {
+                                                    return Text(
+                                                      "Return Requested on ${DateFormat('dd-MM-yyyy').format(requestedReturn.date)}",
+                                                      style: TextStyle(color: AppColors.system_gray, fontSize: 12),
+                                                      overflow: TextOverflow.ellipsis,
+                                                    );
+                                                  }
+                                                },
+                                              )
+                                            : Container(),
+                                        Text(
+                                          "Quantity: ${orders[i].quantity}",
+                                          style: TextStyle(color: AppColors.system_gray, fontSize: 12),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        Text("${getIndividualPriceForWishlistItem(product).toStringAsFixed(2)} ₺",
+                                            style: TextStyle(color: AppColors.title_text, fontSize: 20)),
+                                        SizedBox(
+                                          height: 8,
+                                        ),
+                                        orders[i].status == "processing"
+                                            ? Row(
+                                                mainAxisAlignment: MainAxisAlignment.end,
+                                                children: [
+                                                  TextButton.icon(
+                                                      onPressed: () {
+                                                        DatabaseService(id: orders[i].id, ids: [])
+                                                            .cancelOrder(customer, product, orders[i].size, orders[i].quantity, orders[i].price);
+                                                      },
+                                                      icon: Icon(CupertinoIcons.xmark_circle, size: 17, color: AppColors.negative_button),
+                                                      label: Text(
+                                                        "Cancel Order",
+                                                        style: TextStyle(color: AppColors.negative_button),
+                                                      ))
+                                                ],
+                                              )
+                                            : orders[i].status == "delivered" || orders[i].status.substring(0, 6) == "return"
+                                                ? Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                      !orders[i].rated
+                                                          ? TextButton.icon(
+                                                              onPressed: () {
+                                                                pushNewScreen(context,
+                                                                    screen: RatePage(seller: seller, product: product, order: orders[i]));
+                                                              },
+                                                              style: ShapeRules(bg_color: Colors.transparent, side_color: Colors.transparent)
+                                                                  .text_button_style_no_padding(),
+                                                              icon: Icon(CupertinoIcons.star, size: 17, color: AppColors.title_text),
+                                                              label: Text("Rate",
+                                                                  style: TextStyle(
+                                                                    color: AppColors.title_text,
+                                                                  )))
+                                                          : Text("Already Rated", style: TextStyle(color: AppColors.system_gray, fontSize: 12)),
+                                                      DateTime.now().difference(orders[i].date).inDays <= 30 &&
+                                                              orders[i].status.substring(0, 6) != "return"
+                                                          ? TextButton.icon(
+                                                              onPressed: () {
+                                                                pushNewScreen(context,
+                                                                    screen: ReturnPage(
+                                                                      seller: seller,
+                                                                      productID: product.id,
+                                                                      order: orders[i],
+                                                                    ));
+                                                              },
+                                                              icon:
+                                                                  Icon(CupertinoIcons.arrow_uturn_left_square, size: 17, color: AppColors.title_text),
+                                                              label: Text("Return Order",
+                                                                  style: TextStyle(
+                                                                    color: AppColors.title_text,
+                                                                  )))
+                                                          : Text("", style: TextStyle(color: AppColors.system_gray, fontSize: 12)),
+                                                    ],
+                                                  )
+                                                : Container(),
+                                      ],
+                                    ),
+                                  )
+                                ]),
+                              ],
+                            );
+                          } else {
+                            return Animations().loading();
+                          }
+                        },
+                      );
+                    } else {
+                      return Animations().loading();
+                    }
+                  },
+                );
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
+            child: Row(
+              children: [
+                Container(
+                    width: 150,
+                    child: Text("${getTotalPrice(orders).toStringAsFixed(2)} ₺", style: TextStyle(color: AppColors.title_text, fontSize: 20))),
+                Expanded(
+                  child: OutlinedButton.icon(
+                    style: ShapeRules(bg_color: AppColors.filled_button, side_color: AppColors.filled_button).outlined_button_style(),
+                    onPressed: () async {
+                      String url = await DatabaseService(id: getPDFName(orders), ids: []).getPdfURL();
+                      pushNewScreen(parentcontext, screen: InvoiceView(pdfName: getPDFName(orders), url: url));
+                    },
+                    icon: Icon(
+                      CupertinoIcons.doc,
+                      color: AppColors.background,
+                      size: 18,
+                    ),
+                    label: Text(
+                      "View Invoice",
+                      style: TextStyle(color: AppColors.filled_button_text),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
   Widget failedToAddToCart() {
     return AlertDialog(
         backgroundColor: AppColors.background,
@@ -1257,8 +1515,26 @@ String getStatusMessage(String status) {
     return "In Process";
   } else if (status == "delivery") {
     return "In Delivery";
-  } else {
+  } else if (status == "delivered") {
     return "Delivered";
+  } else if (status == "returnrequested") {
+    return "Return Requested";
+  } else if (status == "returnapproved") {
+    return "Return Approved";
+  } else if (status == "returnrejected") {
+    return "Return Rejected";
+  } else {
+    return "Cancelled";
+  }
+}
+
+Color getButtonColor(String status) {
+  if (status == "processing") {
+    return Colors.orange;
+  } else if (status == "delivery") {
+    return AppColors.secondary_text;
+  } else {
+    return AppColors.filled_button;
   }
 }
 
@@ -1267,7 +1543,34 @@ Color getColor(String status) {
     return Colors.orange;
   } else if (status == "delivery") {
     return AppColors.secondary_text;
-  } else {
+  } else if (status == "delivered") {
     return AppColors.filled_button;
+  } else if (status == "returnrequested") {
+    return Colors.teal;
+  } else if (status == "returnapproved") {
+    return AppColors.positive_button;
+  } else if (status == "returnrejected") {
+    return AppColors.negative_button;
+  } else {
+    return AppColors.negative_button;
   }
+}
+
+String getPDFName(List<Order> orders) {
+  String name = "";
+  for (var i = 0; i < orders.length; i++) {
+    name += orders[i].id;
+    if (i < orders.length - 1) {
+      name += "-";
+    }
+  }
+  return name;
+}
+
+double getTotalPrice(List<Order> orders) {
+  double sum = 0.0;
+  for (var item in orders) {
+    sum += item.price;
+  }
+  return sum;
 }
