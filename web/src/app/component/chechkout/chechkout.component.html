@@ -7,44 +7,44 @@
         <div class="form-area">
 
           <h3>Review Your Order</h3>
-          
-          <p>Total Price: {{totalPrice | currency: 'USD'}}</p>
+
+          <p>Total Price: ${{grandTotal}}</p>
           <p>Shipping: FREE</p>
         </div>
 
         <div formGroupName="Address" class="form-area">
           <h3>Address</h3>
-     
+
           <div class="row">
             <div class="col-md-2"><label>Address</label></div>
             <div class="col-md-9">
               <div class="input-space">
                 <input formControlName="Address" type="text">
-                  
-                
+
+
               </div>
 
             </div>
 
 
           </div>
-          
+
         </div>
 
-        
 
-        
-        
+
+
+
         <div formGroupName="creditCard" class="form-area">
           <h3>Credit Card</h3>
-     
+
           <div class="row">
             <div class="col-md-2"><label>Name on Card</label></div>
             <div class="col-md-9">
               <div class="input-space">
                 <input formControlName="cardHolderName" type="text">
-                  
-                
+
+
               </div>
 
             </div>
@@ -56,7 +56,7 @@
             <div class="col-md-9">
               <div class="input-space">
                 <input formControlName="cardNumber" type="text">
-                      
+
               </div>
 
             </div>
@@ -68,8 +68,8 @@
             <div class="col-md-9">
               <div class="input-space">
                 <input formControlName="cvvCode" type="text">
-                  
-                
+
+
               </div>
 
             </div>
@@ -81,20 +81,20 @@
             <div class="col-md-9">
               <div class="input-space">
                 <input formControlName="expiryDate" type="text">
-                  
-                
+
+
               </div>
 
             </div>
 
 
           </div>
-        
+
         </div>
         <div class="text-center">
           <button type="submit" class="btn btn-info">Finish Checkout</button>
         </div>
-    
+
       </form>
     </div>
   </div>
@@ -109,21 +109,21 @@
     <mat-card-title>
        Order Review
     </mat-card-title>
-    
-    
+
+
     <mat-card-content>
       <div *ngFor="let product of products">
         <div >
           <div style="float: left;">
             <img style="position: relative; right: 5px;"mat-card-sm-image src="{{product.photos[0]}}" >
           </div>
-            
+
           <div style=" left: 5px;">
             <mat-card-subtitle >{{product.name}} - {{product.model}}</mat-card-subtitle>
           </div>
           <p>Size: {{product.size}}<span style="float:right;">Price: {{product.price}}</span>  </p>
         </div>
-         
+
     </div>
   </mat-card-content>
 
@@ -131,4 +131,3 @@
    <button mat-button >Finish Checkout</button>
   </mat-card-actions>
  </mat-card>
- 
