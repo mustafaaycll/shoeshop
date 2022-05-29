@@ -6,6 +6,8 @@ import { ApiService } from 'src/app/service/api.service';
 import { CartService } from 'src/app/service/cart.service';
 import { comment, Customer } from 'src/app/models/customer';
 import { RatingService } from 'src/app/service/rating.service';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { AuthService } from 'src/app/services/auth.service';
 
 
 
@@ -25,9 +27,10 @@ export class ProductDetailsComponent implements OnInit {
   customer: Customer;
   comments: comment[];;
   rating: number = 0;
+  commentrating: number = 5;
   
   constructor(private route: ActivatedRoute, private apiService: ApiService, private cartService: CartService
-    ,private ratingService: RatingService) { 
+    ,private ratingService: RatingService, private afs: AngularFirestore, public auth: AuthService) { 
       
   }
 
@@ -81,6 +84,20 @@ export class ProductDetailsComponent implements OnInit {
            total = total + (this.sizesMap.get(size) || 0);       
       }
       return total;
+    }
+    addComment(comment: string){
+      console.log(comment);
+      let userid = this.auth.userid;
+      let comments = {
+        approved: true,
+        comment: comment,
+        customerID: userid,
+        date: "09-05-2022",
+        productID: this.product.id,
+        rating: this.commentrating,
+        sellerID: "",
+      }
+      this.apiService.addComment(comments);
     }
 
 

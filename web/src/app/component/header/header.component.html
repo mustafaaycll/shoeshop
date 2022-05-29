@@ -11,11 +11,12 @@
       <span class="fas fa-search search-icon"> </span>
     </div>
     <button style="font-size: 30px; color: white; background-color: transparent;" routerLink="login">Login</button>
+    <button style="font-size: 30px; color: white; background-color: transparent;" routerLink="Home">Logout</button>
     <strong style="font-size: 30px; color:white">
-      <div *ngIf="(check===false)">
+      <div *ngIf="!(afAuth.user | async)">
         Hello, visitor
       </div>
-      <div *ngIf="(check===true)">
+      <div *ngIf="(afAuth.user | async)">
         Hello, user 
       </div>
     </strong>

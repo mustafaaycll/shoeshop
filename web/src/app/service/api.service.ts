@@ -124,6 +124,13 @@ export class ApiService {
     
 
   }
+  addComment(comments:any){
+    var ref= this.firestore.collection("/comments").doc().ref;
+    Object.assign(comments, {id: ref.id });
+    console.log(comments);
+    ref.set(comments);
+  }
+
 
 
 }
