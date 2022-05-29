@@ -4,12 +4,7 @@ class Seller {
   final String name;
   final List<dynamic> products;
   final List<dynamic> ratings;
+  final List<dynamic> returnRequests;
 
-  Seller({
-    required this.id,
-    required this.logo,
-    required this.name,
-    required this.products,
-    required this.ratings,
-  });
+  Seller({required this.id, required this.logo, required this.name, required this.products, required this.ratings, required this.returnRequests});
 }

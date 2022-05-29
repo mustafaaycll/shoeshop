@@ -9,6 +9,8 @@ class Customer {
   final List<dynamic> prev_orders;
   final String tax_id;
   final List<dynamic> credit_cards;
+  final List<dynamic> returnRequests;
+  final double wallet;
 
   Customer(
       {required this.id,
@@ -20,5 +22,7 @@ class Customer {
       required this.basketMap,
       required this.prev_orders,
       required this.tax_id,
-      required this.credit_cards});
+      required this.credit_cards,
+      required this.returnRequests,
+      required this.wallet});
 }

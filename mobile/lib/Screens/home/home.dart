@@ -3,6 +3,7 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile/Screens/account/prevorders.dart';
 import 'package:mobile/Screens/home/productpage.dart';
 import 'package:mobile/Screens/home/sellerpage.dart';
 import 'package:mobile/Services/database.dart';
@@ -159,7 +160,7 @@ class _HomeState extends State<Home> {
                                     )
                                   : Animations().loading(),
                             ),
-                            SizedBox(
+                            /*SizedBox(
                               height: 10,
                             ),
                             Row(
@@ -200,7 +201,7 @@ class _HomeState extends State<Home> {
                                       child: Text("Unisex", style: TextStyle(color: AppColors.body_text))),
                                 ),
                               ],
-                            ),
+                            ),*/
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -281,7 +282,9 @@ class _HomeState extends State<Home> {
                                   style: TextStyle(color: AppColors.system_gray),
                                 ),
                                 TextButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    pushNewScreen(context, screen: PrevOrdersPage());
+                                  },
                                   child: Row(
                                     children: [
                                       Text(
@@ -300,7 +303,7 @@ class _HomeState extends State<Home> {
                                 List<Seller>? allSellers = snapshot.data;
 
                                 return StreamBuilder<List<Order>>(
-                                  stream: DatabaseService(id: "", ids: getAllOrderIDsIntoList(customer.prev_orders)).specifiedOrders,
+                                  stream: DatabaseService(id: "", ids: getAllOrderIDsIntoList(customer.prev_orders)).specifiedOrders_nonCancelled,
                                   builder: (context, snapshot) {
                                     List<Order>? orders = snapshot.data;
 
