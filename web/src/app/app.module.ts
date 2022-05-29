@@ -40,6 +40,7 @@ import { ItemService } from './services/item.service';
 import { AddresspageComponent } from './addresspage/addresspage.component';
 import { ChechkoutComponent } from './component/chechkout/chechkout.component';
 import { PaymentComponent } from './component/payment/payment.component';
+import { InvoiceComponent } from './component/invoice/invoice.component';
 
 
 
@@ -57,8 +58,9 @@ import { PaymentComponent } from './component/payment/payment.component';
     ProductDetailsComponent,
     AddresspageComponent,
     ChechkoutComponent,
-    PaymentComponent
-    
+    PaymentComponent,
+    InvoiceComponent,
+
   ],
   imports: [
     BrowserModule,

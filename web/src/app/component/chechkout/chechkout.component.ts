@@ -7,6 +7,7 @@ import { ApiService } from 'src/app/service/api.service';
 import { CartService } from 'src/app/service/cart.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { product} from "src/products";
+import { Router } from '@angular/router';
 
 interface basketMap{
   id: Array<any>;
@@ -38,7 +39,7 @@ export class ChechkoutComponent implements OnInit {
   flag: boolean;
   getAddress?: string[];
   public grandTotal !: number;
-  constructor(private cartService: CartService, private apiService: ApiService, private fb: FormBuilder, private auth: AuthService, public afAuth: AngularFireAuth, private afs: AngularFirestore) { }
+  constructor(private cartService: CartService, private apiService: ApiService, private router: Router, private fb: FormBuilder, private auth: AuthService, public afAuth: AngularFireAuth, private afs: AngularFirestore) { }
 
   ngOnInit(): void {
 
@@ -117,9 +118,8 @@ export class ChechkoutComponent implements OnInit {
     this.apiService.addCart(obj, this.currentCustomer.credit_cards);
 
     this.createOrder();
-    this.cartService.removeAllCart();
 
-
+    this.router.navigate(["/invoice"]);
   }
 
   createOrder(){
