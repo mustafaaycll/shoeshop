@@ -7,6 +7,7 @@ import 'package:mobile/Screens/account/prevorders.dart';
 import 'package:mobile/Screens/home/discountproducts.dart';
 import 'package:mobile/Screens/home/productpage.dart';
 import 'package:mobile/Screens/home/sellerpage.dart';
+import 'package:mobile/Screens/home/singlecategorypage.dart';
 import 'package:mobile/Services/database.dart';
 import 'package:mobile/models/comments/comment.dart';
 import 'package:mobile/models/orders/order.dart';
@@ -150,7 +151,9 @@ class _HomeState extends State<Home> {
                                             OutlinedButton(
                                                 style: ShapeRules(bg_color: AppColors.empty_button, side_color: Colors.transparent)
                                                     .outlined_button_style(),
-                                                onPressed: () {},
+                                                onPressed: () {
+                                                  pushNewScreen(context, screen: singlecategorypage(category: categories[j]));
+                                                },
                                                 child: QuickObjects().namedImageBox(categories[j], categories[j].toLowerCase(), 105, 100, false)),
                                             SizedBox(
                                               width: 10,
