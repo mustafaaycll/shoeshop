@@ -36,7 +36,6 @@ export class SignupComponent implements OnInit {
             return;
         let userId=this.authService.userid;
         
-       
         this.authService.signupUser(this.signupForm.value).then((result) => {
             if (result == null)                                 // null is success, false means there was an error
                 this.router.navigate(['/products']);

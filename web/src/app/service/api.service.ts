@@ -7,6 +7,7 @@ import { product } from 'src/products';
 import { AuthService } from '../services/auth.service';
 import { doc, setDoc, updateDoc } from "firebase/firestore"; 
 import { Customer } from '../models/customer';
+import { Seller } from '../models/seller';
 
 
 
@@ -68,6 +69,18 @@ export class ApiService {
 
   getComments(){
     return this.firestore.collection("comments").valueChanges();
+  }
+
+  getSellers(){
+    return this.firestore.collection<Seller>('sellers').snapshotChanges().pipe(map(snaps => 
+      {return snaps.map(a => {
+        const data = a.payload.doc.data();
+        data.id = a.payload.doc.id;
+        console.log(data);
+        return data;
+      })
+    })
+    );
   }
 
 

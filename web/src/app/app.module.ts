@@ -40,6 +40,9 @@ import { ItemService } from './services/item.service';
 import { AddresspageComponent } from './addresspage/addresspage.component';
 import { ChechkoutComponent } from './component/chechkout/chechkout.component';
 import { PaymentComponent } from './component/payment/payment.component';
+import { SalesManLoginComponent } from './sales-man-login/sales-man-login.component';
+import { SalesManSignupComponent } from './sales-man-signup/sales-man-signup.component';
+import { SalesManPageComponent } from './sales-man-page/sales-man-page.component';
 
 
 
@@ -57,7 +60,10 @@ import { PaymentComponent } from './component/payment/payment.component';
     ProductDetailsComponent,
     AddresspageComponent,
     ChechkoutComponent,
-    PaymentComponent
+    PaymentComponent,
+    SalesManLoginComponent,
+    SalesManSignupComponent,
+    SalesManPageComponent
     
   ],
   imports: [

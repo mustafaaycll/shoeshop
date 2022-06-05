@@ -20,6 +20,8 @@ export class AuthService {
     
     userLoggedIn: boolean; 
     userid: string;     // other components can check on this variable for the login status of the user
+    
+    
 
     constructor(private router: Router, private afAuth: AngularFireAuth, private afs: AngularFirestore) {
         this.userLoggedIn = false;
@@ -89,6 +91,27 @@ export class AuthService {
                     method: "emailandpassword",
                     prev_orders: [],
                     tax_id: ""
+
+                 });
+                result.user!.sendEmailVerification();                    // immediately send the user a verification email
+            })
+            .catch((error: { code: any; message: any; }) => {
+                console.log('Auth Service: signup error', error);
+                if (error.code)
+                    return { isValid: false, message: error.message };
+            });
+    }
+    signupSalesMan(user: any): Promise<any> {
+        
+        return this.afAuth.createUserWithEmailAndPassword(user.email, user.password)
+            .then((result: { user: any; }) => {
+                let emailLower = user.email.toLowerCase();
+                this.afs.doc('/salesmanagers/' + result.user.uid).set({
+                    fullname: user.displayName,
+                    email: user.email,
+                    id: result.user.uid,
+                    method: "emailandpassword",
+                    brand: user.brand,
 
                  });
                 result.user!.sendEmailVerification();                    // immediately send the user a verification email

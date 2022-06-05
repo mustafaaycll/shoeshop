@@ -12,6 +12,9 @@ import { AuthGuard } from './services/auth.guard';
 import { ProductDetailsComponent } from './component/product-details/product-details.component';
 import { AddresspageComponent } from './addresspage/addresspage.component';
 import { ChechkoutComponent } from './component/chechkout/chechkout.component';
+import { SalesManLoginComponent } from './sales-man-login/sales-man-login.component';
+import { SalesManSignupComponent } from './sales-man-signup/sales-man-signup.component';
+import { SalesManPageComponent } from './sales-man-page/sales-man-page.component';
 //import * as auth0 from "auth0-js";
 
 
@@ -28,7 +31,11 @@ const routes: Routes = [
   { path: 'Checkout', component: ChechkoutComponent},
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
   { path: 'addresspage', component: AddresspageComponent },
+  { path: 'sales-man-login', component: SalesManLoginComponent },
+  { path: 'sales-man-signup', component: SalesManSignupComponent },
+  { path: 'sales-man-page', component: SalesManPageComponent },
   { path: '**', component: HomeComponent },  
+  
 
 ];
 
