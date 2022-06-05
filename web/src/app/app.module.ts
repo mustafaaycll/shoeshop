@@ -23,6 +23,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import {MatStepperModule} from '@angular/material/stepper';
+import {MatDividerModule} from '@angular/material/divider';
 
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 
@@ -79,6 +80,7 @@ import { SalesManPageComponent } from './sales-man-page/sales-man-page.component
     MatCardModule,
     MatInputModule,
     NgbRatingModule,
+    MatDividerModule,
     NgbModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
