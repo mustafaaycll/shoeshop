@@ -2,7 +2,6 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 const nodemailer = require("nodemailer");
-const cors = require("cors")({origin: true});
 admin.initializeApp();
 
 const db = admin.firestore();
@@ -88,28 +87,30 @@ exports.onRequestUpdate = functions.firestore
 exports.onMailEntryCreated = functions.firestore
     .document("mail/{mailID}")
     .onCreate((snapshot, context) => {
-      cors.name;
-      const values = snapshot.data();
-      const content = values.message;
-      const receiver = values.to;
-      const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-          user: "shoeshopteam@gmail.com",
-          pass: "cs308ss123",
-        },
-      });
-      const mailOptions = {
-        from: "ShoeShopTeam <shoeshopteam@gmail.com>",
-        to: receiver,
-        subject: content["subject"],
-        html: content["text"] + "\n\n" + content["html"],
-      };
-
-      return transporter.sendMail(mailOptions, (erro, info) => {
-        return db.collection("logs").add({
-          information: info.toString(),
-          event: "Email sent to user "+receiver,
+      try {
+        const values = snapshot.data();
+        const content = values.message;
+        const receiver = values.to;
+        const transporter = nodemailer.createTransport({
+          host: "smtp.gmail.com",
+          port: 465,
+          secure: true,
+          auth: {
+            user: "shoeshopteam@gmail.com",
+            pass: "cs308ss123",
+          },
         });
-      });
+        const mailOptions = {
+          from: "ShoeShopTeam <shoeshopteam@gmail.com>",
+          to: receiver,
+          subject: content["subject"],
+          html: content["text"] + "\n\n" + content["html"],
+        };
+
+        return transporter.sendMail(mailOptions)
+            .then((info) => console.log("Email sent: " + info.response))
+            .catch((error) => console.log("Error sending email ---- ", error));
+      } catch (err) {
+        return console.log("Encountered Error" + err);
+      }
     });

@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:mobile/utils/colors.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void turnBlue() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -19,14 +20,17 @@ void turnBlue() {
       statusBarColor: Colors.transparent));
 }
 
-void main() {
+SharedPreferences? prefs;
+void main() async {
   turnBlue();
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const FirebaseInit());
+  prefs = await SharedPreferences.getInstance();
+  runApp(FirebaseInit(prefs: prefs));
 }
 
 class FirebaseInit extends StatefulWidget {
-  const FirebaseInit({Key? key}) : super(key: key);
+  final SharedPreferences? prefs;
+  const FirebaseInit({Key? key, required this.prefs}) : super(key: key);
 
   @override
   State<FirebaseInit> createState() => _FirebaseInitState();
@@ -55,7 +59,7 @@ class _FirebaseInitState extends State<FirebaseInit> {
         }
 
         if (snapshot.connectionState == ConnectionState.done) {
-          return const MyApp();
+          return MyApp(prefs: widget.prefs);
         }
 
         return MaterialApp(
@@ -72,7 +76,8 @@ class _FirebaseInitState extends State<FirebaseInit> {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  final SharedPreferences? prefs;
+  const MyApp({Key? key, required this.prefs}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +86,9 @@ class MyApp extends StatelessWidget {
       initialData: null,
       child: MaterialApp(
         routes: {
-          '/NavBar': (context) => NavBar(),
+          '/NavBar': (context) => NavBar(
+                prefs: prefs,
+              ),
         },
         initialRoute: '/NavBar',
       ),

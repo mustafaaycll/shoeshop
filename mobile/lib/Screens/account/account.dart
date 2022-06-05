@@ -89,7 +89,7 @@ class _AccountState extends State<Account> {
                         showDialog(
                             context: context,
                             builder: (BuildContext context) {
-                              return QuickObjects().prevention(context);
+                              return QuickObjects().prevention(context, customer);
                             });
                       }
                     },
@@ -137,7 +137,7 @@ class _AccountState extends State<Account> {
                         showDialog(
                             context: context,
                             builder: (BuildContext context) {
-                              return QuickObjects().prevention(context);
+                              return QuickObjects().prevention(context, customer);
                             });
                       }
                     },
@@ -153,7 +153,7 @@ class _AccountState extends State<Account> {
                         showDialog(
                             context: context,
                             builder: (BuildContext context) {
-                              return QuickObjects().prevention(context);
+                              return QuickObjects().prevention(context, customer);
                             });
                       }
                     },
@@ -169,7 +169,7 @@ class _AccountState extends State<Account> {
                         showDialog(
                             context: context,
                             builder: (BuildContext context) {
-                              return QuickObjects().prevention(context);
+                              return QuickObjects().prevention(context, customer);
                             });
                       }
                     },
@@ -192,7 +192,7 @@ class _AccountState extends State<Account> {
                         showDialog(
                             context: context,
                             builder: (BuildContext context) {
-                              return QuickObjects().prevention(context);
+                              return QuickObjects().prevention(context, customer);
                             });
                       }
                     },

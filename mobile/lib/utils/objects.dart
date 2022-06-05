@@ -5,6 +5,7 @@ import 'package:mobile/Screens/account/returnRequestPage.dart';
 import 'package:mobile/Screens/cart/invoiceView.dart';
 import 'package:mobile/Screens/general/ratepage.dart';
 import 'package:mobile/Screens/home/productpage.dart';
+import 'package:mobile/Services/authentication.dart';
 import 'package:mobile/Services/database.dart';
 import 'package:mobile/models/comments/comment.dart';
 import 'package:mobile/models/orders/order.dart';
@@ -17,6 +18,8 @@ import 'package:mobile/utils/colors.dart';
 import 'package:mobile/utils/shapes_dimensions.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class QuickObjects {
   String getInitials(String text) {
@@ -1442,7 +1445,7 @@ class QuickObjects {
         ));
   }
 
-  Widget prevention(BuildContext context) {
+  Widget prevention(BuildContext context, Customer customer) {
     return AlertDialog(
         backgroundColor: AppColors.background,
         scrollable: true,
@@ -1479,6 +1482,26 @@ class QuickObjects {
                 ),
               ],
             ),
+            SizedBox(
+              height: 10,
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    style: ShapeRules(bg_color: AppColors.filled_button, side_color: AppColors.filled_button).outlined_button_style(),
+                    onPressed: () async {
+                      var prefs = await SharedPreferences.getInstance();
+                      String encodedBasket = json.encode(customer.basketMap);
+                      prefs.setString('storedBasket', encodedBasket);
+                      Navigator.pop(context);
+                      AuthService().signOut();
+                    },
+                    child: Text("Login", style: TextStyle(color: AppColors.filled_button_text)),
+                  ),
+                ),
+              ],
+            )
           ],
         ));
   }

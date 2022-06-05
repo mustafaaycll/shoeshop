@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/Screens/cart/checkoutscreen.dart';
@@ -12,11 +14,13 @@ import 'package:mobile/utils/colors.dart';
 import 'package:mobile/utils/objects.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../models/users/customer.dart';
 import '../../utils/shapes_dimensions.dart';
 
 class Cart extends StatefulWidget {
-  const Cart({Key? key}) : super(key: key);
+  final SharedPreferences? prefs;
+  const Cart({Key? key, required this.prefs}) : super(key: key);
 
   @override
   State<Cart> createState() => _CartState();
@@ -28,6 +32,15 @@ class _CartState extends State<Cart> {
     Customer? customer = Provider.of<Customer?>(context);
     if (customer != null) {
       List basketIDs = customer.basketMap.keys.toList();
+
+      String? encodedBasketString = widget.prefs!.getString('storedBasket');
+      print(encodedBasketString);
+
+      if (encodedBasketString != null) {
+        Map<dynamic, dynamic> newCart = json.decode(encodedBasketString);
+        DatabaseService(id: customer.id, ids: []).updateCart(newCart);
+        widget.prefs!.clear();
+      }
 
       return StreamBuilder<List<Product>>(
           stream: DatabaseService(id: "", ids: basketIDs).specifiedProducts,
@@ -94,7 +107,7 @@ class _CartState extends State<Cart> {
                                 showDialog(
                                     context: context,
                                     builder: (BuildContext context) {
-                                      return QuickObjects().prevention(context);
+                                      return QuickObjects().prevention(context, customer);
                                     });
                               }
                             },

@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:email_validator/email_validator.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -16,9 +17,11 @@ import 'package:mobile/utils/colors.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class NavBar extends StatefulWidget {
-  const NavBar({Key? key}) : super(key: key);
+  final SharedPreferences? prefs;
+  const NavBar({Key? key, required this.prefs}) : super(key: key);
   @override
   State<NavBar> createState() => _NavBarState();
 }
@@ -28,7 +31,7 @@ class _NavBarState extends State<NavBar> {
   static FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(analytics: analytics);
 
   List<Widget> _buildScreens() {
-    return [Home(analytics: analytics, observer: observer), Cart(), Wishlist(), Account()];
+    return [Home(analytics: analytics, observer: observer), Cart(prefs: widget.prefs), Wishlist(), Account()];
   }
 
   List<PersistentBottomNavBarItem> _navBarsItems() {
@@ -110,7 +113,7 @@ class _NavBarState extends State<NavBar> {
             ),
           ));
     } else {
-      return Login();
+      return Login(prefs: widget.prefs);
     }
   }
 }

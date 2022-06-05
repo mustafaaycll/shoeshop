@@ -1,6 +1,8 @@
 import 'package:flutter/services.dart';
 import 'package:mobile/Screens/Authentication/signup.dart';
 import 'package:mobile/Screens/home/home.dart';
+import 'package:mobile/Services/database.dart';
+import 'package:mobile/models/users/customer.dart';
 import 'package:mobile/navbar.dart';
 import 'package:mobile/utils/colors.dart';
 import 'package:mobile/utils/shapes_dimensions.dart';
@@ -24,9 +26,11 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 import 'package:mobile/Services/authentication.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
-  const Login({Key? key}) : super(key: key);
+  final SharedPreferences? prefs;
+  const Login({Key? key, required this.prefs}) : super(key: key);
 
   @override
   _LoginState createState() => _LoginState();
@@ -44,8 +48,7 @@ class _LoginState extends State<Login> {
 
   FirebaseAuth auth = FirebaseAuth.instance;
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-  static FirebaseAnalyticsObserver observer =
-      FirebaseAnalyticsObserver(analytics: analytics);
+  static FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(analytics: analytics);
 
   void setMessage(String msg) {
     setState(() {
@@ -68,10 +71,7 @@ class _LoginState extends State<Login> {
               ),
               actions: [
                 TextButton(
-                    style: ShapeRules(
-                            bg_color: AppColors.empty_button,
-                            side_color: AppColors.empty_button_border)
-                        .outlined_button_style(),
+                    style: ShapeRules(bg_color: AppColors.empty_button, side_color: AppColors.empty_button_border).outlined_button_style(),
                     onPressed: () {
                       Navigator.popUntil(context, (route) => route.isFirst);
                       Navigator.popAndPushNamed(context, rName);
@@ -90,10 +90,7 @@ class _LoginState extends State<Login> {
               ),
               actions: [
                 TextButton(
-                    style: ShapeRules(
-                            bg_color: AppColors.empty_button,
-                            side_color: AppColors.empty_button_border)
-                        .outlined_button_style(),
+                    style: ShapeRules(bg_color: AppColors.empty_button, side_color: AppColors.empty_button_border).outlined_button_style(),
                     onPressed: () {
                       Navigator.popUntil(context, (route) => route.isFirst);
                       Navigator.popAndPushNamed(context, rName);
@@ -142,9 +139,7 @@ class _LoginState extends State<Login> {
                           children: [
                             Text(
                               'ShoeShop',
-                              style: TextStyle(
-                                  color: AppColors.opposite_case_title_text,
-                                  fontSize: 30),
+                              style: TextStyle(color: AppColors.opposite_case_title_text, fontSize: 30),
                             ),
                           ],
                         ),
@@ -177,8 +172,7 @@ class _LoginState extends State<Login> {
                                       if (trimmedValue.isEmpty) {
                                         return 'E-mail field cannot be empty!';
                                       }
-                                      if (!EmailValidator.validate(
-                                          trimmedValue)) {
+                                      if (!EmailValidator.validate(trimmedValue)) {
                                         return 'Please enter a valid email!';
                                       }
                                     }
@@ -244,22 +238,17 @@ class _LoginState extends State<Login> {
                             Expanded(
                               flex: 1,
                               child: OutlinedButton(
-                                style: ShapeRules(
-                                        bg_color: AppColors.positive_button,
-                                        side_color:
-                                            AppColors.positive_button_border)
+                                style: ShapeRules(bg_color: AppColors.positive_button, side_color: AppColors.positive_button_border)
                                     .outlined_button_style(),
                                 onPressed: () {
                                   if (_formKey.currentState!.validate()) {
                                     _formKey.currentState!.save();
-                                    AuthService()
-                                        .loginWithMailandPass(mail, pass);
+                                    AuthService().loginWithMailandPass(mail, pass);
                                   }
                                 },
                                 child: Text(
                                   'Login',
-                                  style: TextStyle(
-                                      color: AppColors.filled_button_text),
+                                  style: TextStyle(color: AppColors.filled_button_text),
                                 ),
                               ),
                             )
@@ -275,8 +264,7 @@ class _LoginState extends State<Login> {
                           ),
                           Text(
                             "OR",
-                            style: TextStyle(
-                                color: AppColors.background, fontSize: 10),
+                            style: TextStyle(color: AppColors.background, fontSize: 10),
                           ),
                           SizedBox(
                             width: 8,
@@ -289,30 +277,23 @@ class _LoginState extends State<Login> {
                             Expanded(
                               flex: 1,
                               child: OutlinedButton(
-                                style: ShapeRules(
-                                        bg_color: AppColors.empty_button,
-                                        side_color:
-                                            AppColors.empty_button_border)
-                                    .outlined_button_style(),
+                                style:
+                                    ShapeRules(bg_color: AppColors.empty_button, side_color: AppColors.empty_button_border).outlined_button_style(),
                                 onPressed: () {
                                   AuthService().googleSignIn();
                                 },
                                 child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children: <Widget>[
                                     SizedBox(
                                       width: 110,
                                     ),
                                     Text(
                                       'Login with',
-                                      style: TextStyle(
-                                          color: AppColors
-                                              .opposite_case_filled_button_text),
+                                      style: TextStyle(color: AppColors.opposite_case_filled_button_text),
                                     ),
                                     Image(
-                                      image:
-                                          AssetImage('assets/google_logo.png'),
+                                      image: AssetImage('assets/google_logo.png'),
                                       width: 18,
                                       height: 18,
                                     ),
@@ -335,8 +316,7 @@ class _LoginState extends State<Login> {
                           ),
                           Text(
                             "OR",
-                            style: TextStyle(
-                                color: AppColors.background, fontSize: 10),
+                            style: TextStyle(color: AppColors.background, fontSize: 10),
                           ),
                           SizedBox(
                             width: 8,
@@ -349,11 +329,8 @@ class _LoginState extends State<Login> {
                             Expanded(
                               flex: 1,
                               child: OutlinedButton(
-                                style: ShapeRules(
-                                        bg_color: AppColors.empty_button,
-                                        side_color:
-                                            AppColors.empty_button_border)
-                                    .outlined_button_style(),
+                                style:
+                                    ShapeRules(bg_color: AppColors.empty_button, side_color: AppColors.empty_button_border).outlined_button_style(),
                                 onPressed: () async {
                                   await AuthService().signInAnon();
                                 },
@@ -362,9 +339,7 @@ class _LoginState extends State<Login> {
                                   children: <Widget>[
                                     Text(
                                       'Continue Anonymously',
-                                      style: TextStyle(
-                                          color: AppColors
-                                              .opposite_case_filled_button_text),
+                                      style: TextStyle(color: AppColors.opposite_case_filled_button_text),
                                     )
                                   ],
                                 ),
@@ -396,18 +371,14 @@ class _LoginState extends State<Login> {
                               flex: 1,
                               child: OutlinedButton(
                                 style: ShapeRules(
-                                        bg_color: AppColors
-                                            .opposite_case_filled_button,
-                                        side_color: AppColors
-                                            .opposite_case_filled_button_border)
+                                        bg_color: AppColors.opposite_case_filled_button, side_color: AppColors.opposite_case_filled_button_border)
                                     .outlined_button_style(),
                                 onPressed: () {
                                   pushNewScreen(context, screen: Signup());
                                 },
                                 child: Text(
                                   'Sign Up',
-                                  style: TextStyle(
-                                      color: AppColors.filled_button_text),
+                                  style: TextStyle(color: AppColors.filled_button_text),
                                 ),
                               ),
                             )
@@ -416,15 +387,11 @@ class _LoginState extends State<Login> {
                         SizedBox(height: 100),
                         TextButton(
                             onPressed: () {
-                              pushNewScreen(context,
-                                  screen: ResetPass(
-                                      analytics: analytics,
-                                      observer: observer));
+                              pushNewScreen(context, screen: ResetPass(analytics: analytics, observer: observer));
                             },
                             child: Text(
                               "Forgot your password?",
-                              style: TextStyle(
-                                  color: AppColors.opposite_case_body_text),
+                              style: TextStyle(color: AppColors.opposite_case_body_text),
                             )),
                       ],
                     ),
@@ -436,7 +403,9 @@ class _LoginState extends State<Login> {
         ),
       );
     } else {
-      return NavBar();
+      return NavBar(
+        prefs: widget.prefs,
+      );
     }
   }
 }

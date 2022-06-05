@@ -87,6 +87,7 @@ class DatabaseService {
           'prev_orders': emptyList,
           'tax_id': "",
           'credit_cards': emptyList,
+          'returnRequests': emptyList,
           'wallet': "0.0"
         })
         .then((value) => print('Customer Added'))
@@ -123,6 +124,10 @@ class DatabaseService {
 
     newCart.update(idToBeInserted, (value) => [oldCart[idToBeInserted][0] + 1, size], ifAbsent: () => [1, size]);
 
+    await customerCollection.doc(id).update({'basketMap': newCart});
+  }
+
+  Future updateCart(Map<dynamic, dynamic> newCart) async {
     await customerCollection.doc(id).update({'basketMap': newCart});
   }
 
