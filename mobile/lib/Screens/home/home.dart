@@ -4,8 +4,12 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/Screens/account/prevorders.dart';
+import 'package:mobile/Screens/home/allbrands.dart';
+import 'package:mobile/Screens/home/allcategoriespage.dart';
+import 'package:mobile/Screens/home/discountproducts.dart';
 import 'package:mobile/Screens/home/productpage.dart';
 import 'package:mobile/Screens/home/sellerpage.dart';
+import 'package:mobile/Screens/home/singlecategorypage.dart';
 import 'package:mobile/Services/database.dart';
 import 'package:mobile/models/comments/comment.dart';
 import 'package:mobile/models/orders/order.dart';
@@ -77,7 +81,9 @@ class _HomeState extends State<Home> {
                                   style: TextStyle(color: AppColors.system_gray),
                                 ),
                                 TextButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    pushNewScreen(context, screen: allbrands());
+                                  },
                                   child: Row(
                                     children: [
                                       Text(
@@ -123,7 +129,9 @@ class _HomeState extends State<Home> {
                                   style: TextStyle(color: AppColors.system_gray),
                                 ),
                                 TextButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    pushNewScreen(context, screen: allcategoriespage());
+                                  },
                                   child: Row(
                                     children: [
                                       Text(
@@ -149,7 +157,9 @@ class _HomeState extends State<Home> {
                                             OutlinedButton(
                                                 style: ShapeRules(bg_color: AppColors.empty_button, side_color: Colors.transparent)
                                                     .outlined_button_style(),
-                                                onPressed: () {},
+                                                onPressed: () {
+                                                  pushNewScreen(context, screen: singlecategorypage(category: categories[j]));
+                                                },
                                                 child: QuickObjects().namedImageBox(categories[j], categories[j].toLowerCase(), 105, 100, false)),
                                             SizedBox(
                                               width: 10,
@@ -210,7 +220,9 @@ class _HomeState extends State<Home> {
                                   style: TextStyle(color: AppColors.system_gray),
                                 ),
                                 TextButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    pushNewScreen(context, screen: discountproducts());
+                                  },
                                   child: Row(
                                     children: [
                                       Text(
