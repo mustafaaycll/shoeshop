@@ -16,14 +16,13 @@ import 'package:provider/provider.dart';
 
 class singlecategorypage extends StatefulWidget {
   final String category;
-  const singlecategorypage({required this.category, Key? key }) : super(key: key);
+  const singlecategorypage({required this.category, Key? key}) : super(key: key);
 
   @override
   State<singlecategorypage> createState() => _singlecategorypageState();
 }
 
 class _singlecategorypageState extends State<singlecategorypage> {
-
   List<String> sortMethods = ["Price: Ascending", "Price: Descending", "Popularity: Ascending", "Popularity: Descending"];
   String sorting = "natural";
 
@@ -32,7 +31,6 @@ class _singlecategorypageState extends State<singlecategorypage> {
 
   @override
   Widget build(BuildContext context) {
-
     String category = widget.category;
     Customer customer = Provider.of<Customer>(context);
 
@@ -42,13 +40,13 @@ class _singlecategorypageState extends State<singlecategorypage> {
         List<Seller>? allSellers = snapshot.data;
 
         return StreamBuilder<List<Product>>(
-          stream: DatabaseService(id: "", ids: []).allProducts,
-          builder: (context, snapshot) {
-            List<Product>? products = snapshot.data;
-            //filterByCategory(products, category.toLowerCase());
-            products = reOrder(products, sorting);
+            stream: DatabaseService(id: "", ids: []).allProducts,
+            builder: (context, snapshot) {
+              List<Product>? products = snapshot.data;
+              filterByCategory(products, category.toLowerCase());
+              products = reOrder(products, sorting);
 
-            if (products != null) {
+              if (products != null) {
                 return Scaffold(
                   backgroundColor: AppColors.background,
                   appBar: AppBar(
@@ -128,14 +126,18 @@ class _singlecategorypageState extends State<singlecategorypage> {
                                               style: ShapeRules(bg_color: AppColors.empty_button, side_color: AppColors.empty_button)
                                                   .outlined_button_style_no_padding(),
                                               onPressed: () {
-                                                pushNewScreen(context, screen: ProductPage(seller: allSellers!
-                                                                            .where((element) => element.name == products![index].name)
-                                                                            .toList()[0], productID: products![index].id));
+                                                pushNewScreen(context,
+                                                    screen: ProductPage(
+                                                        seller: allSellers!.where((element) => element.name == products![index].name).toList()[0],
+                                                        productID: products![index].id));
                                               },
-                                              child: QuickObjects().productTile_gridView(products![index], customer, comments, allSellers!
-                                                                            .where((element) => element.name == products![index].name)
-                                                                            .toList()[0],
-                                                  constraints.heightConstraints().maxHeight, constraints.widthConstraints().maxWidth),
+                                              child: QuickObjects().productTile_gridView(
+                                                  products![index],
+                                                  customer,
+                                                  comments,
+                                                  allSellers!.where((element) => element.name == products![index].name).toList()[0],
+                                                  constraints.heightConstraints().maxHeight,
+                                                  constraints.widthConstraints().maxWidth),
                                             );
                                           } else {
                                             return Animations().loading();
@@ -150,9 +152,9 @@ class _singlecategorypageState extends State<singlecategorypage> {
               } else {
                 return Animations().scaffoldLoadingScreen_without_appbar();
               }
-          });
-        }),
-      );
+            });
+      }),
+    );
   }
 }
 
@@ -177,8 +179,8 @@ List<Product>? reOrder(List<Product>? productList, String method) {
 }
 
 void filterByCategory(List<Product>? productList, String categoryToBeFiltered) {
-  for(int i = 0; i < productList!.length; i++){
-    if(productList[i].category != categoryToBeFiltered){
+  for (int i = 0; i < productList!.length; i++) {
+    if (productList[i].category != categoryToBeFiltered) {
       productList.removeAt(i);
       i--;
     }

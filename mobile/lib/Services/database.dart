@@ -27,8 +27,11 @@ class DatabaseService {
     for (var i = 0; i < elems.length; i++) {
       sum += elems[i].toDouble();
     }
-
-    return sum / elems.length.toDouble();
+    if (sum != 0) {
+      return sum / elems.length.toDouble();
+    } else {
+      return sum;
+    }
   }
 
   final CollectionReference customerCollection = FirebaseFirestore.instance.collection('customers');
