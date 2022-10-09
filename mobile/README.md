@@ -30,14 +30,18 @@ Developed in line with the needs of Sabancı University's Software Engineering c
 
 ### Home Tab
 
-|   <b>Home Page Scroll View</b>        |   <b>End of Scroll View</b>           |
-|   :--:                                |   :--:                                |
-|   ![](screenshots/Home/homepage.png)  |   ![](screenshots/Home/homepage2.png) |
+|   <b>Home Page Scroll View</b>        |   <b>End of Scroll View</b>            |
+|   :--:                                |   :--:                                 |
+|   ![](screenshots/Home/homepage.png)  |   ![](screenshots/Home/homepage2.png)  |
 
-|   <b>Search View</b>                  |   <b>Rate View</b>                    |
-|   :--:                                |   :--:                                |
-|   ![](screenshots/Home/search.png)    |   ![](screenshots/Home/rating.png)    |
+|   <b>Search View</b>                  |   <b>Rate View</b>                     |
+|   :--:                                |   :--:                                 |
+|   ![](screenshots/Home/search.png)    |   ![](screenshots/Home/rating.png)     |
 
-|   <b>Shop Page</b>                  |   <b>Product Page</b>                    |
-|   :--:                                |   :--:                                |
-|   ![](screenshots/Home/shoppage.png)    |   ![](screenshots/Home/productpage.png)    |
+|   <b>Shop Page</b>                    |   <b>Product Page</b>                  |
+|   :--:                                |   :--:                                 |
+|   ![](screenshots/Home/shoppage.png)  |   ![](screenshots/Home/productpage.png)|
+
+|   <b>Product Page</b>                    |   <b>Product Page</b>                  |
+|   :--:                                |   :--:                                 |
+|   ![](screenshots/Home/productpage2.png)  |   ![](screenshots/Home/productpageaddingtocart.png)|
