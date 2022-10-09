@@ -13,7 +13,7 @@
 
 ## Introduction
 
------
+
 Developed in line with the needs of Sabancı University's Software Engineering course coded as CS308. It is the mobile application of a fictitious e-commerce company called ShoeShop and offers nearly all the features of an e-commerce application in today's standards:
 
 - Searching/filtering by brand, category, description or name
@@ -26,7 +26,6 @@ Developed in line with the needs of Sabancı University's Software Engineering c
 
 ## Built with
 
-------------
 
 - [Flutter](https://docs.flutter.dev) - Allows app to run both in iOS and Andriod
 - [Firebase](https://firebase.google.com/docs?gclid=Cj0KCQjw4omaBhDqARIsADXULuXuTpLQQkL15zPUfN69XWRSo-FpbzapCVEpCZ6yyQX7rFEn06C2v1gaAgPpEALw_wcB&gclsrc=aw.ds) - Realtime database
@@ -35,7 +34,6 @@ Developed in line with the needs of Sabancı University's Software Engineering c
 
 ## Screenshots
 
-----------
 
 ### Login Page
 
