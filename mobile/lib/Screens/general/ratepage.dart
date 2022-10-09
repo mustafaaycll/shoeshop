@@ -170,6 +170,7 @@ class _RatePageState extends State<RatePage> {
                                 child: OutlinedButton(
                               style: ShapeRules(bg_color: AppColors.filled_button, side_color: AppColors.filled_button).outlined_button_style(),
                               onPressed: () {
+                                print(rating.toString() + comment!);
                                 if (rating != 0 && comment != "") {
                                   Comment commentObject = Comment(
                                     id: DatabaseService(id: "", ids: []).randID(),
@@ -183,7 +184,7 @@ class _RatePageState extends State<RatePage> {
                                   );
                                   DatabaseService(id: "", ids: []).createNewComment(commentObject);
                                   DatabaseService(id: seller.id, ids: []).addRatingToSeller(seller.ratings, rating);
-                                  DatabaseService(id: seller.id, ids: []).addRatingToSeller(product.ratings, rating);
+                                  DatabaseService(id: product.id, ids: []).addRatingToProduct(product.ratings, rating);
                                   DatabaseService(id: product.id, ids: []).addCommentToProduct(product.comments, commentObject.id);
                                   DatabaseService(id: order.id, ids: []).updateRateInfoOfOrder(true);
                                   Navigator.pop(context);

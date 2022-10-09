@@ -273,7 +273,7 @@ class DatabaseService {
                 comments: doc.get("comments"),
                 sizesMap: doc.get("sizesMap"),
                 photos: doc.get("photos"),
-                ratings: doc.get("photos"),
+                ratings: doc.get("ratings"),
                 averageRate: getAve(doc.get('ratings')));
           }
         })
@@ -299,7 +299,7 @@ class DatabaseService {
           comments: doc.get("comments"),
           sizesMap: doc.get("sizesMap"),
           photos: doc.get("photos"),
-          ratings: doc.get("photos"),
+          ratings: doc.get("ratings"),
           averageRate: getAve(doc.get('ratings')));
     }).toList();
   }
@@ -323,7 +323,7 @@ class DatabaseService {
               comments: doc.get("comments"),
               sizesMap: doc.get("sizesMap"),
               photos: doc.get("photos"),
-              ratings: doc.get("photos"),
+              ratings: doc.get("ratings"),
               averageRate: getAve(doc.get('ratings')));
         })
         .toList()

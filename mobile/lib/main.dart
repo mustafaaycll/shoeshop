@@ -49,7 +49,7 @@ class _FirebaseInitState extends State<FirebaseInit> {
             home: Scaffold(
               body: Center(
                 child: Text(
-                  'No Firebase Connection\n' + '${snapshot.error.toString()}',
+                  'No Firebase Connection\n' + snapshot.error.toString(),
                   style: TextStyle(color: AppColors.background, fontSize: 30),
                 ),
               ),
@@ -85,6 +85,7 @@ class MyApp extends StatelessWidget {
       value: AuthService().user,
       initialData: null,
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         routes: {
           '/NavBar': (context) => NavBar(
                 prefs: prefs,

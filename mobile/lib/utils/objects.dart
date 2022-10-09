@@ -94,7 +94,7 @@ class QuickObjects {
                             }
                           },
                         )
-                      : Image.asset('assets/category_pictures/${src}.png')),
+                      : Image.asset('assets/category_pictures/$src.png')),
               SizedBox(
                 height: (h - 5) / 11,
               ),
