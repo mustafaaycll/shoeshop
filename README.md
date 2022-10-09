@@ -41,9 +41,9 @@ Developed in line with the needs of Sabancı University's Software Engineering c
 |   :--:                                |   :--:                                 |
 |   ![](mobile/screenshots/GreetingScreen/loginpage.png)  |   ![](mobile/screenshots/GreetingScreen/signuppage.png)  |
 
-|   <b>Password Reset Page</b>                  |   <b></b>                     |
-|   :--:                                |   :--:                                 |
-|   ![](mobile/screenshots/GreetingScreen/forgotpage.png)    |   ![]()     |
+|   <b>Password Reset Page</b>                  |
+|   :--:                                |
+|   ![](mobile/screenshots/GreetingScreen/forgotpage.png)    |
 
 ### Home Tab
 
