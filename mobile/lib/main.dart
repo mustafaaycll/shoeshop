@@ -12,6 +12,8 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'firebase_options.dart';
+
 void turnBlue() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       systemNavigationBarColor: AppColors.title_text,
@@ -37,7 +39,7 @@ class FirebaseInit extends StatefulWidget {
 }
 
 class _FirebaseInitState extends State<FirebaseInit> {
-  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
+  final Future<FirebaseApp> _initialization = Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   @override
   Widget build(BuildContext context) {
