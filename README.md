@@ -71,7 +71,7 @@ Developed in line with the needs of Sabancı University's Software Engineering c
 
 |   <b>Checkout Using Credit Card</b>                  |   <b>Checkout Using Wallet</b>                     |
 |   :--:                                |   :--:                                 |
-|   ![](mobile/screenshots/cart/checkingoutwithcreditcard.png)    |   ![](mobile/screenshots/Cart/checkingoutwithwallet.png)     |
+|   ![](mobile/screenshots/Cart/checkingoutwithcreditcard.png)    |   ![](mobile/screenshots/Cart/checkingoutwithwallet.png)     |
 
 |   <b>Checkout Completed</b>                    |   <b>Invoice View</b>                  |
 |   :--:                                |   :--:                                 |
