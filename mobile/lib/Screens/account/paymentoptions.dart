@@ -1,4 +1,4 @@
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as badges;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/credit_card_widget.dart';
@@ -53,10 +53,10 @@ class _PaymentOptionsState extends State<PaymentOptions> {
                         itemBuilder: (context, index) {
                           return Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Badge(
-                              animationType: BadgeAnimationType.scale,
+                            child: badges.Badge(
+                              animationType: badges.BadgeAnimationType.scale,
                               elevation: 0,
-                              position: BadgePosition.topStart(),
+                              position: badges.BadgePosition.topStart(),
                               badgeColor: AppColors.background,
                               badgeContent: IconButton(
                                 onPressed: () async {
