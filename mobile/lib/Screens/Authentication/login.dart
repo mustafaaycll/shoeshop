@@ -1,8 +1,5 @@
 import 'package:flutter/services.dart';
 import 'package:mobile/Screens/Authentication/signup.dart';
-import 'package:mobile/Screens/home/home.dart';
-import 'package:mobile/Services/database.dart';
-import 'package:mobile/models/users/customer.dart';
 import 'package:mobile/navbar.dart';
 import 'package:mobile/utils/colors.dart';
 import 'package:mobile/utils/shapes_dimensions.dart';
@@ -10,19 +7,11 @@ import 'package:mobile/utils/styles.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
-import 'package:mobile/utils/colors.dart';
-import 'package:mobile/utils/shapes_dimensions.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:io' show Platform;
 import 'package:mobile/Screens/Authentication/resetpass.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 import 'package:mobile/Services/authentication.dart';
 import 'package:provider/provider.dart';

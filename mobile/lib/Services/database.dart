@@ -6,7 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:mobile/Services/invoice.dart';
 import 'package:mobile/models/bankCards/bankCard.dart';
 import 'package:mobile/models/comments/comment.dart';
-import 'package:mobile/models/orders/order.dart';
+import 'package:mobile/models/orders/order.dart' as orderService;
 import 'package:mobile/models/returnRequests/returnRequest.dart';
 import 'package:mobile/models/users/customer.dart';
 import 'package:mobile/models/users/seller.dart';
@@ -548,11 +548,11 @@ class DatabaseService {
   /*--CARD--CARD--CARD--CARD--CARD--CARD--CARD--CARD--CARD--CARD--CARD*/
   /*--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER--ORDER*/
 
-  List<Order> _orderListFromSnapshot_specified(QuerySnapshot snapshot) {
-    return List<Order>.from(snapshot.docs
+  List<orderService.Order> _orderListFromSnapshot_specified(QuerySnapshot snapshot) {
+    return List<orderService.Order>.from(snapshot.docs
         .map((doc) {
           if (ids.contains(doc.id)) {
-            return Order(
+            return orderService.Order(
                 id: doc.id,
                 customerID: doc.get('customerID'),
                 sellerID: doc.get('sellerID'),
@@ -571,11 +571,11 @@ class DatabaseService {
         .where((element) => element != null));
   }
 
-  List<Order> _orderListFromSnapshot_specified_nonCancelled(QuerySnapshot snapshot) {
-    return List<Order>.from(snapshot.docs
+  List<orderService.Order> _orderListFromSnapshot_specified_nonCancelled(QuerySnapshot snapshot) {
+    return List<orderService.Order>.from(snapshot.docs
         .map((doc) {
           if (ids.contains(doc.id) && doc.get('status') != "cancelled") {
-            return Order(
+            return orderService.Order(
                 id: doc.id,
                 customerID: doc.get('customerID'),
                 sellerID: doc.get('sellerID'),
@@ -594,19 +594,19 @@ class DatabaseService {
         .where((element) => element != null));
   }
 
-  Stream<List<Order>> get specifiedOrders {
+  Stream<List<orderService.Order>> get specifiedOrders {
     return orderCollection.snapshots().map(_orderListFromSnapshot_specified);
   }
 
-  Stream<List<Order>> get specifiedOrders_nonCancelled {
+  Stream<List<orderService.Order>> get specifiedOrders_nonCancelled {
     return orderCollection.snapshots().map(_orderListFromSnapshot_specified_nonCancelled);
   }
 
-  Future createNewOrder(List<Order> orderArr, Customer customer, Map<Product, dynamic> basket, String? address) async {
+  Future createNewOrder(List<orderService.Order> orderArr, Customer customer, Map<Product, dynamic> basket, String? address) async {
     List<dynamic> oldPrevOrder = customer.prev_orders;
     String orderString = "";
     for (var i = 0; i < orderArr.length; i++) {
-      Order order = orderArr[i];
+      orderService.Order order = orderArr[i];
       await orderCollection.doc(order.id).set({
         'id': order.id,
         'customerID': order.customerID,
