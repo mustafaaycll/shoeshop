@@ -268,58 +268,6 @@ class _LoginState extends State<Login> {
                               child: OutlinedButton(
                                 style:
                                     ShapeRules(bg_color: AppColors.empty_button, side_color: AppColors.empty_button_border).outlined_button_style(),
-                                onPressed: () {
-                                  AuthService().googleSignIn();
-                                },
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: <Widget>[
-                                    SizedBox(
-                                      width: 110,
-                                    ),
-                                    Text(
-                                      'Login with',
-                                      style: TextStyle(color: AppColors.opposite_case_filled_button_text),
-                                    ),
-                                    Image(
-                                      image: AssetImage('assets/google_logo.png'),
-                                      width: 18,
-                                      height: 18,
-                                    ),
-                                    SizedBox(
-                                      width: 100,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                        Row(children: <Widget>[
-                          Expanded(
-                              child: Divider(
-                            color: AppColors.background,
-                          )),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Text(
-                            "OR",
-                            style: TextStyle(color: AppColors.background, fontSize: 10),
-                          ),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Expanded(child: Divider(color: AppColors.background)),
-                        ]),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              flex: 1,
-                              child: OutlinedButton(
-                                style:
-                                    ShapeRules(bg_color: AppColors.empty_button, side_color: AppColors.empty_button_border).outlined_button_style(),
                                 onPressed: () async {
                                   await AuthService().signInAnon();
                                 },
